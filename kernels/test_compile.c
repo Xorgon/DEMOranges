@@ -28,10 +28,11 @@ char string[MEM_SIZE];
 FILE *fp;
 char *fileNames[] = {
         "../kernels/iterate_particle.cl",
-//        "../kernels/make_collisions.cl",
-        "../kernels/particle_collision.cl",
-//        "../kernels/sort_particles.cl",
-        "../kernels/wall_collision.cl"
+//        "../kernels/make_pp_collisions.cl",
+//        "../kernels/make_pw_collisions.cl",
+        "../kernels/pp_collision.cl",
+        "../kernels/pw_collision.cl",
+//        "../kernels/sort_particles.cl"
 };
 int files = 3;
 char *source_str;
@@ -41,7 +42,7 @@ size_t source_size;
 int main() {
     for (int i = 0; i < files; i++) {
 
-        printf("\nKernel file = %s\n", fileNames[i]);
+        printf("\nKernel file: %s\n", fileNames[i]);
 
         // load source code containing kernel
         fopen_s(&fp, fileNames[i], "r");
