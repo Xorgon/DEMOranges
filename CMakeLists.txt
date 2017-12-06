@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7)
-project(IP_particle_fluid_sim)
+project(DEMOranges)
 set(CMAKE_CXX_STANDARD 11)
 
 # Fix Windows path environment variable.
@@ -15,3 +15,15 @@ link_libraries($ENV{OCL_ROOT}/lib/x86/OpenCL.lib)
 find_package(OpenCL REQUIRED)
 
 include_directories($ENV{OCL_ROOT}/include/CL/)
+
+file(GLOB_RECURSE clEnqueueNDRangeKernel_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "structures/*.h"
+        clEnqueueNDRangeKernel/host.c)
+add_executable(clEnqueueNDRangeKernel ${clEnqueueNDRangeKernel_SOURCE_FILES})
+
+file(GLOB_RECURSE test_compile_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "structures/*.h"
+        kernels/test_compile.c)
+add_executable(test_compile ${test_compile_SOURCE_FILES})
