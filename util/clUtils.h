@@ -8,10 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/cl.h>
-#include <math.h>
-#include <sys\timeb.h>
-#include <conio.h>
+
+#define MAX_SOURCE_SIZE (0x100000)
+
+void setDevices(cl_platform_id **platforms, cl_device_id **devices);
 
 void printDeviceDetails(cl_uint *platformCount, cl_platform_id *id, cl_uint *deviceCount, cl_device_id *devices);
+
+cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]);
 
 #endif //DEMORANGES_CLDEVICEUTILS_H
