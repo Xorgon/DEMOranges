@@ -72,6 +72,8 @@ int main() {
         return 1;
     }
 
+    cl_kernel kernel = getKernel(&devices, &context, "../clEnqueueNDRangeKernel/propagate.cl", "propagate");
+
     // Create command queue
     cl_command_queue queue = NULL;
     queue = clCreateCommandQueue(context, devices[0], 0, &ret);
@@ -97,8 +99,6 @@ int main() {
         _getch();
         return 1;
     }
-
-    cl_kernel kernel = getKernel(&devices, &context, "../clEnqueueNDRangeKernel/propagate.cl");
 
     // Calculate the TGV constants
     float A = flowMag;

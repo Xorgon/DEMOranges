@@ -133,7 +133,7 @@ printDeviceDetails(cl_uint *platformCount, cl_platform_id *platforms, cl_uint *d
     _getch();
 }
 
-cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]) {
+cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[]) {
 
     FILE *fp;
     char *source_str;
@@ -186,7 +186,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
 
     // Create OpenCL kernel
     cl_kernel kernel = NULL;
-    kernel = clCreateKernel(program, "propagate", &ret);
+    kernel = clCreateKernel(program, kernelName, &ret);
     printf("[INIT] Create OpenCL kernel: ");
     if ((int) ret == 0) {
         printf("SUCCESS\n");
