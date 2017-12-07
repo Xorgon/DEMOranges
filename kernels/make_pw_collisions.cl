@@ -16,3 +16,6 @@ typedef struct {
     float3 max;
     float3 min;
 } aa_wall;
+
+__kernel void make_pw_collisions(
+) {}

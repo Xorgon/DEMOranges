@@ -10,3 +10,6 @@ typedef struct {
     float3 vel;
     float3 forces;
 } particle;
+
+__kernel void iterate_particle(
+) {}

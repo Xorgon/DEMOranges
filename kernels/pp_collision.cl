@@ -20,3 +20,6 @@ typedef struct {
     float friction_coefficient;
     float friction_stiffness;
 } particle_collision;
+
+__kernel void pp_collision(
+) {}
