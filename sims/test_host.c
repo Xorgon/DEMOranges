@@ -38,10 +38,9 @@ int main() {
         particles[i].density = density;
         particles[i].fluid_viscosity = fluid_viscosity;
         particles[i].particle_diameter = particle_diameter;
-        particles[i].pos = (cl_float3) (1.0, 1.0, 1.0);
-        particles[i].vel; // TODO: Define this stuff.
-        particles[i].forces;
-
+        particles[i].pos = (cl_float3) {0.0, i, 0.0};
+        particles[i].vel = (cl_float3) {0.0, 0.0, 0.0};
+        particles[i].forces = (cl_float3) {0.0, 0.0, 0.0};
     }
 
 }
