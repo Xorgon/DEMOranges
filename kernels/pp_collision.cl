@@ -4,7 +4,7 @@ typedef struct {
     ulong particle_id;
     float particle_diameter;
     float density;
-    float *fluid_viscosity;
+    float fluid_viscosity;
 
     float3 pos;
     float3 vel;

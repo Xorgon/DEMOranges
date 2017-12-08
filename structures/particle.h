@@ -11,11 +11,13 @@ typedef struct {
     cl_ulong particle_id;
     cl_float particle_diameter;
     cl_float density;
-    cl_float *fluid_viscosity;
+    cl_float fluid_viscosity;
 
     cl_float3 pos;
     cl_float3 vel;
     cl_float3 forces;
 } particle;
+
+// TODO: Pack or align this correctly. https://stackoverflow.com/questions/35167229/how-to-use-user-defined-structure-in-opencl
 
 #endif //DEMORANGES_PARTICLE_H
