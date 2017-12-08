@@ -133,6 +133,40 @@ printDeviceDetails(cl_uint *platformCount, cl_platform_id *platforms, cl_uint *d
     _getch();
 }
 
+cl_context getContext(cl_device_id **devices) {
+    // Create OpenCL context
+    cl_int ret;
+
+    cl_context context = NULL;
+    context = clCreateContext(NULL, 1, devices[0], NULL, NULL, &ret);
+    printf("[INIT] Create OpenCL context: ");
+    if ((int) ret == 0) {
+        printf("SUCCESS\n");
+    } else {
+        printf("FAILED\n");
+        _getch();
+        return 1;
+    }
+    return context;
+}
+
+cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices) {
+    // Create command queue
+    cl_int ret;
+
+    cl_command_queue queue = NULL;
+    queue = clCreateCommandQueue(*context, *devices[0], 0, &ret);
+    printf("[INIT] Create command queue: ");
+    if ((int) ret == 0) {
+        printf("SUCCESS\n");
+    } else {
+        printf("FAILED\n");
+        _getch();
+        return 1;
+    }
+    return queue;
+}
+
 cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[]) {
 
     FILE *fp;

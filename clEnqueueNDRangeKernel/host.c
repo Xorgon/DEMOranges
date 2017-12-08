@@ -57,34 +57,11 @@ cl_mem g_tstep;
 
 // PROGRAM BEGINS HERE
 int main() {
-
+    // Initializing OpenCL.
     setDevices(&platforms, &devices);
-
-    // Create OpenCL context
-    cl_context context = NULL;
-    context = clCreateContext(NULL, 1, &devices[0], NULL, NULL, &ret);
-    printf("[INIT] Create OpenCL context: ");
-    if ((int) ret == 0) {
-        printf("SUCCESS\n");
-    } else {
-        printf("FAILED\n");
-        _getch();
-        return 1;
-    }
-
+    cl_context context = getContext(&devices);
     cl_kernel kernel = getKernel(&devices, &context, "../clEnqueueNDRangeKernel/propagate.cl", "propagate");
-
-    // Create command queue
-    cl_command_queue queue = NULL;
-    queue = clCreateCommandQueue(context, devices[0], 0, &ret);
-    printf("[INIT] Create command queue: ");
-    if ((int) ret == 0) {
-        printf("SUCCESS\n");
-    } else {
-        printf("FAILED\n");
-        _getch();
-        return 1;
-    }
+    cl_command_queue queue = getCommandQueue(&context, &devices);
 
     // Create memory buffers
     gposold = clCreateBuffer(context, CL_MEM_READ_WRITE, NUMPART * sizeof(cl_float4), NULL, &ret);
