@@ -22,9 +22,6 @@ cl_device_id *devices;
 cl_int ret;
 char string[MEM_SIZE];
 
-// Source file variables
-
-
 // Simulation parameters
 float rho = 2000;               // particle density
 float D = 0.001;                          // particle diameter

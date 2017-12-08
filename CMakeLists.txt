@@ -27,3 +27,9 @@ file(GLOB_RECURSE test_compile_SOURCE_FILES
         "structures/*.h"
         kernels/test_compile.c)
 add_executable(test_compile ${test_compile_SOURCE_FILES})
+
+file(GLOB_RECURSE test_sim_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "structures/*.h"
+        sims/test_host.c)
+add_executable(test_sim ${test_sim_SOURCE_FILES})
