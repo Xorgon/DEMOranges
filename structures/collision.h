@@ -8,8 +8,8 @@
 #include "particle.h"
 
 typedef struct {
-    particle p1;
-    particle p2;
+    cl_ulong p1_id;
+    cl_ulong p2_id;
 
     cl_float stiffness;
     cl_float damping_coefficient;
