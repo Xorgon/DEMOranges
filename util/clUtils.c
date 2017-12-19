@@ -5,11 +5,24 @@
 #include <conio.h>
 #include "clUtils.h"
 
-void setDevices(cl_platform_id **platforms, cl_device_id **devices) {
+void setDevices(cl_platform_id **platforms, cl_device_id **devices, boolean verbose) {
     cl_uint platformCount;
     cl_uint deviceCount;
 
-    printDeviceDetails(&platformCount, *platforms, &deviceCount, *devices);
+    clGetPlatformIDs(0, NULL, &platformCount);
+    *platforms = (cl_platform_id *) malloc(sizeof(cl_platform_id) * platformCount);
+    clGetPlatformIDs(platformCount, *platforms, NULL);
+
+    for (cl_uint i = 0; i < platformCount; i++) {
+        // get all devices
+        clGetDeviceIDs(*platforms[i], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceCount);
+        *devices = (cl_device_id *) malloc(sizeof(cl_device_id) * deviceCount);
+        clGetDeviceIDs(*platforms[i], CL_DEVICE_TYPE_ALL, deviceCount, *devices, NULL);
+    }
+
+    if (verbose) {
+        printDeviceDetails(platformCount, *platforms, deviceCount, *devices);
+    }
 
     // select OpenCL platform and device
     clGetPlatformIDs(0, NULL, &platformCount);
@@ -28,36 +41,27 @@ void setDevices(cl_platform_id **platforms, cl_device_id **devices) {
     clGetDeviceInfo(*devices[0], CL_DEVICE_NAME, 0, NULL, &valueSize);
     value = (char *) malloc(valueSize);
     clGetDeviceInfo(*devices[0], CL_DEVICE_NAME, valueSize, value, NULL);
-    printf("Default computing device selected: %s\n\n", value);
+    if (verbose) printf("Default computing device selected: %s\n\n", value);
     free(value);
 
 }
 
-void
-printDeviceDetails(cl_uint *platformCount, cl_platform_id *platforms, cl_uint *deviceCount, cl_device_id *devices) {
+void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uint deviceCount, cl_device_id *devices) {
 
     cl_uint maxComputeUnits;
     char *value;
     size_t valueSize;
 
-    clGetPlatformIDs(0, NULL, platformCount);
-    platforms = (cl_platform_id *) malloc(sizeof(cl_platform_id) * *platformCount);
-    clGetPlatformIDs(*platformCount, platforms, NULL);
-
-    if (*platformCount == 0) {
+    if (platformCount == 0) {
         printf("No OpenCL platforms available!\n");
     }
 
-    for (cl_uint i = 0; i < *platformCount; i++) {
+    for (cl_uint i = 0; i < platformCount; i++) {
         printf("--------------\n");
         printf(" PLATFORM %d \n", i);
         printf("--------------\n");
-        // get all devices
-        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, 0, NULL, deviceCount);
-        devices = (cl_device_id *) malloc(sizeof(cl_device_id) * *deviceCount);
-        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, *deviceCount, devices, NULL);
         // for each device print critical attributes
-        for (cl_uint j = 0; j < *deviceCount; j++) {
+        for (cl_uint j = 0; j < deviceCount; j++) {
             // print device name
             clGetDeviceInfo(devices[j], CL_DEVICE_NAME, 0, NULL, &valueSize);
             value = (char *) malloc(valueSize);
@@ -133,42 +137,46 @@ printDeviceDetails(cl_uint *platformCount, cl_platform_id *platforms, cl_uint *d
     _getch();
 }
 
-cl_context getContext(cl_device_id **devices) {
+cl_context getContext(cl_device_id **devices, boolean verbose) {
     // Create OpenCL context
     cl_int ret;
 
     cl_context context = NULL;
     context = clCreateContext(NULL, 1, devices[0], NULL, NULL, &ret);
-    printf("[INIT] Create OpenCL context: ");
+    if (verbose) printf("[INIT] Create OpenCL context: ");
     if ((int) ret == 0) {
-        printf("SUCCESS\n");
+        if (verbose) printf("SUCCESS\n");
     } else {
-        printf("FAILED\n");
-        _getch();
+        if (verbose) {
+            printf("FAILED\n");
+            _getch();
+        }
         return 1;
     }
     return context;
 }
 
-cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices) {
+cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, boolean verbose) {
     // Create command queue
     cl_int ret;
 
     cl_command_queue queue = NULL;
     queue = clCreateCommandQueue(*context, *devices[0], 0, &ret);
-    printf("[INIT] Create command queue: ");
+    if (verbose) printf("[INIT] Create command queue: ");
     if ((int) ret == 0) {
-        printf("SUCCESS\n");
+        if (verbose) printf("SUCCESS\n");
     } else {
-        printf("FAILED\n");
-        _getch();
+        if (verbose) {
+            printf("FAILED\n");
+            _getch();
+        }
         return 1;
     }
     return queue;
 }
 
-cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[]) {
 
+cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[], boolean verbose) {
     FILE *fp;
     char *source_str;
     size_t source_size;
@@ -177,7 +185,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     // load source code containing kernel
     fopen_s(&fp, fileName, "r");
     if (!fp) {
-        fprintf(stderr, "Failed to load kernel.\n");
+        if (verbose) fprintf(stderr, "Failed to load kernel.\n");
         exit(1);
     }
     source_str = (char *) malloc(MAX_SOURCE_SIZE);
@@ -187,22 +195,24 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     // Create kernel program from source
     cl_program program = NULL;
     program = clCreateProgramWithSource(*context, 1, (const char **) &source_str, (const size_t *) &source_size, &ret);
-    printf("[INIT] Create kernel program: ");
+    if (verbose) printf("[INIT] Create kernel program: ");
     if ((int) ret == 0) {
-        printf("SUCCESS\n");
+        if (verbose) printf("SUCCESS\n");
     } else {
-        printf("FAILED (%d)\n", ret);
-        _getch();
-        return 1;
+        if (verbose) {
+            printf("FAILED (%d)\n", ret);
+            _getch();
+        }
+        return NULL;
     }
 
     // Build kernel program
     ret = clBuildProgram(program, 1, devices[0], NULL, NULL, NULL);
-    printf("[INIT] Build kernel program: ");
+    if (verbose) printf("[INIT] Build kernel program: ");
     if ((int) ret == 0) {
-        printf("SUCCESS\n");
+        if (verbose) printf("SUCCESS\n");
     } else {
-        printf("FAILED (%d)\n", ret);
+        if (verbose) printf("FAILED (%d)\n", ret);
         // Determine the size of the log
         size_t log_size;
         clGetProgramBuildInfo(program, *devices[0], CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
@@ -213,21 +223,25 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
         clGetProgramBuildInfo(program, *devices[0], CL_PROGRAM_BUILD_LOG, log_size, log, NULL);
 
         // Print the log
-        printf("%s\n", log);
-        _getch();
-        return 1;
+        if (verbose) {
+            printf("%s\n", log);
+            _getch();
+        }
+        return NULL;
     }
 
     // Create OpenCL kernel
     cl_kernel kernel = NULL;
     kernel = clCreateKernel(program, kernelName, &ret);
-    printf("[INIT] Create OpenCL kernel: ");
+    if (verbose) printf("[INIT] Create OpenCL kernel: ");
     if ((int) ret == 0) {
-        printf("SUCCESS\n");
+        if (verbose) printf("SUCCESS\n");
     } else {
-        printf("FAILED (%d)\n", ret);
-        _getch();
-        return 1;
+        if (verbose) {
+            printf("FAILED (%d)\n", ret);
+            _getch();
+        }
+        return NULL;
     }
     return kernel;
 }

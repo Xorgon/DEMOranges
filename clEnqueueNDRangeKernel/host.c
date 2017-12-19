@@ -55,10 +55,10 @@ cl_mem g_tstep;
 // PROGRAM BEGINS HERE
 int main() {
     // Initializing OpenCL.
-    setDevices(&platforms, &devices);
-    cl_context context = getContext(&devices);
-    cl_kernel kernel = getKernel(&devices, &context, "../clEnqueueNDRangeKernel/propagate.cl", "propagate");
-    cl_command_queue queue = getCommandQueue(&context, &devices);
+    setDevices(&platforms, &devices, TRUE);
+    cl_context context = getContext(&devices, TRUE);
+    cl_kernel kernel = getKernel(&devices, &context, "../clEnqueueNDRangeKernel/propagate.cl", "propagate", TRUE);
+    cl_command_queue queue = getCommandQueue(&context, &devices, TRUE);
 
     // Create memory buffers
     gposold = clCreateBuffer(context, CL_MEM_READ_WRITE, NUMPART * sizeof(cl_float4), NULL, &ret);

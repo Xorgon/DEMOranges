@@ -11,14 +11,14 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
-void setDevices(cl_platform_id **platforms, cl_device_id **devices);
+void setDevices(cl_platform_id **platforms, cl_device_id **devices, boolean verbose);
 
-void printDeviceDetails(cl_uint *platformCount, cl_platform_id *id, cl_uint *deviceCount, cl_device_id *devices);
+void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uint deviceCount, cl_device_id *devices);
 
-cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices);
+cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, boolean verbose);
 
-cl_context getContext(cl_device_id **devices);
+cl_context getContext(cl_device_id **devices, boolean verbose);
 
-cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[]);
+cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[], boolean verbose);
 
 #endif //DEMORANGES_CLDEVICEUTILS_H

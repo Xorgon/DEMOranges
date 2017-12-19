@@ -26,10 +26,10 @@ cl_int ret;
 int main() {
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices);
-    cl_context context = getContext(&devices);
-    cl_kernel kernel = getKernel(&devices, &context, "../kernels/iterate_particle.cl", "iterate_particle");
-    cl_command_queue queue = getCommandQueue(&context, &devices);
+    setDevices(&platforms, &devices, TRUE);
+    cl_context context = getContext(&devices, TRUE);
+    cl_kernel kernel = getKernel(&devices, &context, "../kernels/iterate_particle.cl", "iterate_particle", TRUE);
+    cl_command_queue queue = getCommandQueue(&context, &devices, TRUE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
     cl_float density = 2000;
