@@ -4,12 +4,11 @@
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
-
 #include <CL/cl.h>
-
 #endif
 
 #include "../util/clUtils.h"
+#include "../util/particleUtils.h"
 #include "../structures/particle.h"
 
 #define MEM_SIZE (128)
@@ -56,8 +55,8 @@ int main() {
 
     for (cl_ulong i = 0; i < NUMPART; i++) {
         printf("%f\n", hparticles[i].pos.y);
+//        printParticle(&hparticles[i]);
     }
-//    particle p = hparticles[0];
-//    printf("%i\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n", (int) p.particle_id, p.particle_diameter, p.density,
-//           p.fluid_viscosity, p.pos.x, p.pos.y, p.pos.z, p.vel.x, p.vel.y, p.vel.z, p.forces.x, p.forces.y, p.forces.z);
+
+
 }
