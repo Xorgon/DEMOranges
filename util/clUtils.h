@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/cl.h>
+#include "../structures/particle.h"
 
 #define MAX_SOURCE_SIZE (0x100000)
 
@@ -20,5 +21,8 @@ cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, bo
 cl_context getContext(cl_device_id **devices, boolean verbose);
 
 cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[], boolean verbose);
+
+cl_int particlesToDevice(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART);
+cl_int particlesToHost(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART);
 
 #endif //DEMORANGES_CLDEVICEUTILS_H

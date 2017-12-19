@@ -260,3 +260,11 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     }
     return kernel;
 }
+
+cl_int particlesToDevice(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART) {
+    return clEnqueueWriteBuffer(queue, gparticles, CL_TRUE, 0, sizeof(particle) * NUMPART, *hparticles, 0, NULL, NULL);
+}
+
+cl_int particlesToHost(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART){
+    return clEnqueueReadBuffer(queue, gparticles, CL_TRUE, 0, sizeof(particle) * NUMPART, *hparticles, 0, NULL, NULL);
+}

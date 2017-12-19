@@ -7,7 +7,7 @@
 boolean test_particle_struct_alignment(boolean verbose) {
     particle *hparticles;
     cl_mem gparticles;
-    int NUMPART = 10;
+    cl_ulong NUMPART = 10;
 
     cl_platform_id *platforms;
     cl_device_id *devices;
@@ -38,7 +38,7 @@ boolean test_particle_struct_alignment(boolean verbose) {
     gparticles = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(particle) * NUMPART, NULL, &ret);
     gcorrect = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(boolean), NULL, &ret);
 
-    ret = clEnqueueWriteBuffer(queue, gparticles, CL_TRUE, 0, sizeof(particle) * NUMPART, hparticles, 0, NULL, NULL);
+    ret = particlesToDevice(queue, gparticles, &hparticles, NUMPART);
     ret = clEnqueueWriteBuffer(queue, gcorrect, CL_TRUE, 0, sizeof(boolean), &hcorrect, 0, NULL, NULL);
 
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), &gparticles);
@@ -46,7 +46,7 @@ boolean test_particle_struct_alignment(boolean verbose) {
 
     ret = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, (size_t *) &NUMPART, 0, NULL, NULL, NULL);
 
-    ret = clEnqueueReadBuffer(queue, gparticles, CL_TRUE, 0, sizeof(particle) * NUMPART, hparticles, 0, NULL, NULL);
+    ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
     ret = clEnqueueReadBuffer(queue, gcorrect, CL_TRUE, 0, sizeof(boolean), &hcorrect, 0, NULL, NULL);
 
     ret = clFinish(queue);
