@@ -1,38 +1,34 @@
-#pragma warning (disable : 4996)
-
-// Import libraries
-#include <stdio.h>
-#include <stdlib.h>
-#include <CL/cl.h>
-#include <conio.h>
-#include "../util/clUtils.h"
-
-cl_platform_id *platforms;
-cl_device_id *devices;
-
-cl_int ret;
-
-// Source file variables
-char *fileNames[] = {
-        "../kernels/iterate_particle.cl",
-//        "../kernels/make_pp_collisions.cl",
-//        "../kernels/make_pw_collisions.cl",
-        "../kernels/pp_collision.cl",
-        "../kernels/pw_collision.cl",
-//        "../kernels/sort_particles.cl"
-};
-
-char *kernelNames[] = {
-        "iterate_particle",
-//        "make_pp_collisions",
-//        "make_pw_collisions",
-        "pp_collision",
-        "pw_collision",
-//        "sort_particles"
-};
-int files = 3;
+//
+// Created by Elijah on 19/12/2017.
+//
+#include "test_kernels.h"
 
 boolean test_kernels(boolean verbose) {
+    cl_platform_id *platforms;
+    cl_device_id *devices;
+
+    cl_int ret;
+
+    // Source file variables
+    char *fileNames[] = {
+            "../kernels/iterate_particle.cl",
+//        "../kernels/make_pp_collisions.cl",
+//        "../kernels/make_pw_collisions.cl",
+            "../kernels/pp_collision.cl",
+            "../kernels/pw_collision.cl",
+//        "../kernels/sort_particles.cl"
+    };
+
+    char *kernelNames[] = {
+            "iterate_particle",
+//        "make_pp_collisions",
+//        "make_pw_collisions",
+            "pp_collision",
+            "pw_collision",
+//        "sort_particles"
+    };
+    int files = 3;
+
     setDevices(&platforms, &devices, FALSE);
 
     // Create OpenCL context

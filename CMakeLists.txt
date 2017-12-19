@@ -25,7 +25,7 @@ add_executable(clEnqueueNDRangeKernel ${clEnqueueNDRangeKernel_SOURCE_FILES})
 file(GLOB_RECURSE run_tests_SOURCE_FILES
         "util/*.h" "util/*.c"
         "structures/*.h"
-        tests/test_kernels.h)
+        tests/*)
 add_executable(run_tests ${run_tests_SOURCE_FILES} tests/run_tests.c)
 
 file(GLOB_RECURSE test_sim_SOURCE_FILES
