@@ -7,19 +7,10 @@
 #include <conio.h>
 #include "../util/clUtils.h"
 
-// Defining variables
-#define MEM_SIZE (128)
-#define MATH_PI 3.14159265358979323846
-
-// Device and platform info variables
-
 cl_platform_id *platforms;
 cl_device_id *devices;
 
-
-// Debugging strings
 cl_int ret;
-char string[MEM_SIZE];
 
 // Source file variables
 char *fileNames[] = {
@@ -41,27 +32,33 @@ char *kernelNames[] = {
 };
 int files = 3;
 
-// PROGRAM BEGINS HERE
-int main() {
-    setDevices(&platforms, &devices);
+boolean test_kernels(boolean verbose) {
+    setDevices(&platforms, &devices, FALSE);
 
     // Create OpenCL context
     cl_context context = NULL;
     context = clCreateContext(NULL, 1, &devices[0], NULL, NULL, &ret);
-    printf("[INIT] Create OpenCL context: ");
+    if (verbose) printf("[INIT] Create OpenCL context: ");
+
     if ((int) ret == 0) {
-        printf("SUCCESS\n");
+        if (verbose) printf("SUCCESS\n");
     } else {
-        printf("FAILED\n");
+        if (verbose) printf("FAILED\n");
         _getch();
-        return 1;
+        return FALSE;
     }
 
     for (int i = 0; i < files; i++) {
 
-        printf("\nKernel file: %s\n", fileNames[i]);
-        printf("Kernel name: %s\n", kernelNames[i]);
+        if (verbose) {
+            printf("\nKernel file: %s\n", fileNames[i]);
+            printf("Kernel name: %s\n", kernelNames[i]);
+        }
 
-        cl_kernel kernel = getKernel(&devices, &context, fileNames[i], kernelNames[i]);
+        cl_kernel kernel = getKernel(&devices, &context, fileNames[i], kernelNames[i], verbose);
+        if (kernel == NULL) {
+            return FALSE;
+        }
     }
+    return TRUE;
 }
