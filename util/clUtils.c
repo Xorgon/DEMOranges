@@ -175,12 +175,25 @@ cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, bo
     return queue;
 }
 
-
+//TODO: Add boolean to only optionally include utils and make util includes work.
 cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[], boolean verbose) {
     FILE *fp;
     char *source_str;
     size_t source_size;
+
+    char *utils_str;
+    size_t utils_size;
     cl_int ret;
+
+    // load source code containing utilities.
+    fopen_s(&fp, "../util/kernelUtils.cl", "r");
+    if (!fp) {
+        fprintf(stderr, "Failed to load util file.\n");
+        exit(1);
+    }
+    utils_str = (char *) malloc(MAX_SOURCE_SIZE);
+    utils_size = fread(utils_str, 1, MAX_SOURCE_SIZE, fp);
+    fclose(fp);
 
     // load source code containing kernel
     fopen_s(&fp, fileName, "r");
@@ -192,9 +205,11 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
     fclose(fp);
 
+    const char *strings[] = {utils_str, source_str};
+    const size_t sizes[] = {utils_size, source_size};
     // Create kernel program from source
     cl_program program = NULL;
-    program = clCreateProgramWithSource(*context, 1, (const char **) &source_str, (const size_t *) &source_size, &ret);
+    program = clCreateProgramWithSource(*context, 2, strings, sizes, &ret);
     if (verbose) printf("[INIT] Create kernel program: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
