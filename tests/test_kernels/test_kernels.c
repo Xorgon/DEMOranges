@@ -14,8 +14,8 @@ boolean test_kernels(boolean verbose) {
             "../kernels/iterate_particle.cl",
 //        "../kernels/make_pp_collisions.cl",
 //        "../kernels/make_pw_collisions.cl",
-            "../kernels/pp_collision.cl",
-            "../kernels/pw_collision.cl",
+            "../kernels/calculate_pp_collision.cl",
+            "../kernels/calculate_pw_collision.cl",
 //        "../kernels/sort_particles.cl"
     };
 
@@ -23,8 +23,8 @@ boolean test_kernels(boolean verbose) {
             "iterate_particle",
 //        "make_pp_collisions",
 //        "make_pw_collisions",
-            "pp_collision",
-            "pw_collision",
+            "calculate_pp_collision",
+            "calculate_pw_collision",
 //        "sort_particles"
     };
     int files = 3;

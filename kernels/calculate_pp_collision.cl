@@ -1,4 +1,4 @@
 /* Kernel to calculate particle-particle collisions. */
 
-__kernel void pp_collision(
+__kernel void calculate_pp_collision(
 ) {}
