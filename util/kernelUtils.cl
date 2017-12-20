@@ -36,3 +36,19 @@ void atomicAdd_g_f(volatile __global float *addr, float val) {
        current.u32 = atomic_cmpxchg((volatile __global unsigned int *)addr, expected.u32, next.u32);
    } while(current.u32 != expected.u32);
 }
+
+void atomicAdd_float3(volatile __global float3 *addr, float3 val) {
+   union {
+       volatile __global float *array[4];
+       volatile __global float3 *vect;
+   } vector;
+   union {
+       float array[4];
+       float3 vect;
+   } to_add;
+   vector.vect = addr;
+   to_add.vect = val;
+   for (int i = 0; i < 3; i++) {
+       atomicAdd_g_f(&(*vector.array)[i], to_add.array[i]);
+   }
+}
