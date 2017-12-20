@@ -11,9 +11,10 @@
 #include <conio.h>
 #include "../../util/clUtils.h"
 #include "../../structures/particle.h"
+#include "../../structures/collision.h"
 
 boolean test_particle_struct_alignment(boolean verbose);
-boolean test_collision_struct_alignment(boolean verbose);
+boolean test_pp_collision_struct_alignment(boolean verbose);
 boolean test_wall_struct_alignment(boolean verbose);
 
 #endif //DEMORANGES_TEST_ALIGNMENT_H

@@ -18,5 +18,10 @@ int main() {
         return 1;
     }
 
+    if (!test_pp_collision_struct_alignment(VERBOSE)) {
+        fprintf(stderr, "FAILED AT test_pp_collision_struct_alignment");
+        return 1;
+    }
+
     printf("All tests passed.");
 }
