@@ -265,6 +265,18 @@ cl_int particlesToDevice(cl_command_queue queue, cl_mem gparticles, particle **h
     return clEnqueueWriteBuffer(queue, gparticles, CL_TRUE, 0, sizeof(particle) * NUMPART, *hparticles, 0, NULL, NULL);
 }
 
-cl_int particlesToHost(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART){
+cl_int particlesToHost(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART) {
     return clEnqueueReadBuffer(queue, gparticles, CL_TRUE, 0, sizeof(particle) * NUMPART, *hparticles, 0, NULL, NULL);
+}
+
+cl_int
+pp_collisionsToDevice(cl_command_queue queue, cl_mem gpp_collisions, pp_collision **hpp_collisions, cl_ulong NUMCOLS) {
+    return clEnqueueWriteBuffer(queue, gpp_collisions, CL_TRUE, 0, sizeof(pp_collision) * NUMCOLS, *hpp_collisions, 0,
+                                NULL, NULL);
+}
+
+cl_int
+pp_collisionsToHost(cl_command_queue queue, cl_mem gpp_collisions, pp_collision **hpp_collisions, cl_ulong NUMCOLS) {
+    return clEnqueueReadBuffer(queue, gpp_collisions, CL_TRUE, 0, sizeof(pp_collision) * NUMCOLS, *hpp_collisions, 0,
+                               NULL, NULL);
 }
