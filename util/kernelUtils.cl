@@ -9,14 +9,14 @@ typedef struct {
 } __attribute__ ((aligned (128))) particle;
 
 typedef struct {
-    particle p1;
-    particle p2;
+    ulong p1_id;
+    ulong p2_id;
 
     float stiffness;
     float damping_coefficient;
     float friction_coefficient;
     float friction_stiffness;
-} particle_collision;
+} __attribute__ ((aligned (128))) pp_collision;
 
 typedef struct {
     float3 normal;
