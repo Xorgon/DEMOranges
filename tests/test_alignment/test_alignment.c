@@ -30,8 +30,8 @@ boolean test_particle_struct_alignment(boolean verbose) {
         hparticles[i].pos = (cl_float3) {20, 21, 22};
         hparticles[i].vel = (cl_float3) {23, 24, 25};
         hparticles[i].forces = (cl_float3) {26, 27, 28};
-        hparticles[i].particle_id = 29;
-        hparticles[i].particle_diameter = 30;
+        hparticles[i].id = 29;
+        hparticles[i].diameter = 30;
         hparticles[i].density = 31;
         hparticles[i].fluid_viscosity = 32;
     }
@@ -66,8 +66,8 @@ boolean test_particle_struct_alignment(boolean verbose) {
               p.forces.x == 86 &&
               p.forces.y == 87 &&
               p.forces.z == 88 &&
-              p.particle_id == 89 &&
-              p.particle_diameter == 90 &&
+              p.id == 89 &&
+              p.diameter == 90 &&
               p.density == 91 &&
               p.fluid_viscosity == 92)) {
             hcorrect = FALSE;

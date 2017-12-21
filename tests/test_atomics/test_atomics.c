@@ -28,8 +28,8 @@ boolean test_atomics(boolean verbose) {
         hparticles[i].pos = (cl_float3) {0, 0, 0};
         hparticles[i].vel = (cl_float3) {23, 24, 25};
         hparticles[i].forces = (cl_float3) {26, 27, 28};
-        hparticles[i].particle_id = 29;
-        hparticles[i].particle_diameter = 30;
+        hparticles[i].id = 29;
+        hparticles[i].diameter = 30;
         hparticles[i].density = 31;
         hparticles[i].fluid_viscosity = 32;
     }

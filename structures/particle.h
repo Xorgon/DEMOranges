@@ -11,8 +11,8 @@ typedef struct {
     cl_float3 pos;
     cl_float3 vel;
     cl_float3 forces;
-    cl_ulong particle_id;
-    cl_float particle_diameter;
+    cl_ulong id;
+    cl_float diameter;
     cl_float density;
     cl_float fluid_viscosity;
     cl_char padding[56];

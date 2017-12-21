@@ -2,8 +2,8 @@ typedef struct {
     float3 pos;
     float3 vel;
     float3 forces;
-    ulong particle_id;
-    float particle_diameter;
+    ulong id;
+    float diameter;
     float density;
     float fluid_viscosity;
 } __attribute__ ((aligned (128))) particle;
