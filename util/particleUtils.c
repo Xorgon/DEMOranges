@@ -6,6 +6,15 @@
 
 void printParticle(particle *part) {
     particle p = *part;
-    printf("%i\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n", (int) p.particle_id, p.particle_diameter, p.density,
+    printf("%i\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n", (int) p.id, p.diameter, p.density,
            p.fluid_viscosity, p.pos.x, p.pos.y, p.pos.z, p.vel.x, p.vel.y, p.vel.z, p.forces.x, p.forces.y, p.forces.z);
+}
+
+void writeParticles(particle *particles, float time, char prefix[], char dir[], cl_ulong NUMPART) {
+    char filename[500];
+    sprintf(filename, "%s%s_%i.txt", dir, prefix, (int) roundf(time * 1000));
+    FILE *fd = fopen(filename, "w");
+    for (int i = 0; i < NUMPART; i++) {
+        fprintf(fd, "%f,%f,%f\n", particles[i].vel.x, particles[i].vel.y, particles[i].vel.z);
+    }
 }
