@@ -6,7 +6,7 @@
 #include "test_alignment/test_alignment.h"
 #include "test_atomics/test_atomics.h"
 
-#define VERBOSE FALSE
+#define VERBOSE TRUE
 
 int main() {
     if (!test_kernels(VERBOSE)) {
