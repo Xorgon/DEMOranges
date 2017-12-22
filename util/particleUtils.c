@@ -17,4 +17,9 @@ void writeParticles(particle *particles, float time, char prefix[], char dir[], 
     for (int i = 0; i < NUMPART; i++) {
         fprintf(fd, "%f,%f,%f\n", particles[i].pos.x, particles[i].pos.y, particles[i].pos.z);
     }
+    fclose(fd);
+}
+
+float get_particle_mass(particle *p) {
+    return (float) ((*p).density * PI * powf((*p).diameter, 3) / 6);
 }
