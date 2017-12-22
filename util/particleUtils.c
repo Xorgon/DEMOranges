@@ -15,6 +15,6 @@ void writeParticles(particle *particles, float time, char prefix[], char dir[], 
     sprintf(filename, "%s%s_%i.txt", dir, prefix, (int) roundf(time * 1000));
     FILE *fd = fopen(filename, "w");
     for (int i = 0; i < NUMPART; i++) {
-        fprintf(fd, "%f,%f,%f\n", particles[i].vel.x, particles[i].vel.y, particles[i].vel.z);
+        fprintf(fd, "%f,%f,%f\n", particles[i].pos.x, particles[i].pos.y, particles[i].pos.z);
     }
 }

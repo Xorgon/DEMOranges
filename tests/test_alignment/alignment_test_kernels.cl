@@ -10,8 +10,8 @@ __kernel void test_particle_struct_alignment(__global particle *particles, __glo
               particles[gid].forces.x == 26 &&
               particles[gid].forces.y == 27 &&
               particles[gid].forces.z == 28 &&
-              particles[gid].particle_id == 29 &&
-              particles[gid].particle_diameter == 30 &&
+              particles[gid].id == 29 &&
+              particles[gid].diameter == 30 &&
               particles[gid].density == 31 &&
               particles[gid].fluid_viscosity == 32)) {
             *correct = false;
@@ -26,8 +26,8 @@ __kernel void test_particle_struct_alignment(__global particle *particles, __glo
         particles[gid].forces.x = 86;
         particles[gid].forces.y = 87;
         particles[gid].forces.z = 88;
-        particles[gid].particle_id = 89;
-        particles[gid].particle_diameter = 90;
+        particles[gid].id = 89;
+        particles[gid].diameter = 90;
         particles[gid].density = 91;
         particles[gid].fluid_viscosity = 92;
 }
