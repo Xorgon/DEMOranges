@@ -62,6 +62,9 @@ int main() {
                     cl_float xf = 0.15 * (-0.5 + ((float) x / cubert_NUMPART) + 0.01);
                     cl_float yf = 0.15 * (-0.5 + ((float) y / cubert_NUMPART) + 0.01);
                     cl_float zf = 0.15 * (-0.5 + ((float) z / cubert_NUMPART) + 0.01);
+                    cl_float xf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) x / cubert_NUMPART));
+                    cl_float yf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) y / cubert_NUMPART));
+                    cl_float zf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) z / cubert_NUMPART));
                     positions[pos_len] = (cl_float3) {xf, yf, zf};
                 }
                 pos_len++;
