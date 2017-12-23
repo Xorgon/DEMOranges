@@ -57,3 +57,5 @@ dkms.conf
 
 # CMake Output
 cmake-build*
+
+runs/*
