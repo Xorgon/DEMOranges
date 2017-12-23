@@ -7,11 +7,7 @@ float get_mass(particle p) {
 }
 
 float3 get_gravity(particle p, float delta_t) {
-    if (length(p.pos) == 0){
-        return (float3) {0, 0, 0};
-    } else {
-        return 0.05 * normalize(- p.pos) / length(p.pos);
-    }
+    return -9.81 * normalize(p.pos);
 }
 
 float3 get_vel_fluid(particle p, float delta_t) {
