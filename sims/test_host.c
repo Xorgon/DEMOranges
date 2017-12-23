@@ -1,14 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
-
 #include <CL/cl.h>
-
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "../util/clUtils.h"
 #include "../util/particleUtils.h"
 #include "../util/collisionUtils.h"
@@ -20,14 +17,14 @@
 
 particle *hparticles;
 cl_mem gparticles;
-cl_ulong NUMPART = 1000;
+cl_ulong NUMPART = 10000;
 
 pp_collision *hpp_cols;
 cl_mem gpp_cols;
 cl_ulong MAXCOLS;
 cl_ulong NUMCOLS;
 
-cl_float timestep = 1e-4;
+cl_float timestep = 0.0005;
 cl_float sim_length = 10;
 cl_float last_write = 0;
 cl_float log_step = 0.0333;
@@ -39,7 +36,7 @@ cl_int ret;
 int main() {
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, TRUE);
+    setDevices(&platforms, &devices, FALSE);
     cl_context context = getContext(&devices, TRUE);
     cl_kernel iterate_particle = getKernel(&devices, &context, "../kernels/iterate_particle.cl",
                                            "iterate_particle", TRUE);
@@ -48,20 +45,26 @@ int main() {
     cl_command_queue queue = getCommandQueue(&context, &devices, TRUE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
+    if (hparticles == NULL) {
+        fprintf(stderr, "Particles memory allocation failed.");
+    }
     cl_float density = 2000;
-    cl_float particle_diameter = 0.01;
-    cl_float fluid_viscosity = 0.0000193;
+    cl_float particle_diameter = 0.1;
+    cl_float fluid_viscosity = 0.0000193 * 100;
 
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
+
+    if (positions == NULL) {
+        fprintf(stderr, "Position memory allocation failed.");
+    }
+
+    printf("[INIT] Creating particle positions.\n");
     cl_ulong pos_len = 0;
     auto cubert_NUMPART = (cl_ulong) ceil(pow(NUMPART, 0.334));
     for (int x = 0; x < cubert_NUMPART; x++) {
         for (int y = 0; y < cubert_NUMPART; y++) {
             for (int z = 0; z < cubert_NUMPART; z++) {
                 if (pos_len < NUMPART) {
-                    cl_float xf = 0.15 * (-0.5 + ((float) x / cubert_NUMPART) + 0.01);
-                    cl_float yf = 0.15 * (-0.5 + ((float) y / cubert_NUMPART) + 0.01);
-                    cl_float zf = 0.15 * (-0.5 + ((float) z / cubert_NUMPART) + 0.01);
                     cl_float xf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) x / cubert_NUMPART));
                     cl_float yf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) y / cubert_NUMPART));
                     cl_float zf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) z / cubert_NUMPART));
@@ -71,7 +74,6 @@ int main() {
             }
         }
     }
-
     for (cl_ulong i = 0; i < NUMPART; i++) {
         hparticles[i].id = i;
         hparticles[i].density = density;
@@ -82,13 +84,19 @@ int main() {
         hparticles[i].forces = (cl_float3) {0.0, 0.0, 0.0};
     }
 
-    MAXCOLS = (cl_ulong) ceil(NUMPART * (NUMPART + 1) / 2);
-    hpp_cols = malloc(sizeof(pp_collision) * MAXCOLS);
+    MAXCOLS = (cl_ulong) (NUMPART * (NUMPART + 1) / 2);
+    cl_ulong size = sizeof(pp_collision) * MAXCOLS;
+    hpp_cols = malloc(size);
 
-    cl_float stiffness = 5e4;
+    if (hpp_cols == NULL) {
+        fprintf(stderr, "Collision memory allocation failed.");
+    }
+
+    cl_float stiffness = 1e5;
     cl_float friction_coefficient = 0.6;
     cl_float friction_stiffness = 1e5;
 
+    printf("[INIT] Creating particle-particle collisions.\n");
     NUMCOLS = 0;
     for (cl_ulong i = 0; i < NUMPART; i++) {
         for (cl_ulong j = i + 1; j < NUMPART; j++) {
@@ -97,12 +105,15 @@ int main() {
             hpp_cols[NUMCOLS].stiffness = stiffness;
             hpp_cols[NUMCOLS].friction_coefficient = friction_coefficient;
             hpp_cols[NUMCOLS].friction_stiffness = friction_stiffness;
-            hpp_cols[NUMCOLS].damping_coefficient = get_damping_coefficient(0.1, 5e4, get_reduced_particle_mass(
+            hpp_cols[NUMCOLS].damping_coefficient = get_damping_coefficient(0.8, stiffness, get_reduced_particle_mass(
                     &hparticles[i], &hparticles[j]));
             NUMCOLS++;
         }
     }
 
+
+    printf("\nRunning sim with %i particles.\n", NUMPART);
+    printf("Logging at time: 0.000000\n");
     writeParticles(hparticles, 0, "TEST", "", NUMPART);
 
     gparticles = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(particle) * NUMPART, NULL, &ret);
@@ -129,6 +140,4 @@ int main() {
             last_write = time;
         }
     }
-
-
 }
