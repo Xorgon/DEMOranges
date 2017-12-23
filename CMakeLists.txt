@@ -3,30 +3,36 @@ project(DEMOranges)
 set(CMAKE_CXX_STANDARD 11)
 
 # Fix Windows path environment variable.
-STRING(REGEX REPLACE "\\\\" "/" OCL_ROOT $ENV{OCL_ROOT})
+if (WIN32)
+    STRING(REGEX REPLACE "\\\\" "/" OCL_ROOT $ENV{OCL_ROOT})
+endif(WIN32)
 
 # Set required OpenCL CMake build options.
 set(OpenCL_INCLUDE_DIR ${OCL_ROOT}/include/)
-set(OpenCL_LIBRARY ${OCL_ROOT}/lib/x86/OpenCL.lib)
+set(OpenCL_LIBRARY ${OCL_ROOT}/lib/x86_64/OpenCL.lib)
 
 # Add OpenCL stuff.
-include_directories($ENV{OCL_ROOT}/include/)
-link_libraries($ENV{OCL_ROOT}/lib/x86/OpenCL.lib)
 find_package(OpenCL REQUIRED)
+#add_library(OpenCL ${OpenCL_LIBRARY})
+include_directories(${OpenCL_INCLUDE_DIR})
+#SET_TARGET_PROPERTIES(OpenCL PROPERTIES LINKER_LANGUAGE C)
 
-include_directories($ENV{OCL_ROOT}/include/CL/)
 
-file(GLOB_RECURSE clEnqueueNDRangeKernel_SOURCE_FILES
-        "util/*.h" "util/*.c"
-        "structures/*.h"
-        clEnqueueNDRangeKernel/host.c)
-add_executable(clEnqueueNDRangeKernel ${clEnqueueNDRangeKernel_SOURCE_FILES})
+# Targets
 
 file(GLOB_RECURSE run_tests_SOURCE_FILES
         "util/*.h" "util/*.c"
         "structures/*.h"
         tests/*)
 add_executable(run_tests ${run_tests_SOURCE_FILES} tests/run_tests.c)
+target_link_libraries(run_tests ${OpenCL_LIBRARY})
+
+file(GLOB_RECURSE clEnqueueNDRangeKernel_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "structures/*.h"
+        clEnqueueNDRangeKernel/host.c)
+add_executable(clEnqueueNDRangeKernel ${clEnqueueNDRangeKernel_SOURCE_FILES})
+target_link_libraries(clEnqueueNDRangeKernel ${OpenCL_LIBRARY})
 
 file(GLOB_RECURSE test_sim_SOURCE_FILES
         "util/*.h" "util/*.c"
@@ -34,3 +40,6 @@ file(GLOB_RECURSE test_sim_SOURCE_FILES
         "structures/*.h" "util/kernelUtils.cl"
         sims/test_host.c)
 add_executable(test_sim ${test_sim_SOURCE_FILES})
+target_link_libraries(test_sim ${OpenCL_LIBRARY})
+
+#SET(CMAKE_VERBOSE_MAKEFILE ON)

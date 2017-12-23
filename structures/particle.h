@@ -7,7 +7,7 @@
 
 #include <CL/cl_platform.h>
 
-typedef struct {
+typedef struct particle {
     cl_float3 pos;
     cl_float3 vel;
     cl_float3 forces;
@@ -19,7 +19,7 @@ typedef struct {
 // Structure memory alignment for Visual Studio and GCC compilers.
 #if defined(_MSC_VER)
 } __declspec(align(128)) particle;
-#elif defined(__GNUC) || defined(__GNUG__)
+#elif defined(__GNUC) || defined(__GNUG__) || defined(__MINGW_GCC_VERSION)
 } __attribute__((aligned (128))) particle;
 #endif
 

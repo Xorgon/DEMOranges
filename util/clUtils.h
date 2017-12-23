@@ -10,8 +10,17 @@
 #include <CL/cl.h>
 #include "../structures/particle.h"
 #include "../structures/collision.h"
+#include <stdbool.h>
+#include <conio.h>
 
 #define MAX_SOURCE_SIZE (0x100000)
+
+// Boolean definitions for gcc.
+#if defined(__MINGW_GCC_VERSION)
+#define boolean bool
+#define TRUE true
+#define FALSE false
+#endif
 
 void setDevices(cl_platform_id **platforms, cl_device_id **devices, boolean verbose);
 

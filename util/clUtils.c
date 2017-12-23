@@ -2,7 +2,6 @@
 // Created by Elijah on 05/12/2017.
 //
 
-#include <conio.h>
 #include "clUtils.h"
 
 void setDevices(cl_platform_id **platforms, cl_device_id **devices, boolean verbose) {
@@ -151,7 +150,7 @@ cl_context getContext(cl_device_id **devices, boolean verbose) {
             printf("FAILED\n");
             _getch();
         }
-        return 1;
+        return NULL;
     }
     return context;
 }
@@ -170,7 +169,7 @@ cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, bo
             printf("FAILED\n");
             _getch();
         }
-        return 1;
+        return NULL;
     }
     return queue;
 }

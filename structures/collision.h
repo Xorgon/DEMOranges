@@ -7,7 +7,7 @@
 
 #include <CL/cl_platform.h>
 
-typedef struct {
+typedef struct pp_collision {
     cl_ulong p1_id;
     cl_ulong p2_id;
 
@@ -19,7 +19,7 @@ typedef struct {
 // Structure memory alignment for Visual Studio and GCC compilers.
 #if defined(_MSC_VER)
 } __declspec(align(128)) pp_collision;
-#elif defined(__GNUC) || defined(__GNUG__)
+#elif defined(__GNUC) || defined(__GNUG__ ) || defined(__MINGW_GCC_VERSION)
 } __attribute__((aligned (128))) pp_collision;
 #endif
 
