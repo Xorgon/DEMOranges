@@ -5,6 +5,7 @@
 #include "test_kernels/test_kernels.h"
 #include "test_alignment/test_alignment.h"
 #include "test_atomics/test_atomics.h"
+#include "test_assign_particles/test_assign_particles.h"
 
 #define VERBOSE TRUE
 
@@ -29,5 +30,10 @@ int main() {
         return 1;
     }
 
-    printf("All tests passed.");
+    if (!test_assign_particle_count(VERBOSE)) {
+        fprintf(stderr, "FAILED AT test_assign_particle_count");
+        return 1;
+    }
+
+    printf("\nAll tests passed.");
 }
