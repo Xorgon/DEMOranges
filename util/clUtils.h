@@ -42,4 +42,10 @@ pp_collisionsToDevice(cl_command_queue queue, cl_mem gpp_collisions, pp_collisio
 cl_int
 pp_collisionsToHost(cl_command_queue queue, cl_mem gpp_collisions, pp_collision **hpp_collisions, cl_ulong NUMCOLS);
 
+cl_int particle_count_arrayToDevice(cl_command_queue queue, cl_mem gparticle_count_array,
+                                    cl_int **particle_count_array, cl_ulong NUMCVS);
+
+cl_int particle_count_arrayToHost(cl_command_queue queue, cl_mem gparticle_count_array, cl_int **particle_count_array,
+                                  cl_ulong NUMCVS);
+
 #endif //DEMORANGES_CLDEVICEUTILS_H

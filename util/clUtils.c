@@ -279,3 +279,15 @@ pp_collisionsToHost(cl_command_queue queue, cl_mem gpp_collisions, pp_collision 
     return clEnqueueReadBuffer(queue, gpp_collisions, CL_TRUE, 0, sizeof(pp_collision) * NUMCOLS, *hpp_collisions, 0,
                                NULL, NULL);
 }
+
+cl_int particle_count_arrayToDevice(cl_command_queue queue, cl_mem gparticle_count_array, cl_int **particle_count_array,
+                                    cl_ulong NUMCVS) {
+    return clEnqueueWriteBuffer(queue, gparticle_count_array, CL_TRUE, 0, sizeof(cl_int) * NUMCVS,
+                                *particle_count_array, 0, NULL, NULL);
+}
+
+cl_int particle_count_arrayToHost(cl_command_queue queue, cl_mem gparticle_count_array, cl_int **particle_count_array,
+                                  cl_ulong NUMCVS) {
+    return clEnqueueReadBuffer(queue, gparticle_count_array, CL_TRUE, 0, sizeof(cl_int) * NUMCVS, *particle_count_array,
+                               0, NULL, NULL);
+}
