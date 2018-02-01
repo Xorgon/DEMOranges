@@ -1,7 +1,9 @@
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
+
 #include <CL/cl.h>
+
 #endif
 
 #include <stdio.h>
@@ -9,6 +11,7 @@
 #include "../util/clUtils.h"
 #include "../util/particleUtils.h"
 #include "../util/collisionUtils.h"
+#include "../util/cvUtils.h"
 #include "../structures/particle.h"
 #include "../structures/collision.h"
 
@@ -29,6 +32,22 @@ cl_float sim_length = 10;
 cl_float last_write = 0;
 cl_float log_step = 0.0333;
 
+cl_float cv_length;
+uint16_t cvs_per_edge;
+cl_float domain_length = 6;
+cl_ulong NUMCVS; // Total number of CVs.
+
+cl_int *particle_count_array; // Array of CVs with just the number of particles in each CV.
+cl_int *input_count_array; // Array of CVs with a count of how many particles have been input for each CV.
+cl_ulong *cv_array_starts; // Array of CVs with the index of where the CV starts in cv_pids.
+cl_ulong *cv_pids; // Array of particle IDs, sorted into CVs. Referenced with cv_array_starts and particle_count_array.
+
+// Device memory copies of the above arrays.
+cl_mem gparticle_count_array;
+cl_mem ginput_count_array;
+cl_mem gcv_array_starts;
+cl_mem gcv_pids;
+
 cl_platform_id *platforms;
 cl_device_id *devices;
 cl_int ret;
@@ -42,12 +61,15 @@ int main() {
                                            "iterate_particle", TRUE);
     cl_kernel calculate_pp_collision = getKernel(&devices, &context, "../kernels/calculate_pp_collision.cl",
                                                  "calculate_pp_collision", TRUE);
+    cl_kernel assign_particle_count = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+                                                "assign_particle_count", TRUE);
     cl_command_queue queue = getCommandQueue(&context, &devices, TRUE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
     if (hparticles == NULL) {
         fprintf(stderr, "Particles memory allocation failed.");
     }
+
     cl_float density = 2000;
     cl_float particle_diameter = 0.1;
     cl_float fluid_viscosity = 0.0000193 * 100;
@@ -83,6 +105,14 @@ int main() {
         hparticles[i].vel = (cl_float3) {0.0, 0.0, 0.0};
         hparticles[i].forces = (cl_float3) {0.0, 0.0, 0.0};
     }
+
+
+    printf("[INIT] Creating particle count CV array.");
+    create_domain_count_cvs(&particle_count_array, &cv_length, &cvs_per_edge, domain_length, particle_diameter);
+    NUMCVS = cvs_per_edge * cvs_per_edge * cvs_per_edge;
+    gparticle_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
+    particle_count_arrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+
 
     MAXCOLS = (cl_ulong) (NUMPART * (NUMPART + 1) / 2);
     cl_ulong size = sizeof(pp_collision) * MAXCOLS;
