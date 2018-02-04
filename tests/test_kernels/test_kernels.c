@@ -15,6 +15,7 @@ boolean test_kernels(boolean verbose) {
     char *fileNames[] = {
             "../kernels/iterate_particle.cl",
             "../kernels/assign_particles.cl",
+            "../kernels/assign_particles.cl",
 //        "../kernels/make_pp_collisions.cl",
 //        "../kernels/make_pw_collisions.cl",
             "../kernels/calculate_pp_collision.cl",
@@ -25,6 +26,7 @@ boolean test_kernels(boolean verbose) {
     char *kernelNames[] = {
             "iterate_particle",
             "assign_particle_count",
+            "assign_particles",
 //        "make_pp_collisions",
 //        "make_pw_collisions",
             "calculate_pp_collision",

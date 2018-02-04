@@ -12,4 +12,15 @@ __kernel void assign_particle_count(__global particle *particles, __global int *
 
 /* Kernel to assign particles to control volumes. */
 
-__kernel void assign_particles() {}
+__kernel void assign_particles(__global particle *particles, __global ulong *cv_start_array,
+                               __global int *input_count_array, __global ulong *cv_pids) {
+    int gid = get_global_id(0); // Equivalent to particle ID.
+    int cv_array_idx = particles[gid].cv_array_idx;
+    int cv_pid_mini_idx = atomic_inc(&(input_count_array[cv_array_idx])); // Index within the CV.
+    if (cv_start_array[cv_array_idx] == (ulong) -1) {
+        printf("WARNING: Particle assigned to array with particle count of 0.");
+        return;
+    }
+    int cv_pid_idx = cv_start_array[cv_array_idx] + cv_pid_mini_idx;
+    cv_pids[cv_pid_idx] = gid;
+}
