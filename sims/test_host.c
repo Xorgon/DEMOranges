@@ -33,19 +33,19 @@ cl_float last_write = 0;
 cl_float log_step = 0.0333;
 
 cl_float cv_length;
-uint16_t cvs_per_edge;
+cl_int cvs_per_edge;
 cl_float domain_length = 6;
 cl_ulong NUMCVS; // Total number of CVs.
 
 cl_int *particle_count_array; // Array of CVs with just the number of particles in each CV.
 cl_int *input_count_array; // Array of CVs with a count of how many particles have been input for each CV.
-cl_ulong *cv_array_starts; // Array of CVs with the index of where the CV starts in cv_pids.
-cl_ulong *cv_pids; // Array of particle IDs, sorted into CVs. Referenced with cv_array_starts and particle_count_array.
+cl_ulong *cv_start_array; // Array of CVs with the index of where the CV starts in cv_pids.
+cl_ulong *cv_pids; // Array of particle IDs, sorted into CVs. Referenced with cv_start_array and particle_count_array.
 
 // Device memory copies of the above arrays.
 cl_mem gparticle_count_array;
 cl_mem ginput_count_array;
-cl_mem gcv_array_starts;
+cl_mem gcv_start_array;
 cl_mem gcv_pids;
 
 cl_platform_id *platforms;
@@ -63,6 +63,8 @@ int main() {
                                                  "calculate_pp_collision", TRUE);
     cl_kernel assign_particle_count = getKernel(&devices, &context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", TRUE);
+    cl_kernel assign_particles = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+                                                "assign_particles", TRUE);
     cl_command_queue queue = getCommandQueue(&context, &devices, TRUE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
@@ -107,12 +109,19 @@ int main() {
     }
 
 
-    printf("[INIT] Creating particle count CV array.");
+    printf("[INIT] Creating CV arrays.");
     create_domain_count_cvs(&particle_count_array, &cv_length, &cvs_per_edge, domain_length, particle_diameter);
-    NUMCVS = cvs_per_edge * cvs_per_edge * cvs_per_edge;
+    NUMCVS = (cl_ulong) cvs_per_edge * cvs_per_edge * cvs_per_edge;
     gparticle_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
-    intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
 
+    cv_start_array = malloc(sizeof(cl_ulong) * NUMCVS);
+    gcv_start_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong) * NUMCVS, NULL, &ret);
+
+    input_count_array = calloc(NUMCVS, sizeof(cl_int));
+    ginput_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
+
+    cv_pids = malloc(sizeof(cl_ulong) * NUMPART);
+    gcv_pids = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong) * NUMCVS, NULL, &ret);
 
     MAXCOLS = (cl_ulong) (NUMPART * (NUMPART + 1) / 2);
     cl_ulong size = sizeof(pp_collision) * MAXCOLS;
@@ -158,7 +167,34 @@ int main() {
     ret = particlesToDevice(queue, gparticles, &hparticles, NUMPART);
     ret = pp_collisionsToDevice(queue, gpp_cols, &hpp_cols, NUMCOLS);
 
+    ret = clSetKernelArg(assign_particle_count, 0, sizeof(cl_mem), &gparticles);
+    ret = clSetKernelArg(assign_particle_count, 1, sizeof(cl_mem), &gparticle_count_array);
+    ret = clSetKernelArg(assign_particle_count, 2, sizeof(cl_float), &domain_length);
+    ret = clSetKernelArg(assign_particle_count, 3, sizeof(cl_float), &cv_length);
+    ret = clSetKernelArg(assign_particle_count, 4, sizeof(cl_int), &cvs_per_edge);
+
+    ret = clSetKernelArg(assign_particles, 0, sizeof(cl_mem), &gparticles);
+    ret = clSetKernelArg(assign_particles, 1, sizeof(cl_mem), &gcv_start_array);
+    ret = clSetKernelArg(assign_particles, 2, sizeof(cl_mem), &ginput_count_array);
+    ret = clSetKernelArg(assign_particles, 3, sizeof(cl_mem), &gcv_pids);
+
     for (cl_float time = timestep; time <= sim_length; time += timestep) {
+
+        // Count how many particles are in each CV.
+        memset(particle_count_array, 0, sizeof(cl_int) * NUMCVS); // Reset counts to 0.
+        ret = intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+        ret = clEnqueueNDRangeKernel(queue, assign_particle_count, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
+
+        // Set CV array starts according to the counts and assign particles to the cv_pid array.
+        ret = intArrayToHost(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+        set_array_starts(particle_count_array, &cv_start_array, NUMCVS);
+        ulongArrayToDevice(queue, gcv_start_array, &cv_start_array, NUMCVS);
+        memset(input_count_array, 0, sizeof(cl_int) * NUMCVS); // Reset counts to 0.
+        intArrayToDevice(queue, ginput_count_array, &input_count_array, NUMCVS);
+        ret = clEnqueueNDRangeKernel(queue, assign_particles, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
+
+        // TODO: Make collisions.
+
         ret = clEnqueueNDRangeKernel(queue, calculate_pp_collision, 1, NULL, (size_t *) &NUMCOLS, 0, NULL, NULL, NULL);
         ret = clFinish(queue);
         ret = clEnqueueNDRangeKernel(queue, iterate_particle, 1, NULL, (size_t *) &NUMPART, 0, NULL, NULL, NULL);
