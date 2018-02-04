@@ -14,5 +14,7 @@
 
 boolean test_assign_particle_count(boolean verbose);
 
+boolean test_set_array_starts(boolean verbose);
+
 
 #endif //DEMORANGES_TEST_ASSIGN_PARTICLES_H

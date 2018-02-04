@@ -35,5 +35,10 @@ int main() {
         return 1;
     }
 
+    if (!test_set_array_starts(VERBOSE)) {
+        fprintf(stderr, "FAILED AT test_set_array_starts");
+        return 1;
+    }
+
     printf("\nAll tests passed.");
 }

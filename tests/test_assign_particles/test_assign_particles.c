@@ -86,3 +86,16 @@ boolean test_assign_particle_count(boolean verbose) {
 
     return true;
 }
+
+boolean test_set_array_starts(boolean verbose) {
+    cl_int particle_count_array[] = {3, 2, 1, 0, 6};
+    cl_ulong NUMCVS = 5;
+    cl_ulong *cv_array_starts;
+
+    set_array_starts(particle_count_array, &cv_array_starts, NUMCVS);
+    return (cv_array_starts[0] == 0
+            && cv_array_starts[1] == 3
+            && cv_array_starts[2] == 5
+            && cv_array_starts[3] == -1
+            && cv_array_starts[4] == 6);
+}
