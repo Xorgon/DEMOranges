@@ -31,9 +31,10 @@ boolean test_particle_struct_alignment(boolean verbose) {
         hparticles[i].vel = (cl_float3) {23, 24, 25};
         hparticles[i].forces = (cl_float3) {26, 27, 28};
         hparticles[i].id = 29;
-        hparticles[i].diameter = 30;
-        hparticles[i].density = 31;
-        hparticles[i].fluid_viscosity = 32;
+        hparticles[i].cv_array_idx = 30;
+        hparticles[i].diameter = 31;
+        hparticles[i].density = 32;
+        hparticles[i].fluid_viscosity = 33;
     }
 
     gparticles = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(particle) * NUMPART, NULL, &ret);
@@ -67,9 +68,10 @@ boolean test_particle_struct_alignment(boolean verbose) {
               p.forces.y == 87 &&
               p.forces.z == 88 &&
               p.id == 89 &&
-              p.diameter == 90 &&
-              p.density == 91 &&
-              p.fluid_viscosity == 92)) {
+              p.cv_array_idx == 90 &&
+              p.diameter == 91 &&
+              p.density == 92 &&
+              p.fluid_viscosity == 93)) {
             hcorrect = FALSE;
         }
     }

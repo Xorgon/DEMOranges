@@ -11,9 +11,10 @@ __kernel void test_particle_struct_alignment(__global particle *particles, __glo
               particles[gid].forces.y == 27 &&
               particles[gid].forces.z == 28 &&
               particles[gid].id == 29 &&
-              particles[gid].diameter == 30 &&
-              particles[gid].density == 31 &&
-              particles[gid].fluid_viscosity == 32)) {
+              particles[gid].cv_array_idx == 30 &&
+              particles[gid].diameter == 31 &&
+              particles[gid].density == 32 &&
+              particles[gid].fluid_viscosity == 33)) {
             *correct = false;
         }
 
@@ -27,9 +28,10 @@ __kernel void test_particle_struct_alignment(__global particle *particles, __glo
         particles[gid].forces.y = 87;
         particles[gid].forces.z = 88;
         particles[gid].id = 89;
-        particles[gid].diameter = 90;
-        particles[gid].density = 91;
-        particles[gid].fluid_viscosity = 92;
+        particles[gid].cv_array_idx = 90;
+        particles[gid].diameter = 91;
+        particles[gid].density = 92;
+        particles[gid].fluid_viscosity = 93;
 }
 
 __kernel void test_pp_collision_struct_alignment(__global pp_collision *pp_collisions, __global bool *correct) {

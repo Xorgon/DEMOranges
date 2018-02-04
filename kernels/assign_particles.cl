@@ -5,6 +5,7 @@ __kernel void assign_particle_count(__global particle *particles, __global int *
     int gid = get_global_id(0);
     int cv_array_idx = cv_coords_to_cv_array_idx(pos_to_cv_coords(particles[gid].pos, domain_length, cv_length),
                                                 cvs_per_edge);
+    particles[gid].cv_array_idx = cv_array_idx;
     atomic_inc(&(particle_count_array[cv_array_idx]));
 }
 

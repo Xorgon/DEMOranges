@@ -12,10 +12,11 @@ typedef struct particle {
     cl_float3 vel;
     cl_float3 forces;
     cl_ulong id;
+    cl_ulong cv_array_idx;
     cl_float diameter;
     cl_float density;
     cl_float fluid_viscosity;
-    cl_char padding[56];
+//    cl_char padding[56];
 // Structure memory alignment for Visual Studio and GCC compilers.
 #if defined(_MSC_VER)
 } __declspec(align(128)) particle;

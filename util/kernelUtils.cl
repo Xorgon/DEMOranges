@@ -3,6 +3,7 @@ typedef struct {
     float3 vel;
     float3 forces;
     ulong id;
+    ulong cv_array_idx;
     float diameter;
     float density;
     float fluid_viscosity;
