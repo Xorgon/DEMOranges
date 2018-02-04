@@ -9,10 +9,7 @@ void create_domain_count_cvs(cl_int **particle_count_array, cl_float *cv_length,
     *cvs_per_edge = (cl_int) floorf(domain_length / particle_diameter);
     *cv_length = domain_length / *cvs_per_edge;
     int total_cvs = (int) pow(*cvs_per_edge, 3);
-    *particle_count_array = malloc(sizeof(cl_int) * total_cvs);
-    for (int i = 0; i < total_cvs; i++) {
-        (*particle_count_array)[i] = 0;
-    }
+    *particle_count_array = calloc(total_cvs, sizeof(cl_int));
 }
 
 cl_int get_array_idx(cl_int3 cv_coords, cl_int cvs_per_edge) {
