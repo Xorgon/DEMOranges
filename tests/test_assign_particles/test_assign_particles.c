@@ -28,10 +28,10 @@ boolean test_assign_particle_count(boolean verbose) {
 
     // Initializing OpenCL.
     setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, TRUE);
-    cl_command_queue queue = getCommandQueue(&context, &devices, TRUE);
+    cl_context context = getContext(&devices, verbose);
+    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
     cl_kernel assign_particle_count = getKernel(&devices, &context, "../kernels/assign_particles.cl",
-                                                "assign_particle_count", TRUE);
+                                                "assign_particle_count", verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
 
@@ -91,6 +91,8 @@ boolean test_set_array_starts(boolean verbose) {
     cl_int particle_count_array[] = {3, 2, 1, 0, 6};
     cl_ulong NUMCVS = 5;
     cl_ulong *cv_array_starts;
+
+    printf("\nTesting setting CV array starts.\n");
 
     set_array_starts(particle_count_array, &cv_array_starts, NUMCVS);
     return (cv_array_starts[0] == 0

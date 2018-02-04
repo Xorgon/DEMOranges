@@ -14,7 +14,7 @@ boolean test_atomics(boolean verbose) {
     cl_device_id *devices;
     cl_int ret;
 
-    if (verbose) printf("\nTesting atomic float addition.\n");
+    printf("\nTesting atomic float addition.\n");
 
     setDevices(&platforms, &devices, FALSE);
     cl_context context = getContext(&devices, verbose);

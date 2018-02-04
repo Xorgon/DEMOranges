@@ -16,7 +16,7 @@ boolean test_particle_struct_alignment(boolean verbose) {
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
 
-    if (verbose) printf("\nTesting particle struct alignment.\n");
+    printf("\nTesting particle struct alignment.\n");
 
     setDevices(&platforms, &devices, FALSE);
     cl_context context = getContext(&devices, verbose);
@@ -87,7 +87,7 @@ boolean test_pp_collision_struct_alignment(boolean verbose) {
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
 
-    if (verbose) printf("\nTesting pp_collision struct alignment.\n");
+    printf("\nTesting pp_collision struct alignment.\n");
 
     setDevices(&platforms, &devices, FALSE);
     cl_context context = getContext(&devices, verbose);

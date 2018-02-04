@@ -7,7 +7,7 @@
 #include "test_atomics/test_atomics.h"
 #include "test_assign_particles/test_assign_particles.h"
 
-#define VERBOSE TRUE
+#define VERBOSE FALSE
 
 int main() {
     if (!test_kernels(VERBOSE)) {

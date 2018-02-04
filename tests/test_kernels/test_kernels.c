@@ -9,6 +9,8 @@ boolean test_kernels(boolean verbose) {
 
     cl_int ret;
 
+    printf("\nTesting compiling kernels.\n");
+
     // Source file variables
     char *fileNames[] = {
             "../kernels/iterate_particle.cl",
