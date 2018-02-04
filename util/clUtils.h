@@ -48,4 +48,10 @@ cl_int intArrayToDevice(cl_command_queue queue, cl_mem array_buffer,
 cl_int intArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_int **array,
                       cl_ulong length);
 
+cl_int ulongArrayToDevice(cl_command_queue queue, cl_mem array_buffer,
+                        cl_ulong **array, cl_ulong length);
+
+cl_int ulongArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_ulong **array,
+                      cl_ulong length);
+
 #endif //DEMORANGES_CLDEVICEUTILS_H

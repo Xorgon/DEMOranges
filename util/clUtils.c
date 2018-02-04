@@ -291,3 +291,15 @@ cl_int intArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_int **arra
     return clEnqueueReadBuffer(queue, array_buffer, CL_TRUE, 0, sizeof(cl_int) * length, *array,
                                0, NULL, NULL);
 }
+
+cl_int ulongArrayToDevice(cl_command_queue queue, cl_mem array_buffer, cl_ulong **array,
+                        cl_ulong length) {
+    return clEnqueueWriteBuffer(queue, array_buffer, CL_TRUE, 0, sizeof(cl_ulong) * length,
+                                *array, 0, NULL, NULL);
+}
+
+cl_int ulongArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_ulong **array,
+                      cl_ulong length) {
+    return clEnqueueReadBuffer(queue, array_buffer, CL_TRUE, 0, sizeof(cl_ulong) * length, *array,
+                               0, NULL, NULL);
+}
