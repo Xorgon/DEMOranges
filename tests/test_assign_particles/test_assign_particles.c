@@ -60,7 +60,7 @@ boolean test_assign_particle_count(boolean verbose) {
     NUMCVS = (cl_ulong) cvs_per_edge * cvs_per_edge * cvs_per_edge;
 
     gparticle_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
-    ret = particle_count_arrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+    ret = intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
 
     ret = clSetKernelArg(assign_particle_count, 0, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(assign_particle_count, 1, sizeof(cl_mem), &gparticle_count_array);
@@ -70,7 +70,7 @@ boolean test_assign_particle_count(boolean verbose) {
     ret = clEnqueueNDRangeKernel(queue, assign_particle_count, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
     ret = clFinish(queue);
 
-    ret = particle_count_arrayToHost(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+    ret = intArrayToHost(queue, gparticle_count_array, &particle_count_array, NUMCVS);
 
     if (NUMCVS != 27) {
         printf("Incorrect number of CVs.\n");

@@ -111,7 +111,7 @@ int main() {
     create_domain_count_cvs(&particle_count_array, &cv_length, &cvs_per_edge, domain_length, particle_diameter);
     NUMCVS = cvs_per_edge * cvs_per_edge * cvs_per_edge;
     gparticle_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
-    particle_count_arrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+    intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
 
 
     MAXCOLS = (cl_ulong) (NUMPART * (NUMPART + 1) / 2);
