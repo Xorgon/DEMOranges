@@ -16,7 +16,8 @@ boolean test_kernels(boolean verbose) {
             "../kernels/iterate_particle.cl",
             "../kernels/assign_particles.cl",
             "../kernels/assign_particles.cl",
-//        "../kernels/make_pp_collisions.cl",
+            "../kernels/make_pp_collisions.cl",
+            "../kernels/make_pp_collisions.cl",
 //        "../kernels/make_pw_collisions.cl",
             "../kernels/calculate_pp_collision.cl",
             "../kernels/calculate_pw_collision.cl",
@@ -27,13 +28,14 @@ boolean test_kernels(boolean verbose) {
             "iterate_particle",
             "assign_particle_count",
             "assign_particles",
-//        "make_pp_collisions",
+            "count_pp_collisions",
+            "make_pp_collisions",
 //        "make_pw_collisions",
             "calculate_pp_collision",
             "calculate_pw_collision",
 //        "sort_particles"
     };
-    int files = 3;
+    int files = 7;
 
     setDevices(&platforms, &devices, FALSE);
 
