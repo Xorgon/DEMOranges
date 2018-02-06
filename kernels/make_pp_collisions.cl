@@ -30,10 +30,8 @@ __kernel void count_pp_collisions(__global int *particle_count_array, int cvs_pe
                 if (other_cv_idx == cv_idx) {
                     atom_add(collision_count,
                                 particle_count_array[cv_idx] * (particle_count_array[cv_idx] - 1) / 2);
-                    printf("%i -> %i = %i", cv_idx, other_cv_idx, particle_count_array[cv_idx] * (particle_count_array[cv_idx] - 1) / 2);
                 } else {
                     atom_add(collision_count, particle_count_array[cv_idx] * particle_count_array[other_cv_idx]);
-                    printf("%i -> %i = %i", cv_idx, other_cv_idx, particle_count_array[cv_idx] * particle_count_array[other_cv_idx]);
                 }
             }
         }

@@ -6,6 +6,7 @@
 #include "test_alignment/test_alignment.h"
 #include "test_atomics/test_atomics.h"
 #include "test_assign_particles/test_assign_particles.h"
+#include "test_make_pp_collisions/test_make_pp_collisions.h"
 
 #define VERBOSE TRUE
 
@@ -42,6 +43,11 @@ int main() {
 
     if (!test_assign_particles(VERBOSE)) {
         fprintf(stderr, "\nFAILED AT test_assign_particles\n");
+        return 1;
+    }
+
+    if (!test_count_pp_collisions(VERBOSE)) {
+        fprintf(stderr, "\nFAILED AT test_count_pp_collisions\n");
         return 1;
     }
 
