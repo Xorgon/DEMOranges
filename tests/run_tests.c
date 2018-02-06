@@ -51,5 +51,10 @@ int main() {
         return 1;
     }
 
+    if (!test_make_pp_collisions(VERBOSE)) {
+        fprintf(stderr, "\nFAILED AT test_make_pp_collisions\n");
+        return 1;
+    }
+
     printf("\nAll tests passed.\n");
 }

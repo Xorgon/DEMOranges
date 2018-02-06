@@ -61,8 +61,8 @@ __kernel void make_pp_collisions(__global ulong *cv_start_array, __global int *p
                     for (int j = 0; j < particle_count_array[other_cv_idx]; j++){
                         ulong this_pid = cv_pids[cv_start_array[cv_idx] + i];
                         ulong other_pid = cv_pids[cv_start_array[other_cv_idx] + j];
-                        if (this_pid >= other_pid) {
-                            continue; // Skip if it's the same particle or a particle with a lower ID.
+                        if (this_pid >= other_pid && cv_idx == other_cv_idx) {
+                            continue; // Skip if it's the same particle or a particle with a lower ID in the same CV.
                         }
                         ulong col_idx = atom_inc(collision_count);
                         collisions[col_idx].p1_id = this_pid;
