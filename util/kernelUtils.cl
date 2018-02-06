@@ -1,3 +1,5 @@
+#pragma OPENCL EXTENSION cl_khr_int64_base_atomics : enable // Enable 64 bit integer atomics.
+
 typedef struct {
     float3 pos;
     float3 vel;
@@ -61,6 +63,14 @@ int3 pos_to_cv_coords(float3 pos, float domain_length, float cv_length){
     return (int3) {cv_x, cv_y, cv_z};
 }
 
-int cv_coords_to_cv_array_idx(int3 cv_coords, int cvs_per_edge) {
+ulong cv_coords_to_cv_array_idx(int3 cv_coords, int cvs_per_edge) {
     return cv_coords.x + cv_coords.y * cvs_per_edge + cv_coords.z * cvs_per_edge * cvs_per_edge;
+}
+
+int3 cv_array_idx_to_cv_coords(ulong cv_array_idx, int cvs_per_edge) {
+    int x = cv_array_idx % cvs_per_edge;
+    int y = ((cv_array_idx - x) / cvs_per_edge) % cvs_per_edge;
+    int z = (cv_array_idx - x - y * cvs_per_edge) / cvs_per_edge / cvs_per_edge;
+    int3 cv_coords = (int3) {x, y, z};
+    return cv_coords;
 }
