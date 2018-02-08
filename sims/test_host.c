@@ -193,12 +193,6 @@ int main() {
         if (VERBOSE) printf("    Assigning particles to CVs\n");
         ret = clEnqueueNDRangeKernel(queue, assign_particles, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
 
-//        for (int i = 0; i < NUMCVS; i++) {
-//            printf("%i = %i\n", i, input_count_array[i]);
-//        }
-//        printf("----------------\n");
-        ulongArrayToHost(queue, gcv_pids, &cv_pids, NUMPART);
-
         // Count collisions.
         if (VERBOSE) printf("    Counting collisions\n");
         collision_count = 0;
@@ -215,18 +209,11 @@ int main() {
         ret = clReleaseMemObject(gpp_cols);
         gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMCOLS, NULL, &ret);
 
-        ulongArrayToDevice(queue, gcv_pids, &cv_pids, NUMPART);
-
-        ret = pp_collisionsToDevice(queue, gpp_cols, &hpp_cols, NUMCOLS);
         clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
 
         clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
 
         clEnqueueNDRangeKernel(queue, make_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
-        clFinish(queue);
-
-
-        pp_collisionsToHost(queue, gpp_cols, &hpp_cols, NUMCOLS);
 
         // Calculate collisions.
         if (VERBOSE) printf("    Calculating collisions\n");
@@ -236,7 +223,6 @@ int main() {
         // Iterate particles.
         if (VERBOSE) printf("    Iterating particles\n");
         ret = clEnqueueNDRangeKernel(queue, iterate_particle, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
-        ret = clFinish(queue);
         if (time - last_write > log_step) {
             ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
             printf("Logging at time: %f\n", time);
