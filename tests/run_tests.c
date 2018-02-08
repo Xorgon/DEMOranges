@@ -7,6 +7,7 @@
 #include "test_atomics/test_atomics.h"
 #include "test_assign_particles/test_assign_particles.h"
 #include "test_make_pp_collisions/test_make_pp_collisions.h"
+#include "test_main_loop/test_main_loop.h"
 
 #define VERBOSE TRUE
 
@@ -53,6 +54,11 @@ int main() {
 
     if (!test_make_pp_collisions(VERBOSE)) {
         fprintf(stderr, "\nFAILED AT test_make_pp_collisions\n");
+        return 1;
+    }
+    
+    if (!test_main_loop(VERBOSE)) {
+        fprintf(stderr, "\nFAILED AT test_main_loop\n");
         return 1;
     }
 
