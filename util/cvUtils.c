@@ -16,16 +16,15 @@ cl_int get_array_idx(cl_int3 cv_coords, cl_int cvs_per_edge) {
     return cv_coords.x + cv_coords.y * cvs_per_edge + cv_coords.z * cvs_per_edge * cvs_per_edge;
 }
 
-void set_array_starts(cl_int *particle_count_array, cl_ulong **cv_array_starts, cl_ulong NUMCVS) {
+void set_array_starts(cl_int *particle_count_array, cl_ulong *cv_array_starts, cl_ulong NUMCVS) {
     cl_ulong idx = 0;
-    *cv_array_starts = malloc(sizeof(cl_ulong) * NUMCVS);
     for (cl_ulong i = 0; i < NUMCVS; i++) {
         cl_int count = particle_count_array[i];
         if (count > 0) {
-            (*cv_array_starts)[i] = idx;
+            cv_array_starts[i] = idx;
             idx += count;
         } else {
-            (*cv_array_starts)[i] = -1;
+            cv_array_starts[i] = -1;
         }
     }
 }

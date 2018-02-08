@@ -88,13 +88,14 @@ boolean test_assign_particle_count(boolean verbose) {
 }
 
 boolean test_set_array_starts(boolean verbose) {
-    cl_int particle_count_array[] = {3, 2, 1, 0, 6};
-    cl_ulong NUMCVS = 5;
-    cl_ulong *cv_array_starts;
-
     printf("\nTesting setting CV array starts.\n");
 
-    set_array_starts(particle_count_array, &cv_array_starts, NUMCVS);
+    cl_int particle_count_array[] = {3, 2, 1, 0, 6};
+    cl_ulong NUMCVS = 5;
+    cl_ulong *cv_array_starts = malloc(sizeof(cl_ulong) * NUMCVS);
+
+
+    set_array_starts(particle_count_array, cv_array_starts, NUMCVS);
     return (cv_array_starts[0] == 0
             && cv_array_starts[1] == 3
             && cv_array_starts[2] == 5
@@ -168,6 +169,7 @@ boolean test_assign_particles(boolean verbose) {
     NUMCVS = (cl_ulong) cvs_per_edge * cvs_per_edge * cvs_per_edge;
     gparticle_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
     ret = intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+    cv_start_array = malloc(sizeof(cl_ulong) * NUMCVS);
 
     ret = clSetKernelArg(assign_particle_count, 0, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(assign_particle_count, 1, sizeof(cl_mem), &gparticle_count_array);
@@ -178,7 +180,7 @@ boolean test_assign_particles(boolean verbose) {
     ret = clFinish(queue);
     ret = intArrayToHost(queue, gparticle_count_array, &particle_count_array, NUMCVS);
 
-    set_array_starts(particle_count_array, &cv_start_array, NUMCVS);
+    set_array_starts(particle_count_array, cv_start_array, NUMCVS);
     gcv_start_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong) * NUMCVS, NULL, &ret);
     ret = ulongArrayToDevice(queue, gcv_start_array, &cv_start_array, NUMCVS);
 
