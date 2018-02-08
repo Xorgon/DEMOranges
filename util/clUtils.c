@@ -184,6 +184,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     size_t utils_size;
     cl_int ret;
 
+    if (verbose) printf("[INIT] Creating %s kernel\n", kernelName);
     // load source code containing utilities.
     fopen_s(&fp, "../util/kernelUtils.cl", "r");
     if (!fp) {
@@ -209,7 +210,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     // Create kernel program from source
     cl_program program = NULL;
     program = clCreateProgramWithSource(*context, 2, strings, sizes, &ret);
-    if (verbose) printf("[INIT] Create kernel program: ");
+    if (verbose) printf("       Create kernel program: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
     } else {
@@ -222,7 +223,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
 
     // Build kernel program
     ret = clBuildProgram(program, 1, devices[0], NULL, NULL, NULL);
-    if (verbose) printf("[INIT] Build kernel program: ");
+    if (verbose) printf("       Build kernel program: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
     } else {
@@ -247,7 +248,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     // Create OpenCL kernel
     cl_kernel kernel = NULL;
     kernel = clCreateKernel(program, kernelName, &ret);
-    if (verbose) printf("[INIT] Create OpenCL kernel: ");
+    if (verbose) printf("       Create OpenCL kernel: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
     } else {
