@@ -9,6 +9,7 @@ This is essentially what a naive approach does but for a limited number of parti
 __kernel void count_pp_collisions(__global int *particle_count_array, int cvs_per_edge,
                                     __global ulong *collision_count){
     ulong cv_idx = get_global_id(0);
+    ulong count_to_add = 0;
     int3 coords = cv_array_idx_to_cv_coords(cv_idx, cvs_per_edge);
     for (int x = coords.x - 1; x <= coords.x + 1; x++) {
         if (x >= cvs_per_edge || x < 0) {
@@ -25,13 +26,14 @@ __kernel void count_pp_collisions(__global int *particle_count_array, int cvs_pe
                 int3 other_cv_coords = (int3) {x, y, z};
                 ulong other_cv_idx = cv_coords_to_cv_array_idx(other_cv_coords, cvs_per_edge);
                 if (other_cv_idx == cv_idx) {
-                    atom_add(collision_count, particle_count_array[cv_idx] * (particle_count_array[cv_idx] - 1) / 2);
+                    count_to_add += particle_count_array[cv_idx] * (particle_count_array[cv_idx] - 1) / 2;
                 } else if (other_cv_idx > cv_idx) { // To avoid counting the same collisions twice.
-                    atom_add(collision_count, particle_count_array[cv_idx] * particle_count_array[other_cv_idx]);
+                    count_to_add += particle_count_array[cv_idx] * particle_count_array[other_cv_idx];
                 }
             }
         }
     }
+    atom_add(collision_count, count_to_add);
 }
 
 __kernel void make_pp_collisions(__global ulong *cv_start_array, __global int *particle_count_array,
