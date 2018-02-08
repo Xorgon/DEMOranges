@@ -42,10 +42,14 @@ float3 calculate_friction_tangent_force(pp_collision col, particle p1, particle 
 
 /* Kernel to calculate particle-particle collisions. */
 
-__kernel void calculate_pp_collision(__global pp_collision *collisions, __global particle *particles, float delta_t) {
+__kernel void calculate_pp_collision(__global pp_collision *collisions, __global particle *particles, float delta_t,
+                                        float stiffness, float friction_coefficient, float friction_stiffness) {
     int gid = get_global_id(0);
     ulong p1_id = collisions[gid].p1_id;
     ulong p2_id = collisions[gid].p2_id;
+    collisions[gid].stiffness = stiffness;
+    collisions[gid].friction_coefficient = friction_coefficient;
+    collisions[gid].friction_stiffness = friction_stiffness;
     float overlap = get_particle_overlap(particles[p1_id], particles[p2_id]);
     if (overlap > 0) {
         float3 normal_force = calculate_collision_normal_force(collisions[gid], particles[p1_id], particles[p2_id]);
