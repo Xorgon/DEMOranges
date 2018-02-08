@@ -5,6 +5,8 @@
 #include "test_make_pp_collisions.h"
 
 boolean test_count_pp_collisions(boolean verbose) {
+    printf("\nTesting pp_collision counting.\n");
+
     particle *hparticles;
     cl_mem gparticles;
 
@@ -18,7 +20,6 @@ boolean test_count_pp_collisions(boolean verbose) {
     cl_device_id *devices;
     cl_int ret;
 
-    printf("\nTesting pp_collision counting.\n");
 
     // Initializing OpenCL.
     setDevices(&platforms, &devices, FALSE);
@@ -29,6 +30,8 @@ boolean test_count_pp_collisions(boolean verbose) {
 
     particle_count_array = calloc(27, sizeof(cl_int));
     particle_count_array[0] = 1; // CV 0, 0, 0
+    particle_count_array[1] = 1; // CV 1, 0, 0
+    particle_count_array[9] = 1; // CV 0, 0, 1
     particle_count_array[13] = 2; // CV 1, 1, 1
     particle_count_array[26] = 3; // CV 2, 2, 2
 
@@ -49,7 +52,7 @@ boolean test_count_pp_collisions(boolean verbose) {
 
     clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
 
-    return (collision_count == 12);
+    return (collision_count == 19);
 }
 
 boolean test_make_pp_collisions(boolean verbose) {
@@ -74,23 +77,27 @@ boolean test_make_pp_collisions(boolean verbose) {
 
     particle_count_array = calloc(27, sizeof(cl_int));
     particle_count_array[0] = 1; // CV 0, 0, 0
+    particle_count_array[1] = 1; // CV 1, 0, 0
+    particle_count_array[9] = 1; // CV 0, 0, 1
     particle_count_array[13] = 2; // CV 1, 1, 1
     particle_count_array[26] = 3; // CV 2, 2, 2
 
     cv_start_array = malloc(sizeof(cl_ulong) * NUMCVS);
     memset(cv_start_array, -1, NUMCVS);
     cv_start_array[0] = 0;
-    cv_start_array[13] = 1;
-    cv_start_array[26] = 3;
+    cv_start_array[1] = 1;
+    cv_start_array[9] = 2;
+    cv_start_array[13] = 3;
+    cv_start_array[26] = 5;
 
 
-    cl_ulong NUMPARTS = 6;
+    cl_ulong NUMPARTS = 8;
     cv_pids = malloc(sizeof(cl_ulong) * NUMPARTS);
     for (cl_ulong i = 0; i < NUMPARTS; i++) {
         cv_pids[i] = i;
     }
 
-    cl_ulong NUMCOLS = 12;
+    cl_ulong NUMCOLS = 19;
     collisions = malloc(sizeof(pp_collision) * NUMCOLS);
     collision_count = 0;
 
@@ -117,7 +124,7 @@ boolean test_make_pp_collisions(boolean verbose) {
     ulongArrayToDevice(queue, gcv_start_array, &cv_start_array, NUMCVS);
     intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
     ulongArrayToDevice(queue, gcv_pids, &cv_pids, NUMPARTS);
-    clEnqueueWriteBuffer(queue, gcollisions, CL_TRUE, 0, sizeof(pp_collision) * NUMCOLS, &collisions, 0, NULL, NULL);
+    pp_collisionsToDevice(queue, gcollisions, &collisions, NUMCOLS);
     clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
 
     clSetKernelArg(make_pp_collisions, 0, sizeof(cl_mem), &gcv_start_array);
@@ -130,7 +137,15 @@ boolean test_make_pp_collisions(boolean verbose) {
     clEnqueueNDRangeKernel(queue, make_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
 
     clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
-    printf("Collision count = %lu", (unsigned long) collision_count);
+    pp_collisionsToHost(queue, gcollisions, &collisions, NUMCOLS);
+
+    if (verbose) {
+        printf("Collision count = %lu\n", (unsigned long) collision_count);
+
+//        for (int i = 0; i < NUMCOLS; i++) {
+//            printf("%llu -> %llu\n", collisions[i].p1_id, collisions[i].p2_id);
+//        }
+    }
 
     return (collision_count == NUMCOLS);
 }
