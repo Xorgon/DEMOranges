@@ -42,4 +42,6 @@ file(GLOB_RECURSE test_sim_SOURCE_FILES
 add_executable(test_sim ${test_sim_SOURCE_FILES})
 target_link_libraries(test_sim ${OpenCL_LIBRARY})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -funroll-loops ") # Optimization stuff, TODO: Investigate.
+
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
