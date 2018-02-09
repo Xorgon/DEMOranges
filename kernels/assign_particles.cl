@@ -3,8 +3,12 @@
 __kernel void assign_particle_count(__global particle *particles, __global int *particle_count_array,
     float domain_length, float cv_length, int cvs_per_edge){
     int gid = get_global_id(0);
-    int cv_array_idx = cv_coords_to_cv_array_idx(pos_to_cv_coords(particles[gid].pos, domain_length, cv_length),
-                                                cvs_per_edge);
+    int3 cv_coords = pos_to_cv_coords(particles[gid].pos, domain_length, cv_length);
+    if (cv_coords.x == -1 && cv_coords.y == -1 && cv_coords.z == -1) {
+        printf("assign_particle_count: Failed to get CV coordinates.");
+        return;
+    }
+    int cv_array_idx = cv_coords_to_cv_array_idx(cv_coords, cvs_per_edge);
     particles[gid].cv_array_idx = cv_array_idx;
     atomic_inc(&(particle_count_array[cv_array_idx]));
 }

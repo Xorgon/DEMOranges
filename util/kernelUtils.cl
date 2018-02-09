@@ -57,6 +57,11 @@ void atomicAdd_float3(volatile __global float3 *addr, float3 val) {
 }
 
 int3 pos_to_cv_coords(float3 pos, float domain_length, float cv_length){
+    if (fabs(pos.x) > domain_length / 2 || fabs(pos.x) > domain_length / 2 || fabs(pos.x) > domain_length / 2) {
+        printf("Failed to convert position to CV coordinates. Position outside of domain. [%f, %f, %f].\n",
+                pos.x, pos.y, pos.z);
+        return (int3) {-1, -1, -1};
+    }
     int cv_x = floor((pos.x + domain_length / 2) / cv_length);
     int cv_y = floor((pos.y + domain_length / 2) / cv_length);
     int cv_z = floor((pos.z + domain_length / 2) / cv_length);
