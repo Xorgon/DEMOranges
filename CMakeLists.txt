@@ -32,14 +32,14 @@ file(GLOB_RECURSE run_tests_SOURCE_FILES
         "structures/*.h"
         tests/*)
 add_executable(run_tests ${run_tests_SOURCE_FILES} tests/run_tests.c)
-target_link_libraries(run_tests ${OpenCL_LIBRARY})
+target_link_libraries(run_tests ${OpenCL_LIBRARY} m)
 
 file(GLOB_RECURSE clEnqueueNDRangeKernel_SOURCE_FILES
         "util/*.h" "util/*.c"
         "structures/*.h"
         clEnqueueNDRangeKernel/host.c)
 add_executable(clEnqueueNDRangeKernel ${clEnqueueNDRangeKernel_SOURCE_FILES})
-target_link_libraries(clEnqueueNDRangeKernel ${OpenCL_LIBRARY})
+target_link_libraries(clEnqueueNDRangeKernel ${OpenCL_LIBRARY} m)
 
 file(GLOB_RECURSE test_sim_SOURCE_FILES
         "util/*.h" "util/*.c"
@@ -47,8 +47,7 @@ file(GLOB_RECURSE test_sim_SOURCE_FILES
         "structures/*.h" "util/kernelUtils.cl"
         sims/test_host.c)
 add_executable(test_sim ${test_sim_SOURCE_FILES})
-target_link_libraries(test_sim ${OpenCL_LIBRARY})
+target_link_libraries(test_sim ${OpenCL_LIBRARY} m)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -funroll-loops ") # Optimization stuff, TODO: Investigate.
-
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
