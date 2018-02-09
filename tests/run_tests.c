@@ -8,6 +8,7 @@
 #include "test_assign_particles/test_assign_particles.h"
 #include "test_make_pp_collisions/test_make_pp_collisions.h"
 #include "test_main_loop/test_main_loop.h"
+#include "test_setDevices/test_setContext.h"
 
 #define VERBOSE TRUE
 
@@ -62,5 +63,10 @@ int main() {
         return 1;
     }
 
+    if (!test_setContext(VERBOSE)) {
+        fprintf(stderr, "\nFAILED AT test_setContext\n");
+        return 1;
+    }
+    
     printf("\nAll tests passed.\n");
 }

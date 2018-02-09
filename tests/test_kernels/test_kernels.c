@@ -4,8 +4,8 @@
 #include "test_kernels.h"
 
 boolean test_kernels(boolean verbose) {
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
 
     cl_int ret;
 
@@ -37,20 +37,7 @@ boolean test_kernels(boolean verbose) {
     };
     int files = 7;
 
-    setDevices(&platforms, &devices, FALSE);
-
-    // Create OpenCL context
-    cl_context context = NULL;
-    context = clCreateContext(NULL, 1, &devices[0], NULL, NULL, &ret);
-    if (verbose) printf("[INIT] Create OpenCL context: ");
-
-    if ((int) ret == 0) {
-        if (verbose) printf("SUCCESS\n");
-    } else {
-        if (verbose) printf("FAILED\n");
-        _getch();
-        return FALSE;
-    }
+    setContext(&device, &context, FALSE);
 
     for (int i = 0; i < files; i++) {
 
@@ -59,7 +46,7 @@ boolean test_kernels(boolean verbose) {
             printf("Kernel name: %s\n", kernelNames[i]);
         }
 
-        cl_kernel kernel = getKernel(&devices, &context, fileNames[i], kernelNames[i], verbose);
+        cl_kernel kernel = getKernel(device, context, fileNames[i], kernelNames[i], verbose);
         if (kernel == NULL) {
             return FALSE;
         }

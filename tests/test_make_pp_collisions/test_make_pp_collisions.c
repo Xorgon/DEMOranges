@@ -16,16 +16,15 @@ boolean test_count_pp_collisions(boolean verbose) {
     cl_int cvs_per_edge = 3;
     cl_ulong NUMCVS = 27;
 
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
     cl_int ret;
 
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, verbose);
-    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
-    cl_kernel count_pp_collisions = getKernel(&devices, &context, "../kernels/make_pp_collisions.cl",
+    setContext(&device, &context, FALSE);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+    cl_kernel count_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                               "count_pp_collisions", verbose);
 
     particle_count_array = calloc(27, sizeof(cl_int));
@@ -101,17 +100,16 @@ boolean test_make_pp_collisions(boolean verbose) {
     collisions = malloc(sizeof(pp_collision) * NUMCOLS);
     collision_count = 0;
 
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
     cl_int ret;
 
     printf("\nTesting pp_collision creation.\n");
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, verbose);
-    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
-    cl_kernel make_pp_collisions = getKernel(&devices, &context, "../kernels/make_pp_collisions.cl",
+    setContext(&device, &context, FALSE);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+    cl_kernel make_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                              "make_pp_collisions", verbose);
 
 

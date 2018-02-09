@@ -20,17 +20,16 @@ boolean test_assign_particle_count(boolean verbose) {
 
     cl_ulong NUMPART = 6;
 
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
     cl_int ret;
 
     printf("\nTesting particle count assignment.\n");
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, verbose);
-    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
-    cl_kernel assign_particle_count = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+    setContext(&device, &context, FALSE);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+    cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
@@ -126,19 +125,18 @@ boolean test_assign_particles(boolean verbose) {
 
     cl_ulong NUMPART = 6;
 
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
     cl_int ret;
 
     printf("\nTesting particle assignment.\n");
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, verbose);
-    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
-    cl_kernel assign_particle_count = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+    setContext(&device, &context, FALSE);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+    cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", verbose);
-    cl_kernel assign_particles = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+    cl_kernel assign_particles = getKernel(device, context, "../kernels/assign_particles.cl",
                                            "assign_particles", verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);

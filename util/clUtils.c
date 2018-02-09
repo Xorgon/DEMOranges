@@ -4,44 +4,82 @@
 
 #include "clUtils.h"
 
-void setDevices(cl_platform_id **platforms, cl_device_id **devices, boolean verbose) {
+void setContext(cl_device_id *device, cl_context *context,
+                boolean verbose) {
+    cl_platform_id *platforms;
+    cl_device_id *devices;
     cl_uint platformCount;
     cl_uint deviceCount;
 
     clGetPlatformIDs(0, NULL, &platformCount);
-    *platforms = (cl_platform_id *) malloc(sizeof(cl_platform_id) * platformCount);
-    clGetPlatformIDs(platformCount, *platforms, NULL);
+    platforms = (cl_platform_id *) malloc(sizeof(cl_platform_id) * platformCount);
+    clGetPlatformIDs(platformCount, platforms, NULL);
 
     for (cl_uint i = 0; i < platformCount; i++) {
         // get all devices
-        clGetDeviceIDs(*platforms[i], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceCount);
-        *devices = (cl_device_id *) malloc(sizeof(cl_device_id) * deviceCount);
-        clGetDeviceIDs(*platforms[i], CL_DEVICE_TYPE_ALL, deviceCount, *devices, NULL);
+        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceCount);
+        devices = (cl_device_id *) malloc(sizeof(cl_device_id) * deviceCount);
+        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, deviceCount, devices, NULL);
     }
 
     if (verbose) {
-        printDeviceDetails(platformCount, *platforms, deviceCount, *devices);
+        printDeviceDetails(platformCount, platforms, deviceCount, devices);
     }
 
     // select OpenCL platform and device
     clGetPlatformIDs(0, NULL, &platformCount);
-    *platforms = (cl_platform_id *) malloc(sizeof(cl_platform_id) * platformCount);
-    clGetPlatformIDs(platformCount, *platforms, NULL);
+    platforms = (cl_platform_id *) malloc(sizeof(cl_platform_id) * platformCount);
+    clGetPlatformIDs(platformCount, platforms, NULL);
+
+    int platform_id = 0;
+    if (verbose && platformCount > 1) {
+        printf("Enter platform number:\n");
+        boolean valid = FALSE;
+        while (!valid) {
+            int input;
+            if (scanf("%d", &input) > 0 && input < platformCount && input >= 0) {
+                platform_id = input;
+                valid = TRUE;
+            } else {
+                printf("Invalid input, select a platform number no higher than %i\n", platformCount - 1);
+                getchar();
+            }
+        }
+    }
 
     // Change the first argument of clGetDeviceIDs to the desired platform from initial system diagnosis, default is set to platforms[0]
-    clGetDeviceIDs(*platforms[0], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceCount);
-    *devices = (cl_device_id *) malloc(sizeof(cl_device_id) * deviceCount);
-    clGetDeviceIDs(*platforms[0], CL_DEVICE_TYPE_ALL, deviceCount, *devices, NULL);
+    clGetDeviceIDs(platforms[platform_id], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceCount);
+    devices = (cl_device_id *) malloc(sizeof(cl_device_id) * deviceCount);
+    clGetDeviceIDs(platforms[platform_id], CL_DEVICE_TYPE_ALL, deviceCount, devices, NULL);
+
+    int device_id = 0;
+    if (verbose && deviceCount > 1) {
+        printf("Enter device number:\n");
+        boolean valid = FALSE;
+        while (!valid) {
+            int input;
+            if (scanf("%d", &input) > 0 && input < deviceCount && input >= 0) {
+                device_id = input;
+                valid = TRUE;
+            } else {
+                printf("Invalid input, select a device number no higher than %i\n", platformCount - 1);
+                getchar();
+            }
+        }
+    }
+
+    *device = devices[device_id];
 
     char *value;
     size_t valueSize;
 
-    // Change the first argument of clGetDeviceInfo to the desired device from initial system diagnosis, default is set to devices[0]
-    clGetDeviceInfo(*devices[0], CL_DEVICE_NAME, 0, NULL, &valueSize);
+    clGetDeviceInfo(devices[device_id], CL_DEVICE_NAME, 0, NULL, &valueSize);
     value = (char *) malloc(valueSize);
-    clGetDeviceInfo(*devices[0], CL_DEVICE_NAME, valueSize, value, NULL);
-    if (verbose) printf("Default computing device selected: %s\n\n", value);
+    clGetDeviceInfo(devices[device_id], CL_DEVICE_NAME, valueSize, value, NULL);
+    if (verbose) printf("Selected device: %s\n", value);
     free(value);
+
+    *context = getContext(&devices, deviceCount, verbose);
 
 }
 
@@ -65,68 +103,68 @@ void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uin
             clGetDeviceInfo(devices[j], CL_DEVICE_NAME, 0, NULL, &valueSize);
             value = (char *) malloc(valueSize);
             clGetDeviceInfo(devices[j], CL_DEVICE_NAME, valueSize, value, NULL);
-            printf("%d. Device: %s\n", j + 1, value);
+            printf("%d. Device: %s\n", j, value);
             free(value);
 
             // print hardware device version
             clGetDeviceInfo(devices[j], CL_DEVICE_VERSION, 0, NULL, &valueSize);
             value = (char *) malloc(valueSize);
             clGetDeviceInfo(devices[j], CL_DEVICE_VERSION, valueSize, value, NULL);
-            printf("   %d.%d Hardware version: %s\n", j + 1, 1, value);
+            printf("   %d.%d Hardware version: %s\n", j, 1, value);
             free(value);
 
             // print software driver version
             clGetDeviceInfo(devices[j], CL_DRIVER_VERSION, 0, NULL, &valueSize);
             value = (char *) malloc(valueSize);
             clGetDeviceInfo(devices[j], CL_DRIVER_VERSION, valueSize, value, NULL);
-            printf("   %d.%d Software version: %s\n", j + 1, 2, value);
+            printf("   %d.%d Software version: %s\n", j, 2, value);
             free(value);
 
             // print c version supported by compiler for device
             clGetDeviceInfo(devices[j], CL_DEVICE_OPENCL_C_VERSION, 0, NULL, &valueSize);
             value = (char *) malloc(valueSize);
             clGetDeviceInfo(devices[j], CL_DEVICE_OPENCL_C_VERSION, valueSize, value, NULL);
-            printf("   %d.%d OpenCL C version: %s\n", j + 1, 3, value);
+            printf("   %d.%d OpenCL C version: %s\n", j, 3, value);
             free(value);
 
             // device type
             cl_device_type devtype;
             clGetDeviceInfo(devices[j], CL_DEVICE_TYPE, sizeof(devtype), &devtype, NULL);
-            if (devtype == CL_DEVICE_TYPE_CPU) printf("   %d.%d Device type: CPU\n", j + 1, 4);
-            else if (devtype == CL_DEVICE_TYPE_GPU) printf("   %d.%d Device type: GPU\n", j + 1, 4);
-            else if (devtype == CL_DEVICE_TYPE_ACCELERATOR) printf("   %d.%d Device type: ACCELERATOR\n", j + 1, 4);
-            else printf("   %d.%d Device type: UNKNOWN\n", j + 1, 4);
+            if (devtype == CL_DEVICE_TYPE_CPU) printf("   %d.%d Device type: CPU\n", j, 4);
+            else if (devtype == CL_DEVICE_TYPE_GPU) printf("   %d.%d Device type: GPU\n", j, 4);
+            else if (devtype == CL_DEVICE_TYPE_ACCELERATOR) printf("   %d.%d Device type: ACCELERATOR\n", j, 4);
+            else printf("   %d.%d Device type: UNKNOWN\n", j, 4);
 
             // print parallel compute units
             clGetDeviceInfo(devices[j], CL_DEVICE_MAX_COMPUTE_UNITS, sizeof(maxComputeUnits), &maxComputeUnits, NULL);
-            printf("   %d.%d Parallel compute units: %d\n", j + 1, 5, maxComputeUnits);
+            printf("   %d.%d Parallel compute units: %d\n", j, 5, maxComputeUnits);
 
             // max work group size
             size_t devcores2;
             clGetDeviceInfo(devices[j], CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof(devcores2), &devcores2, NULL);
-            printf("   %d.%d Max work group size: %u\n", j + 1, 6, (cl_uint) devcores2);
+            printf("   %d.%d Max work group size: %u\n", j, 6, (cl_uint) devcores2);
 
             // max work item size
             size_t work_item_size[3] = {0, 0, 0};
             clGetDeviceInfo(devices[j], CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof(work_item_size), &work_item_size, NULL);
-            printf("   %d.%d Max work items: (%d, %d, %d)\n", j + 1, 7, work_item_size[0], work_item_size[1],
+            printf("   %d.%d Max work items: (%d, %d, %d)\n", j, 7, work_item_size[0], work_item_size[1],
                    work_item_size[2]);
 
             // max clock frequency
             cl_uint devfreq;
             clGetDeviceInfo(devices[j], CL_DEVICE_MAX_CLOCK_FREQUENCY, sizeof(devfreq), &devfreq, NULL);
-            printf("   %d.%d Max clock frequency: %u\n", j + 1, 8, devfreq);
+            printf("   %d.%d Max clock frequency: %u\n", j, 8, devfreq);
 
             // memory in MB
             cl_ulong devmem;
             clGetDeviceInfo(devices[j], CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(devmem), &devmem, NULL);
             cl_uint devmemMB = (cl_uint) (devmem / 1000000);
-            printf("   %d.%d Device global memory (MB): %u\n", j + 1, 9, devmemMB);
+            printf("   %d.%d Device global memory (MB): %u\n", j, 9, devmemMB);
 
             // double precision support?
             cl_int supported;
             clGetDeviceInfo(devices[j], CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE, sizeof(supported), &supported, NULL);
-            printf("   %d.%d Double precision supported: %s\n\n", j + 1, 10, supported ? "YES" : "NO");
+            printf("   %d.%d Double precision supported: %s\n\n", j, 10, supported ? "YES" : "NO");
 
         }
         free(devices);
@@ -134,12 +172,12 @@ void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uin
     free(platforms);
 }
 
-cl_context getContext(cl_device_id **devices, boolean verbose) {
+cl_context getContext(cl_device_id **devices, cl_uint num_devices, boolean verbose) {
     // Create OpenCL context
     cl_int ret;
 
     cl_context context = NULL;
-    context = clCreateContext(NULL, 1, devices[0], NULL, NULL, &ret);
+    context = clCreateContext(NULL, num_devices, *devices, NULL, NULL, &ret);
     if (verbose) printf("[INIT] Create OpenCL context: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
@@ -153,16 +191,17 @@ cl_context getContext(cl_device_id **devices, boolean verbose) {
     return context;
 }
 
-cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, boolean verbose) {
+cl_command_queue getCommandQueue(cl_context context, cl_device_id device, boolean verbose) {
     // Create command queue
     cl_int ret;
 
     cl_command_queue queue = NULL;
-    queue = clCreateCommandQueue(*context, *devices[0], 0, &ret);
+    queue = clCreateCommandQueue(context, device, 0, &ret);
     if (verbose) printf("[INIT] Create command queue: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
     } else {
+        fprintf(stderr, "Failed to create command queue. Error %i\n", ret);
         if (verbose) {
             printf("FAILED\n");
             getchar();
@@ -173,7 +212,7 @@ cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, bo
 }
 
 //TODO: Add boolean to only optionally include utils and make util includes work.
-cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[], boolean verbose) {
+cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], char kernelName[], boolean verbose) {
     FILE *fp;
     char *source_str;
     size_t source_size;
@@ -207,7 +246,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     const size_t sizes[] = {utils_size, source_size};
     // Create kernel program from source
     cl_program program = NULL;
-    program = clCreateProgramWithSource(*context, 2, strings, sizes, &ret);
+    program = clCreateProgramWithSource(context, 2, strings, sizes, &ret);
     if (verbose) printf("       Create kernel program: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
@@ -219,8 +258,9 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
         return NULL;
     }
 
+    cl_device_id devices[] = {device};
     // Build kernel program
-    ret = clBuildProgram(program, 1, devices[0], NULL, NULL, NULL);
+    ret = clBuildProgram(program, 1, devices, NULL, NULL, NULL);
     if (verbose) printf("       Build kernel program: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
@@ -228,12 +268,12 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
         if (verbose) printf("FAILED (%d)\n", ret);
         // Determine the size of the log
         size_t log_size;
-        clGetProgramBuildInfo(program, *devices[0], CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+        clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
         // Allocate memory for the log
         char *log = (char *) malloc(log_size);
 
         // Get the log
-        clGetProgramBuildInfo(program, *devices[0], CL_PROGRAM_BUILD_LOG, log_size, log, NULL);
+        clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, log, NULL);
 
         // Print the log
         if (verbose) {
@@ -292,13 +332,13 @@ cl_int intArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_int **arra
 }
 
 cl_int ulongArrayToDevice(cl_command_queue queue, cl_mem array_buffer, cl_ulong **array,
-                        cl_ulong length) {
+                          cl_ulong length) {
     return clEnqueueWriteBuffer(queue, array_buffer, CL_TRUE, 0, sizeof(cl_ulong) * length,
                                 *array, 0, NULL, NULL);
 }
 
 cl_int ulongArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_ulong **array,
-                      cl_ulong length) {
+                        cl_ulong length) {
     return clEnqueueReadBuffer(queue, array_buffer, CL_TRUE, 0, sizeof(cl_ulong) * length, *array,
                                0, NULL, NULL);
 }

@@ -15,8 +15,8 @@
 
 // Device and platform info variables
 
-cl_platform_id *platforms;
-cl_device_id *devices;
+cl_device_id device;
+cl_context context;
 
 // Debugging strings
 cl_int ret;
@@ -54,11 +54,11 @@ cl_mem g_tstep;
 
 // PROGRAM BEGINS HERE
 int main() {
+
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, TRUE);
-    cl_context context = getContext(&devices, TRUE);
-    cl_kernel kernel = getKernel(&devices, &context, "../clEnqueueNDRangeKernel/propagate.cl", "propagate", TRUE);
-    cl_command_queue queue = getCommandQueue(&context, &devices, TRUE);
+    setContext(&device, &context, TRUE);
+    cl_kernel kernel = getKernel(device, context, "../clEnqueueNDRangeKernel/propagate.cl", "propagate", TRUE);
+    cl_command_queue queue = getCommandQueue(context, device, TRUE);
 
     // Create memory buffers
     gposold = clCreateBuffer(context, CL_MEM_READ_WRITE, NUMPART * sizeof(cl_float4), NULL, &ret);

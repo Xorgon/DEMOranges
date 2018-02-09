@@ -48,28 +48,27 @@ cl_mem ginput_count_array;
 cl_mem gcv_start_array;
 cl_mem gcv_pids;
 
-cl_platform_id *platforms;
-cl_device_id *devices;
+cl_context context;
+cl_device_id device;
 cl_int ret;
 
 int main() {
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, VERBOSE);
-    cl_kernel iterate_particle = getKernel(&devices, &context, "../kernels/iterate_particle.cl",
+    setContext(&device, &context, TRUE);
+    cl_kernel iterate_particle = getKernel(device, context, "../kernels/iterate_particle.cl",
                                            "iterate_particle", VERBOSE);
-    cl_kernel calculate_pp_collision = getKernel(&devices, &context, "../kernels/calculate_pp_collision.cl",
+    cl_kernel calculate_pp_collision = getKernel(device, context, "../kernels/calculate_pp_collision.cl",
                                                  "calculate_pp_collision", VERBOSE);
-    cl_kernel assign_particle_count = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+    cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", VERBOSE);
-    cl_kernel assign_particles = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+    cl_kernel assign_particles = getKernel(device, context, "../kernels/assign_particles.cl",
                                            "assign_particles", VERBOSE);
-    cl_kernel count_pp_collisions = getKernel(&devices, &context, "../kernels/make_pp_collisions.cl",
+    cl_kernel count_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                               "count_pp_collisions", VERBOSE);
-    cl_kernel make_pp_collisions = getKernel(&devices, &context, "../kernels/make_pp_collisions.cl",
+    cl_kernel make_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                              "make_pp_collisions", VERBOSE);
-    cl_command_queue queue = getCommandQueue(&context, &devices, VERBOSE);
+    cl_command_queue queue = getCommandQueue(context, device, VERBOSE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
     if (hparticles == NULL) {

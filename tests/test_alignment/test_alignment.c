@@ -10,19 +10,18 @@ boolean test_particle_struct_alignment(boolean verbose) {
     cl_mem gparticles;
     cl_ulong NUMPART = 10;
 
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
     cl_int ret;
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
 
     printf("\nTesting particle struct alignment.\n");
 
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, verbose);
-    cl_kernel kernel = getKernel(&devices, &context, "../tests/test_alignment/alignment_test_kernels.cl",
+    setContext(&device, &context, FALSE);
+    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
                                  "test_particle_struct_alignment", verbose);
-    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
 
@@ -83,19 +82,18 @@ boolean test_pp_collision_struct_alignment(boolean verbose) {
     cl_mem gpp_collisions;
     cl_ulong NUMCOLS = 10;
 
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
     cl_int ret;
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
 
     printf("\nTesting pp_collision struct alignment.\n");
 
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, verbose);
-    cl_kernel kernel = getKernel(&devices, &context, "../tests/test_alignment/alignment_test_kernels.cl",
+    setContext(&device, &context, FALSE);
+    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
                                  "test_pp_collision_struct_alignment", verbose);
-    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
 
     hpp_collisions = malloc(sizeof(pp_collision) * NUMCOLS);
 

@@ -30,23 +30,22 @@ boolean test_main_loop(boolean verbose) {
 
     cl_ulong NUMPART = 6;
 
-    cl_platform_id *platforms;
-    cl_device_id *devices;
+    cl_device_id device;
+    cl_context context;
     cl_int ret;
 
     printf("\nTesting main loop functionality.\n");
 
     // Initializing OpenCL.
-    setDevices(&platforms, &devices, FALSE);
-    cl_context context = getContext(&devices, verbose);
-    cl_command_queue queue = getCommandQueue(&context, &devices, verbose);
-    cl_kernel assign_particle_count = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+    setContext(&device, &context, FALSE);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+    cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", verbose);
-    cl_kernel assign_particles = getKernel(&devices, &context, "../kernels/assign_particles.cl",
+    cl_kernel assign_particles = getKernel(device, context, "../kernels/assign_particles.cl",
                                            "assign_particles", verbose);
-    cl_kernel count_pp_collisions = getKernel(&devices, &context, "../kernels/make_pp_collisions.cl",
+    cl_kernel count_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                               "count_pp_collisions", verbose);
-    cl_kernel make_pp_collisions = getKernel(&devices, &context, "../kernels/make_pp_collisions.cl",
+    cl_kernel make_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                              "make_pp_collisions", verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
@@ -108,9 +107,9 @@ boolean test_main_loop(boolean verbose) {
     clFinish(queue);
 
     ulongArrayToHost(queue, gcv_pids, &cv_pids, NUMPART);
-    for (int i = 0; i < NUMPART; i++) {
-        printf("%llu\n", cv_pids[i]);
-    }
+//    for (int i = 0; i < NUMPART; i++) {
+//        printf("%llu\n", cv_pids[i]);
+//    }
 
     cl_ulong collision_count = 0;
     cl_mem gcollision_count = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong), NULL, &ret);
@@ -147,7 +146,7 @@ boolean test_main_loop(boolean verbose) {
     clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
     pp_collisionsToHost(queue, gcollisions, &collisions, NUMCOLS);
 
-    printf("%llu\n", collision_count);
+    if (verbose) printf("Collision count = %llu\n", collision_count);
 
     return (collision_count == NUMCOLS);
 }

@@ -21,15 +21,16 @@
 #define FALSE false
 #endif
 
-void setDevices(cl_platform_id **platforms, cl_device_id **devices, boolean verbose);
+void setContext(cl_device_id *device, cl_context *context,
+                boolean verbose);
 
 void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uint deviceCount, cl_device_id *devices);
 
-cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, boolean verbose);
+cl_command_queue getCommandQueue(cl_context context, cl_device_id device, boolean verbose);
 
-cl_context getContext(cl_device_id **devices, boolean verbose);
+cl_context getContext(cl_device_id **devices, cl_uint num_devices, boolean verbose);
 
-cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[], char kernelName[], boolean verbose);
+cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], char kernelName[], boolean verbose);
 
 cl_int particlesToDevice(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART);
 
@@ -48,9 +49,9 @@ cl_int intArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_int **arra
                       cl_ulong length);
 
 cl_int ulongArrayToDevice(cl_command_queue queue, cl_mem array_buffer,
-                        cl_ulong **array, cl_ulong length);
+                          cl_ulong **array, cl_ulong length);
 
 cl_int ulongArrayToHost(cl_command_queue queue, cl_mem array_buffer, cl_ulong **array,
-                      cl_ulong length);
+                        cl_ulong length);
 
 #endif //DEMORANGES_CLDEVICEUTILS_H
