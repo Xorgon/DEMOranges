@@ -4,7 +4,7 @@
 
 #include "test_main_loop.h"
 
-boolean test_main_loop(boolean verbose) {
+boolean test_main_loop(cl_device_id device, cl_context context, boolean verbose) {
     particle *hparticles;
     cl_mem gparticles;
 
@@ -30,8 +30,6 @@ boolean test_main_loop(boolean verbose) {
 
     cl_ulong NUMPART = 6;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
 
     printf("\nTesting main loop functionality.\n");

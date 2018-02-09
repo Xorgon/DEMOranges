@@ -5,13 +5,11 @@
 #include "test_alignment.h"
 #include "../../structures/collision.h"
 
-boolean test_particle_struct_alignment(boolean verbose) {
+boolean test_particle_struct_alignment(cl_device_id device, cl_context context, boolean verbose) {
     particle *hparticles;
     cl_mem gparticles;
     cl_ulong NUMPART = 10;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
@@ -77,13 +75,11 @@ boolean test_particle_struct_alignment(boolean verbose) {
     return (boolean) hcorrect;
 }
 
-boolean test_pp_collision_struct_alignment(boolean verbose) {
+boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context context, boolean verbose) {
     pp_collision *hpp_collisions;
     cl_mem gpp_collisions;
     cl_ulong NUMCOLS = 10;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;

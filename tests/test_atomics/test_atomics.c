@@ -5,13 +5,11 @@
 #include "test_atomics.h"
 #include "../../structures/particle.h"
 
-boolean test_atomics(boolean verbose) {
+boolean test_atomics(cl_device_id device, cl_context context, boolean verbose) {
     particle *hparticles;
     cl_mem gparticles;
     cl_ulong NUMPART = 10;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
 
     printf("\nTesting atomic float addition.\n");

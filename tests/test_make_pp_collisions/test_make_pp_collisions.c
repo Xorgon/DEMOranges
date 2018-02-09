@@ -4,7 +4,7 @@
 
 #include "test_make_pp_collisions.h"
 
-boolean test_count_pp_collisions(boolean verbose) {
+boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolean verbose) {
     printf("\nTesting pp_collision counting.\n");
 
     particle *hparticles;
@@ -16,8 +16,6 @@ boolean test_count_pp_collisions(boolean verbose) {
     cl_int cvs_per_edge = 3;
     cl_ulong NUMCVS = 27;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
 
 
@@ -54,7 +52,7 @@ boolean test_count_pp_collisions(boolean verbose) {
     return (collision_count == 19);
 }
 
-boolean test_make_pp_collisions(boolean verbose) {
+boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean verbose) {
     cl_ulong *cv_start_array;
     cl_mem gcv_start_array;
 
@@ -100,8 +98,6 @@ boolean test_make_pp_collisions(boolean verbose) {
     collisions = malloc(sizeof(pp_collision) * NUMCOLS);
     collision_count = 0;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
 
     printf("\nTesting pp_collision creation.\n");

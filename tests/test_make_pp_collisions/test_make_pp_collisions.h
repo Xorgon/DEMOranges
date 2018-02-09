@@ -12,8 +12,8 @@
 #include "../../util/cvUtils.h"
 #include "../../structures/particle.h"
 
-boolean test_count_pp_collisions(boolean verbose);
+boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolean verbose);
 
-boolean test_make_pp_collisions(boolean verbose);
+boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean verbose);
 
 #endif //DEMORANGES_TEST_MAKE_PP_COLLISIONS_H

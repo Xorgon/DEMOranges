@@ -3,10 +3,7 @@
 //
 #include "test_kernels.h"
 
-boolean test_kernels(boolean verbose) {
-    cl_device_id device;
-    cl_context context;
-
+boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
     cl_int ret;
 
     printf("\nTesting compiling kernels.\n");

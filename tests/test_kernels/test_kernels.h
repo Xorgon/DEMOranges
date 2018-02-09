@@ -6,4 +6,4 @@
 #include <CL/cl.h>
 #include "../../util/clUtils.h"
 
-boolean test_kernels(boolean verbose);
+boolean test_kernels(cl_device_id device, cl_context context, boolean verbose);

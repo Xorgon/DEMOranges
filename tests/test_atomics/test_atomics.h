@@ -8,6 +8,6 @@
 #include "CL/cl.h"
 #include "../../util/clUtils.h"
 
-boolean test_atomics(boolean verbose);
+boolean test_atomics(cl_device_id device, cl_context context, boolean verbose);
 
 #endif //DEMORANGES_TEST_ATOMICS_H

@@ -5,7 +5,7 @@
 #include "test_assign_particles.h"
 #include "../../util/cvUtils.h"
 
-boolean test_assign_particle_count(boolean verbose) {
+boolean test_assign_particle_count(cl_device_id device, cl_context context, boolean verbose) {
 
     particle *hparticles;
     cl_mem gparticles;
@@ -20,8 +20,6 @@ boolean test_assign_particle_count(boolean verbose) {
 
     cl_ulong NUMPART = 6;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
 
     printf("\nTesting particle count assignment.\n");
@@ -102,7 +100,7 @@ boolean test_set_array_starts(boolean verbose) {
             && cv_array_starts[4] == 6);
 }
 
-boolean test_assign_particles(boolean verbose) {
+boolean test_assign_particles(cl_device_id device, cl_context context, boolean verbose) {
     particle *hparticles;
     cl_mem gparticles;
 
@@ -125,8 +123,6 @@ boolean test_assign_particles(boolean verbose) {
 
     cl_ulong NUMPART = 6;
 
-    cl_device_id device;
-    cl_context context;
     cl_int ret;
 
     printf("\nTesting particle assignment.\n");
