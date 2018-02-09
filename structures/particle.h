@@ -20,7 +20,7 @@ typedef struct particle {
 // Structure memory alignment for Visual Studio and GCC compilers.
 #if defined(_MSC_VER)
 } __declspec(align(128)) particle;
-#elif defined(__GNUC) || defined(__GNUG__) || defined(__MINGW_GCC_VERSION)
+#elif defined(__GNUC__) || defined(__GNUG__) || defined(__MINGW_GCC_VERSION)
 } __attribute__((aligned (128))) particle;
 #endif
 
