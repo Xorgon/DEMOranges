@@ -21,7 +21,7 @@
 
 particle *hparticles;
 cl_mem gparticles;
-cl_ulong NUMPART = 100000;
+cl_ulong NUMPART = 500000;
 
 pp_collision *hpp_cols;
 cl_mem gpp_cols;
@@ -34,7 +34,7 @@ cl_float log_step = 0.0333;
 
 cl_float cv_length;
 cl_int cvs_per_edge;
-cl_float domain_length = 10;
+cl_float domain_length = 18;
 cl_ulong NUMCVS; // Total number of CVs.
 
 cl_int *particle_count_array; // Array of CVs with just the number of particles in each CV.
