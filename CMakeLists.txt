@@ -9,17 +9,21 @@ MESSAGE(CMake\ Version: \ ${CMAKE_VERSION})
 if (WIN32)
     STRING(REGEX REPLACE "\\\\" "/" OCL_ROOT $ENV{OCL_ROOT})
 endif(WIN32)
+if (NOT ${OCL_ROOT} STREQUAL "")
+    # Set required OpenCL CMake build options.
+    set(OpenCL_INCLUDE_DIR ${OCL_ROOT}/include/)
+    set(OpenCL_LIBRARY ${OCL_ROOT}/lib/x86_64/OpenCL.lib)
 
-# Set required OpenCL CMake build options.
-set(OpenCL_INCLUDE_DIR ${OCL_ROOT}/include/)
-set(OpenCL_LIBRARY ${OCL_ROOT}/lib/x86_64/OpenCL.lib)
-
-# Add OpenCL stuff.
-find_package(OpenCL REQUIRED)
-#add_library(OpenCL ${OpenCL_LIBRARY})
-include_directories(${OpenCL_INCLUDE_DIR})
-#SET_TARGET_PROPERTIES(OpenCL PROPERTIES LINKER_LANGUAGE C)
-
+    # Add OpenCL stuff.
+    find_package(OpenCL REQUIRED)
+    #add_library(OpenCL ${OpenCL_LIBRARY})
+    include_directories(${OpenCL_INCLUDE_DIR})
+    #SET_TARGET_PROPERTIES(OpenCL PROPERTIES LINKER_LANGUAGE C)
+else()
+    MESSAGE(OCL_ROOT\ not\ found.)
+    find_package(OpenCL REQUIRED)
+    set(OpenCL_LIBRARY OpenCL::OpenCL)
+endif()
 
 # Targets
 
