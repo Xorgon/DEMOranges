@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.7)
 project(DEMOranges)
 set(CMAKE_CXX_STANDARD 11)
 
+MESSAGE(Compiler: \ ${CMAKE_CXX_COMPILER_ID} \ ${CMAKE_CXX_COMPILER_VERSION})
+MESSAGE(CMake\ Version: \ ${CMAKE_VERSION})
+
 # Fix Windows path environment variable.
 if (WIN32)
     STRING(REGEX REPLACE "\\\\" "/" OCL_ROOT $ENV{OCL_ROOT})
