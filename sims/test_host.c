@@ -86,6 +86,7 @@ int main() {
         fprintf(stderr, "Position memory allocation failed.");
     }
 
+    srand(0);
     printf("[INIT] Creating particle positions.\n");
     cl_ulong pos_len = 0;
     auto cubert_NUMPART = (cl_ulong) ceil(pow(NUMPART, 0.334));
@@ -93,9 +94,13 @@ int main() {
         for (int y = 0; y < cubert_NUMPART; y++) {
             for (int z = 0; z < cubert_NUMPART; z++) {
                 if (pos_len < NUMPART) {
-                    cl_float xf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) x / cubert_NUMPART));
-                    cl_float yf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) y / cubert_NUMPART));
-                    cl_float zf = 1.2 * cubert_NUMPART * particle_diameter * (-0.5 + ((float) z / cubert_NUMPART));
+                    float rand_offset = 0.005 * (float) rand() / (float) (RAND_MAX);
+                    cl_float xf = 1.2 * cubert_NUMPART * particle_diameter
+                                  * (-0.5 + rand_offset + ((float) x / cubert_NUMPART));
+                    cl_float yf = 1.2 * cubert_NUMPART * particle_diameter
+                                  * (-0.5 + rand_offset + ((float) y / cubert_NUMPART));
+                    cl_float zf = 1.2 * cubert_NUMPART * particle_diameter
+                                  * (-0.5 + rand_offset + ((float) z / cubert_NUMPART));
                     positions[pos_len] = (cl_float3) {xf, yf, zf};
                 }
                 pos_len++;
