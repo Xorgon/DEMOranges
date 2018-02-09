@@ -223,7 +223,8 @@ cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], ch
 
     if (verbose) printf("[INIT] Creating %s kernel\n", kernelName);
     // load source code containing utilities.
-    fopen_s(&fp, "../util/kernelUtils.cl", "r");
+    fp = fopen("../util/kernelUtils.cl", "r");
+//    fopen_s(&fp, "../util/kernelUtils.cl", "r");
     if (!fp) {
         fprintf(stderr, "Failed to load util file.\n");
         exit(1);
@@ -233,7 +234,8 @@ cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], ch
     fclose(fp);
 
     // load source code containing kernel
-    fopen_s(&fp, fileName, "r");
+    fp = fopen(fileName, "r");
+//    fopen_s(&fp, fileName, "r");
     if (!fp) {
         if (verbose) fprintf(stderr, "Failed to load kernel.\n");
         exit(1);
