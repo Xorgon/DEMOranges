@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/cl.h>
-#include <conio.h>
 #include "../../util/clUtils.h"
 #include "../../util/cvUtils.h"
 #include "../../structures/particle.h"

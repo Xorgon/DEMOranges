@@ -132,8 +132,6 @@ void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uin
         free(devices);
     }
     free(platforms);
-    printf("Press any key to continue.\n");
-    _getch();
 }
 
 cl_context getContext(cl_device_id **devices, boolean verbose) {
@@ -148,7 +146,7 @@ cl_context getContext(cl_device_id **devices, boolean verbose) {
     } else {
         if (verbose) {
             printf("FAILED\n");
-            _getch();
+            getchar();
         }
         return NULL;
     }
@@ -167,7 +165,7 @@ cl_command_queue getCommandQueue(cl_context *context, cl_device_id **devices, bo
     } else {
         if (verbose) {
             printf("FAILED\n");
-            _getch();
+            getchar();
         }
         return NULL;
     }
@@ -216,7 +214,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     } else {
         if (verbose) {
             printf("FAILED (%d)\n", ret);
-            _getch();
+            getchar();
         }
         return NULL;
     }
@@ -240,7 +238,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
         // Print the log
         if (verbose) {
             printf("%s\n", log);
-            _getch();
+            getchar();
         }
         return NULL;
     }
@@ -254,7 +252,7 @@ cl_kernel getKernel(cl_device_id **devices, cl_context *context, char fileName[]
     } else {
         if (verbose) {
             printf("FAILED (%d)\n", ret);
-            _getch();
+            getchar();
         }
         return NULL;
     }

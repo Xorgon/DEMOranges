@@ -11,7 +11,6 @@
 #include "../structures/particle.h"
 #include "../structures/collision.h"
 #include <stdbool.h>
-#include <conio.h>
 
 #define MAX_SOURCE_SIZE (0x100000)
 
