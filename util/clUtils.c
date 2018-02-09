@@ -183,7 +183,7 @@ cl_context getContext(cl_device_id **devices, cl_uint num_devices, boolean verbo
         if (verbose) printf("SUCCESS\n");
     } else {
         if (verbose) {
-            printf("FAILED\n");
+            printf("FAILED\n (%i)", ret);
             getchar();
         }
         return NULL;
