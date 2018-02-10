@@ -21,7 +21,7 @@
 
 particle *hparticles;
 cl_mem gparticles;
-cl_ulong NUMPART = 500000;
+cl_ulong NUMPART = 1000000;
 
 pp_collision *hpp_cols;
 cl_mem gpp_cols;
