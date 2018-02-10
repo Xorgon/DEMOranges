@@ -37,7 +37,6 @@ boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolea
     cl_ulong collision_count = 0;
     cl_mem gcollision_count = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong), NULL, &ret);
     ret = clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
-    gcollision_count = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong), NULL, &ret);
 
     clSetKernelArg(count_pp_collisions, 0, sizeof(cl_mem), &gparticle_count_array);
     clSetKernelArg(count_pp_collisions, 1, sizeof(cl_int), &cvs_per_edge);
@@ -46,8 +45,7 @@ boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolea
     ret = clEnqueueNDRangeKernel(queue, count_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
     clFinish(queue);
 
-    clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
-
+    ret = clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
     return (collision_count == 19);
 }
 
