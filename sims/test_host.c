@@ -34,7 +34,7 @@ cl_float log_step = 0.0333;
 
 cl_float cv_length;
 cl_int cvs_per_edge;
-cl_float domain_length = 18;
+cl_float domain_length;
 cl_ulong NUMCVS; // Total number of CVs.
 
 cl_int *particle_count_array; // Array of CVs with just the number of particles in each CV.
@@ -89,6 +89,10 @@ int main() {
     printf("[INIT] Creating particle positions.\n");
     cl_ulong pos_len = 0;
     auto cubert_NUMPART = (cl_ulong) ceil(pow(NUMPART, 0.334));
+
+    domain_length = (cl_float) (2 * 1.2 * cubert_NUMPART * particle_diameter);
+    printf("[INIT] Domain length = %f\n", domain_length);
+
     for (int x = 0; x < cubert_NUMPART; x++) {
         for (int y = 0; y < cubert_NUMPART; y++) {
             for (int z = 0; z < cubert_NUMPART; z++) {
