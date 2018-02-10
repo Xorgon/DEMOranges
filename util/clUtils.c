@@ -62,7 +62,7 @@ void setContext(cl_device_id *device, cl_context *context,
                 device_id = input;
                 valid = TRUE;
             } else {
-                printf("Invalid input, select a device number no higher than %i\n", platformCount - 1);
+                printf("Invalid input, select a device number no higher than %i\n", deviceCount - 1);
                 getchar();
             }
         }
@@ -79,8 +79,8 @@ void setContext(cl_device_id *device, cl_context *context,
     if (verbose) printf("Selected device: %s\n", value);
     free(value);
 
-    *context = getContext(&devices, deviceCount, verbose);
-
+    devices[0] = *device; // Only send selected device.
+    *context = getContext(&devices, 1, verbose);
 }
 
 void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uint deviceCount, cl_device_id *devices) {
@@ -183,7 +183,7 @@ cl_context getContext(cl_device_id **devices, cl_uint num_devices, boolean verbo
         if (verbose) printf("SUCCESS\n");
     } else {
         if (verbose) {
-            printf("FAILED\n (%i)", ret);
+            printf("FAILED (%i)\n", ret);
             getchar();
         }
         return NULL;
