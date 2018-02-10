@@ -34,8 +34,6 @@ boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
     };
     int files = 7;
 
-    setContext(&device, &context, FALSE);
-
     for (int i = 0; i < files; i++) {
 
         if (verbose) {

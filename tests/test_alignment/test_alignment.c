@@ -16,7 +16,6 @@ boolean test_particle_struct_alignment(cl_device_id device, cl_context context, 
 
     printf("\nTesting particle struct alignment.\n");
 
-    setContext(&device, &context, FALSE);
     cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
                                  "test_particle_struct_alignment", verbose);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
@@ -86,7 +85,6 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
 
     printf("\nTesting pp_collision struct alignment.\n");
 
-    setContext(&device, &context, FALSE);
     cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
                                  "test_pp_collision_struct_alignment", verbose);
     cl_command_queue queue = getCommandQueue(context, device, verbose);

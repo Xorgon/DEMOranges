@@ -25,7 +25,6 @@ boolean test_assign_particle_count(cl_device_id device, cl_context context, bool
     printf("\nTesting particle count assignment.\n");
 
     // Initializing OpenCL.
-    setContext(&device, &context, FALSE);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
     cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", verbose);
@@ -128,7 +127,6 @@ boolean test_assign_particles(cl_device_id device, cl_context context, boolean v
     printf("\nTesting particle assignment.\n");
 
     // Initializing OpenCL.
-    setContext(&device, &context, FALSE);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
     cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", verbose);

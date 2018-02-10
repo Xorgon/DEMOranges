@@ -20,7 +20,6 @@ boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolea
 
 
     // Initializing OpenCL.
-    setContext(&device, &context, FALSE);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
     cl_kernel count_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                               "count_pp_collisions", verbose);
@@ -103,7 +102,6 @@ boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean
     printf("\nTesting pp_collision creation.\n");
 
     // Initializing OpenCL.
-    setContext(&device, &context, FALSE);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
     cl_kernel make_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
                                              "make_pp_collisions", verbose);

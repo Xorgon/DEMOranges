@@ -35,7 +35,6 @@ boolean test_main_loop(cl_device_id device, cl_context context, boolean verbose)
     printf("\nTesting main loop functionality.\n");
 
     // Initializing OpenCL.
-    setContext(&device, &context, FALSE);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
     cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
                                                 "assign_particle_count", verbose);
