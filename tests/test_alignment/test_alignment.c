@@ -94,10 +94,10 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
     for (cl_ulong i = 0; i < NUMCOLS; i++) {
         hpp_collisions[i].p1_id = 20;
         hpp_collisions[i].p2_id = 21;
-        hpp_collisions[i].stiffness = 22;
-        hpp_collisions[i].damping_coefficient = 23;
-        hpp_collisions[i].friction_coefficient = 24;
-        hpp_collisions[i].friction_stiffness = 25;
+//        hpp_collisions[i].stiffness = 22;
+//        hpp_collisions[i].damping_coefficient = 23;
+//        hpp_collisions[i].friction_coefficient = 24;
+//        hpp_collisions[i].friction_stiffness = 25;
     }
 
     gpp_collisions = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMCOLS, NULL, &ret);
@@ -121,12 +121,13 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
     }
     for (int i = 0; i < NUMCOLS; i++) {
         pp_collision col = hpp_collisions[i];
-        if (!(col.p1_id == 80 &&
-              col.p2_id == 81 &&
-              col.stiffness == 82 &&
-              col.damping_coefficient == 83 &&
-              col.friction_coefficient == 84 &&
-              col.friction_stiffness == 85)) {
+        if (!(col.p1_id == 80
+              && col.p2_id == 81
+//            &&  col.stiffness == 82 
+//            &&  col.damping_coefficient == 83 
+//            &&  col.friction_coefficient == 84 
+//            &&  col.friction_stiffness == 85
+        )) {
             hcorrect = FALSE;
         }
     }

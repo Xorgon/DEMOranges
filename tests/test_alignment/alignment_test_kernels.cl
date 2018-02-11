@@ -39,17 +39,18 @@ __kernel void test_pp_collision_struct_alignment(__global pp_collision *pp_colli
 
         if (!(pp_collisions[gid].p1_id == 20
             && pp_collisions[gid].p2_id == 21
-            && pp_collisions[gid].stiffness == 22
-            && pp_collisions[gid].damping_coefficient == 23
-            && pp_collisions[gid].friction_coefficient == 24
-            && pp_collisions[gid].friction_stiffness == 25)) {
+//            && pp_collisions[gid].stiffness == 22
+//            && pp_collisions[gid].damping_coefficient == 23
+//            && pp_collisions[gid].friction_coefficient == 24
+//            && pp_collisions[gid].friction_stiffness == 25
+            )) {
 //            *correct = false;
         }
 
         pp_collisions[gid].p1_id = 80;
         pp_collisions[gid].p2_id = 81;
-        pp_collisions[gid].stiffness = 82;
-        pp_collisions[gid].damping_coefficient = 83;
-        pp_collisions[gid].friction_coefficient = 84;
-        pp_collisions[gid].friction_stiffness = 85;
+//        pp_collisions[gid].stiffness = 82;
+//        pp_collisions[gid].damping_coefficient = 83;
+//        pp_collisions[gid].friction_coefficient = 84;
+//        pp_collisions[gid].friction_stiffness = 85;
 }
