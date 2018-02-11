@@ -79,3 +79,17 @@ int3 cv_array_idx_to_cv_coords(ulong cv_array_idx, int cvs_per_edge) {
     int3 cv_coords = (int3) {x, y, z};
     return cv_coords;
 }
+
+float get_particle_mass(particle p) {
+    return (float) p.density * M_PI_F * pow(p.diameter, 3) / 6;
+}
+
+float get_reduced_particle_mass(float m1, float m2) {
+    return m1 * m2 / (m1 + m2);
+}
+
+float get_damping_coefficient(float restitution_coeff, float stiffness, float reduced_particle_mass) {
+    float ln_rest = log(restitution_coeff);
+    return -2 * ln_rest * pow((float)(reduced_particle_mass * stiffness / (M_PI_F * M_PI_F + ln_rest * ln_rest)),
+                                (float) 0.5);
+}

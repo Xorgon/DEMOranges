@@ -139,6 +139,7 @@ int main() {
     gcv_pids = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong) * NUMPART, NULL, &ret);
 
     cl_float stiffness = 1e5;
+    cl_float restitution_coefficient = 0.8;
     cl_float friction_coefficient = 0.6;
     cl_float friction_stiffness = 1e5;
 
@@ -157,8 +158,9 @@ int main() {
     ret = clSetKernelArg(calculate_pp_collision, 1, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(calculate_pp_collision, 2, sizeof(cl_float), &timestep);
     ret = clSetKernelArg(calculate_pp_collision, 3, sizeof(cl_float), &stiffness);
-    ret = clSetKernelArg(calculate_pp_collision, 4, sizeof(cl_float), &friction_coefficient);
-    ret = clSetKernelArg(calculate_pp_collision, 5, sizeof(cl_float), &friction_stiffness);
+    ret = clSetKernelArg(calculate_pp_collision, 4, sizeof(cl_float), &restitution_coefficient);
+    ret = clSetKernelArg(calculate_pp_collision, 5, sizeof(cl_float), &friction_coefficient);
+    ret = clSetKernelArg(calculate_pp_collision, 6, sizeof(cl_float), &friction_stiffness);
 
     ret = particlesToDevice(queue, gparticles, &hparticles, NUMPART);
 
