@@ -23,7 +23,6 @@ particle *hparticles;
 cl_mem gparticles;
 cl_ulong NUMPART = 1000000;
 
-pp_collision *hpp_cols;
 cl_mem gpp_cols;
 cl_ulong NUMCOLS;
 
@@ -212,13 +211,11 @@ int main() {
         NUMCOLS = collision_count;
 
         // Make collisions.
-        if (VERBOSE) printf("    Making collisions\n");
-        free(hpp_cols);
-        hpp_cols = malloc(sizeof(pp_collision) * NUMCOLS);
-        collision_count = 0;
+        if (VERBOSE) printf("    Making %llu collisions\n", collision_count);
         ret = clReleaseMemObject(gpp_cols);
         gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMCOLS, NULL, &ret);
 
+        collision_count = 0;
         clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
 
         clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
