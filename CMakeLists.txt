@@ -59,7 +59,7 @@ file(GLOB_RECURSE test_sim_SOURCE_FILES
 add_executable(test_sim ${test_sim_SOURCE_FILES})
 target_link_libraries(test_sim ${OpenCL_LIBRARY})
 if (NOT(WIN32))
-    target_link_libraries(run_tests m)
+    target_link_libraries(test_sim m)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -funroll-loops ") # Optimization stuff, TODO: Investigate.
