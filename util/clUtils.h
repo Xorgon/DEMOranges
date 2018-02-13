@@ -14,8 +14,8 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
-// Boolean definitions for gcc.
-#if defined(__GNUC__) || defined(__MINGW_GCC_VERSION)
+// If boolean is not correctly defined.
+#if !defined(boolean)
 #define boolean bool
 #define TRUE true
 #define FALSE false
