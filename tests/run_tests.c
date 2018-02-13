@@ -34,6 +34,11 @@ int main() {
         return 1;
     }
 
+    if (!test_pw_collision_struct_alignment(device, context, VERBOSE)) {
+        fprintf(stderr, "\nFAILED AT test_pw_collision_struct_alignment\n");
+        return 1;
+    }
+
     if (!test_atomics(device, context, VERBOSE)) {
         fprintf(stderr, "\nFAILED AT test_atomics\n");
         return 1;

@@ -133,4 +133,63 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
     }
     return (boolean) hcorrect;
 }
-//boolean test_wall_struct_alignment(boolean verbose);
+
+boolean test_pw_collision_struct_alignment(cl_device_id device, cl_context context, boolean verbose) {
+    pw_collision *hpw_collisions;
+    cl_mem gpw_collisions;
+    cl_ulong NUMCOLS = 10;
+
+    cl_int ret;
+    cl_bool hcorrect = TRUE;
+    cl_mem gcorrect;
+
+    printf("\nTesting pw_collision struct alignment.\n");
+
+    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
+                                 "test_pw_collision_struct_alignment", verbose);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+
+    hpw_collisions = malloc(sizeof(pw_collision) * NUMCOLS);
+
+    for (cl_ulong i = 0; i < NUMCOLS; i++) {
+        hpw_collisions[i].p_id = 20;
+        hpw_collisions[i].w_id = 21;
+//        hpp_collisions[i].stiffness = 22;
+//        hpp_collisions[i].damping_coefficient = 23;
+//        hpp_collisions[i].friction_coefficient = 24;
+//        hpp_collisions[i].friction_stiffness = 25;
+    }
+
+    gpw_collisions = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pw_collision) * NUMCOLS, NULL, &ret);
+    gcorrect = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(boolean), NULL, &ret);
+
+    ret = pw_collisionsToDevice(queue, gpw_collisions, &hpw_collisions, NUMCOLS);
+    ret = clEnqueueWriteBuffer(queue, gcorrect, CL_TRUE, 0, sizeof(boolean), &hcorrect, 0, NULL, NULL);
+
+    ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), &gpw_collisions);
+    ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), &gcorrect);
+
+    ret = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, (size_t *) &NUMCOLS, 0, NULL, NULL, NULL);
+
+    ret = pw_collisionsToHost(queue, gpw_collisions, &hpw_collisions, NUMCOLS);
+    ret = clEnqueueReadBuffer(queue, gcorrect, CL_TRUE, 0, sizeof(boolean), &hcorrect, 0, NULL, NULL);
+
+    ret = clFinish(queue);
+
+    if (!hcorrect) {
+        return FALSE;
+    }
+    for (int i = 0; i < NUMCOLS; i++) {
+        pw_collision col = hpw_collisions[i];
+        if (!(col.p_id == 80
+              && col.w_id == 81
+//            &&  col.stiffness == 82
+//            &&  col.damping_coefficient == 83
+//            &&  col.friction_coefficient == 84
+//            &&  col.friction_stiffness == 85
+        )) {
+            hcorrect = FALSE;
+        }
+    }
+    return (boolean) hcorrect;
+}

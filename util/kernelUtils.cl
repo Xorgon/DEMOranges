@@ -22,6 +22,16 @@ typedef struct {
 } __attribute__ ((aligned (16))) pp_collision;
 
 typedef struct {
+    ulong p_id;
+    ulong w_id;
+
+//    float stiffness;
+//    float damping_coefficient;
+//    float friction_coefficient;
+//    float friction_stiffness;
+} __attribute__ ((aligned (16))) pw_collision;
+
+typedef struct {
     float3 normal;
     float3 max;
     float3 min;

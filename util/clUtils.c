@@ -243,7 +243,6 @@ cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], ch
     source_str = (char *) malloc(MAX_SOURCE_SIZE);
     source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
     fclose(fp);
-
     const char *strings[] = {utils_str, source_str};
     const size_t sizes[] = {utils_size, source_size};
     // Create kernel program from source
@@ -318,6 +317,18 @@ pp_collisionsToDevice(cl_command_queue queue, cl_mem gpp_collisions, pp_collisio
 cl_int
 pp_collisionsToHost(cl_command_queue queue, cl_mem gpp_collisions, pp_collision **hpp_collisions, cl_ulong NUMCOLS) {
     return clEnqueueReadBuffer(queue, gpp_collisions, CL_TRUE, 0, sizeof(pp_collision) * NUMCOLS, *hpp_collisions, 0,
+                               NULL, NULL);
+}
+
+cl_int
+pw_collisionsToDevice(cl_command_queue queue, cl_mem gpw_collisions, pw_collision **hpw_collisions, cl_ulong NUMCOLS) {
+    return clEnqueueWriteBuffer(queue, gpw_collisions, CL_TRUE, 0, sizeof(pw_collision) * NUMCOLS, *hpw_collisions, 0,
+                                NULL, NULL);
+}
+
+cl_int
+pw_collisionsToHost(cl_command_queue queue, cl_mem gpw_collisions, pw_collision **hpw_collisions, cl_ulong NUMCOLS) {
+    return clEnqueueReadBuffer(queue, gpw_collisions, CL_TRUE, 0, sizeof(pw_collision) * NUMCOLS, *hpw_collisions, 0,
                                NULL, NULL);
 }
 

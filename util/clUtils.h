@@ -42,6 +42,12 @@ pp_collisionsToDevice(cl_command_queue queue, cl_mem gpp_collisions, pp_collisio
 cl_int
 pp_collisionsToHost(cl_command_queue queue, cl_mem gpp_collisions, pp_collision **hpp_collisions, cl_ulong NUMCOLS);
 
+cl_int
+pw_collisionsToDevice(cl_command_queue queue, cl_mem gpw_collisions, pw_collision **hpw_collisions, cl_ulong NUMCOLS);
+
+cl_int
+pw_collisionsToHost(cl_command_queue queue, cl_mem gpw_collisions, pw_collision **hpw_collisions, cl_ulong NUMCOLS);
+
 cl_int intArrayToDevice(cl_command_queue queue, cl_mem array_buffer,
                         cl_int **array, cl_ulong length);
 

@@ -44,11 +44,32 @@ __kernel void test_pp_collision_struct_alignment(__global pp_collision *pp_colli
 //            && pp_collisions[gid].friction_coefficient == 24
 //            && pp_collisions[gid].friction_stiffness == 25
             )) {
-//            *correct = false;
+            *correct = false;
         }
 
         pp_collisions[gid].p1_id = 80;
         pp_collisions[gid].p2_id = 81;
+//        pp_collisions[gid].stiffness = 82;
+//        pp_collisions[gid].damping_coefficient = 83;
+//        pp_collisions[gid].friction_coefficient = 84;
+//        pp_collisions[gid].friction_stiffness = 85;
+}
+
+__kernel void test_pw_collision_struct_alignment(__global pw_collision *pw_collisions, __global bool *correct) {
+        int gid = get_global_id(0);
+
+        if (!(pw_collisions[gid].p_id == 20
+            && pw_collisions[gid].w_id == 21
+//            && pp_collisions[gid].stiffness == 22
+//            && pp_collisions[gid].damping_coefficient == 23
+//            && pp_collisions[gid].friction_coefficient == 24
+//            && pp_collisions[gid].friction_stiffness == 25
+            )) {
+            *correct = false;
+        }
+
+        pw_collisions[gid].p_id = 80;
+        pw_collisions[gid].w_id = 81;
 //        pp_collisions[gid].stiffness = 82;
 //        pp_collisions[gid].damping_coefficient = 83;
 //        pp_collisions[gid].friction_coefficient = 84;
