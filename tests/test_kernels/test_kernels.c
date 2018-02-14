@@ -18,7 +18,6 @@ boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
 //        "../kernels/make_pw_collisions.cl",
             "../kernels/calculate_pp_collision.cl",
             "../kernels/calculate_pw_collision.cl",
-//        "../kernels/sort_particles.cl"
     };
 
     char *kernelNames[] = {
@@ -30,7 +29,6 @@ boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
 //        "make_pw_collisions",
             "calculate_pp_collision",
             "calculate_pw_collision",
-//        "sort_particles"
     };
     int files = 7;
 

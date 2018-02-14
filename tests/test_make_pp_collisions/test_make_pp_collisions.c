@@ -132,7 +132,7 @@ boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean
     if (verbose) {
         printf("Collision count = %lu\n", (unsigned long) collision_count);
 
-//        for (int i = 0; i < NUMCOLS; i++) {
+//        for (int i = 0; i < NUMPPCOLS; i++) {
 //            printf("%llu -> %llu\n", collisions[i].p1_id, collisions[i].p2_id);
 //        }
     }

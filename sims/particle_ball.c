@@ -25,7 +25,7 @@ cl_mem gparticles;
 cl_ulong NUMPART = 100000;
 
 cl_mem gpp_cols;
-cl_ulong NUMCOLS;
+cl_ulong NUMPPCOLS;
 
 cl_float timestep = 0.0005;
 cl_float sim_length = 10;
@@ -58,7 +58,9 @@ int main() {
     setContext(&device, &context, TRUE);
 
     // Run tests
-    run_all_tests(device, context, FALSE);
+    if (!run_all_tests(device, context, FALSE)) {
+        return 1;
+    }
 
     cl_kernel iterate_particle = getKernel(device, context, "../kernels/iterate_particle.cl",
                                            "iterate_particle", verbose);
@@ -213,12 +215,12 @@ int main() {
         clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
         ret = clEnqueueNDRangeKernel(queue, count_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
         clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
-        NUMCOLS = collision_count;
+        NUMPPCOLS = collision_count;
 
         // Make collisions.
         if (verbose) printf("    Making %llu collisions\n", collision_count);
         ret = clReleaseMemObject(gpp_cols);
-        gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMCOLS, NULL, &ret);
+        gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMPPCOLS, NULL, &ret);
 
         collision_count = 0;
         clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
@@ -230,7 +232,7 @@ int main() {
         // Calculate collisions.
         if (verbose) printf("    Calculating collisions\n");
         ret = clSetKernelArg(calculate_pp_collision, 0, sizeof(cl_mem), &gpp_cols);
-        ret = clEnqueueNDRangeKernel(queue, calculate_pp_collision, 1, NULL, &NUMCOLS, 0, NULL, NULL, NULL);
+        ret = clEnqueueNDRangeKernel(queue, calculate_pp_collision, 1, NULL, &NUMPPCOLS, 0, NULL, NULL, NULL);
 
         // Iterate particles.
         if (verbose) printf("    Iterating particles\n");
