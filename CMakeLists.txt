@@ -65,7 +65,7 @@ file(GLOB_RECURSE box_SOURCE_FILES
 add_executable(box ${box_SOURCE_FILES})
 target_link_libraries(box ${OpenCL_LIBRARY})
 if (NOT(WIN32))
-    target_link_libraries(particle_ball m)
+    target_link_libraries(box m)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -funroll-loops ") # Optimization stuff, TODO: Investigate.

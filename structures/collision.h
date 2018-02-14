@@ -36,7 +36,7 @@ typedef struct pw_collision {
 #if defined(_MSC_VER)
 } __declspec(align(16)) pw_collision;
 #elif defined(__GNUC__) || defined(__GNUG__ ) || defined(__MINGW_GCC_VERSION)
-} __attribute__((aligned (16))) pp_collision;
+} __attribute__((aligned (16))) pw_collision;
 #endif
 
 
