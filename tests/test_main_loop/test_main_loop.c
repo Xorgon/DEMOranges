@@ -32,7 +32,7 @@ boolean test_main_loop(cl_device_id device, cl_context context, boolean verbose)
 
     cl_int ret;
 
-    printf("\nTesting main loop functionality.\n");
+    if (verbose) printf("\nTesting main loop functionality.\n");
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);

@@ -12,7 +12,7 @@ boolean test_atomics(cl_device_id device, cl_context context, boolean verbose) {
 
     cl_int ret;
 
-    printf("\nTesting atomic float addition.\n");
+    if (verbose) printf("\nTesting atomic float addition.\n");
 
     cl_kernel kernel = getKernel(device, context, "../tests/test_atomics/test_atomics.cl",
                                  "test_atomics", verbose);

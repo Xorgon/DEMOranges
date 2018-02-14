@@ -22,7 +22,7 @@ boolean test_assign_particle_count(cl_device_id device, cl_context context, bool
 
     cl_int ret;
 
-    printf("\nTesting particle count assignment.\n");
+    if (verbose) printf("\nTesting particle count assignment.\n");
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);
@@ -84,7 +84,7 @@ boolean test_assign_particle_count(cl_device_id device, cl_context context, bool
 }
 
 boolean test_set_array_starts(boolean verbose) {
-    printf("\nTesting setting CV array starts.\n");
+    if (verbose) printf("\nTesting setting CV array starts.\n");
 
     cl_int particle_count_array[] = {3, 2, 1, 0, 6};
     cl_ulong NUMCVS = 5;
@@ -124,7 +124,7 @@ boolean test_assign_particles(cl_device_id device, cl_context context, boolean v
 
     cl_int ret;
 
-    printf("\nTesting particle assignment.\n");
+    if (verbose) printf("\nTesting particle assignment.\n");
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);

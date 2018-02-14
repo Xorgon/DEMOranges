@@ -6,7 +6,7 @@
 boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
     cl_int ret;
 
-    printf("\nTesting compiling kernels.\n");
+    if (verbose) printf("\nTesting compiling kernels.\n");
 
     // Source file variables
     char *fileNames[] = {

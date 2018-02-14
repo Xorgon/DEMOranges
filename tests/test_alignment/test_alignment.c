@@ -14,7 +14,7 @@ boolean test_particle_struct_alignment(cl_device_id device, cl_context context, 
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
 
-    printf("\nTesting particle struct alignment.\n");
+    if (verbose) printf("\nTesting particle struct alignment.\n");
 
     cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
                                  "test_particle_struct_alignment", verbose);
@@ -83,7 +83,7 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
 
-    printf("\nTesting pp_collision struct alignment.\n");
+    if (verbose) printf("\nTesting pp_collision struct alignment.\n");
 
     cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
                                  "test_pp_collision_struct_alignment", verbose);
@@ -143,7 +143,7 @@ boolean test_pw_collision_struct_alignment(cl_device_id device, cl_context conte
     cl_bool hcorrect = TRUE;
     cl_mem gcorrect;
 
-    printf("\nTesting pw_collision struct alignment.\n");
+    if (verbose) printf("\nTesting pw_collision struct alignment.\n");
 
     cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
                                  "test_pw_collision_struct_alignment", verbose);

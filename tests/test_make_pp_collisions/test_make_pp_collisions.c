@@ -5,7 +5,7 @@
 #include "test_make_pp_collisions.h"
 
 boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolean verbose) {
-    printf("\nTesting pp_collision counting.\n");
+    if (verbose) printf("\nTesting pp_collision counting.\n");
 
     particle *hparticles;
     cl_mem gparticles;
@@ -97,7 +97,7 @@ boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean
 
     cl_int ret;
 
-    printf("\nTesting pp_collision creation.\n");
+    if (verbose) printf("\nTesting pp_collision creation.\n");
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);

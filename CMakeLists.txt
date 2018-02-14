@@ -38,7 +38,7 @@ file(GLOB_RECURSE run_tests_SOURCE_FILES
         "util/*.h" "util/*.c"
         "structures/*.h"
         tests/*)
-add_executable(run_tests ${run_tests_SOURCE_FILES} tests/run_tests.c)
+add_executable(run_tests ${run_tests_SOURCE_FILES} tests/standalone_tests.c)
 target_link_libraries(run_tests ${OpenCL_LIBRARY})
 if (NOT(WIN32))
     target_link_libraries(run_tests m)
