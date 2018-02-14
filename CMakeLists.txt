@@ -51,15 +51,16 @@ endif()
 #add_executable(clEnqueueNDRangeKernel ${clEnqueueNDRangeKernel_SOURCE_FILES})
 #target_link_libraries(clEnqueueNDRangeKernel ${OpenCL_LIBRARY} m)
 
-file(GLOB_RECURSE test_sim_SOURCE_FILES
+file(GLOB_RECURSE particle_ball_SOURCE_FILES
         "util/*.h" "util/*.c"
         "util/particleUtils.c" "util/particleUtils.h"
         "structures/*.h" "util/kernelUtils.cl"
-        sims/test_host.c)
-add_executable(test_sim ${test_sim_SOURCE_FILES})
-target_link_libraries(test_sim ${OpenCL_LIBRARY})
+        "tests/*/*"
+        sims/particle_ball.c)
+add_executable(particle_ball ${particle_ball_SOURCE_FILES})
+target_link_libraries(particle_ball ${OpenCL_LIBRARY})
 if (NOT(WIN32))
-    target_link_libraries(test_sim m)
+    target_link_libraries(particle_ball m)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -funroll-loops ") # Optimization stuff, TODO: Investigate.
