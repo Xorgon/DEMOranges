@@ -1,7 +1,7 @@
 /* Kernel to calculate particle-wall collisions. */
 
 float get_overlap(particle p, aa_wall wall) {
-    return 0.5 * p.diameter  - length(dot(wall.max - p.pos, wall.normal));
+    return 0.5 * p.diameter  - fabs(dot(wall.max - p.pos, wall.normal));
 }
 
 float3 get_collision_normal(particle p, aa_wall wall) {

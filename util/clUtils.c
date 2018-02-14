@@ -332,6 +332,16 @@ pw_collisionsToHost(cl_command_queue queue, cl_mem gpw_collisions, pw_collision 
                                NULL, NULL);
 }
 
+cl_int aa_wallsToDevice(cl_command_queue queue, cl_mem gaa_walls, aa_wall **haa_walls, cl_ulong NUMWALLS) {
+    return clEnqueueWriteBuffer(queue, gaa_walls, CL_TRUE, 0, sizeof(aa_wall) * NUMWALLS, *haa_walls, 0,
+                               NULL, NULL);
+}
+
+cl_int aa_wallsToHost(cl_command_queue queue, cl_mem gaa_walls, aa_wall **haa_walls, cl_ulong NUMWALLS) {
+    return clEnqueueReadBuffer(queue, gaa_walls, CL_TRUE, 0, sizeof(aa_wall) * NUMWALLS, *haa_walls, 0,
+                               NULL, NULL);
+}
+
 cl_int intArrayToDevice(cl_command_queue queue, cl_mem array_buffer, cl_int **array,
                         cl_ulong length) {
     return clEnqueueWriteBuffer(queue, array_buffer, CL_TRUE, 0, sizeof(cl_int) * length,

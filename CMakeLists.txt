@@ -56,5 +56,17 @@ if (NOT(WIN32))
     target_link_libraries(particle_ball m)
 endif()
 
+file(GLOB_RECURSE box_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "util/particleUtils.c" "util/particleUtils.h"
+        "structures/*.h" "util/kernelUtils.cl"
+        "tests/*/*"
+        sims/box.c)
+add_executable(box ${box_SOURCE_FILES})
+target_link_libraries(box ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(particle_ball m)
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -funroll-loops ") # Optimization stuff, TODO: Investigate.
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
