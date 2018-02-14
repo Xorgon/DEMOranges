@@ -4,6 +4,7 @@
 
 #include "test_alignment.h"
 #include "../../structures/collision.h"
+#include "../../structures/wall.h"
 
 boolean test_particle_struct_alignment(cl_device_id device, cl_context context, boolean verbose) {
     particle *hparticles;
@@ -187,6 +188,66 @@ boolean test_pw_collision_struct_alignment(cl_device_id device, cl_context conte
 //            &&  col.damping_coefficient == 83
 //            &&  col.friction_coefficient == 84
 //            &&  col.friction_stiffness == 85
+        )) {
+            hcorrect = FALSE;
+        }
+    }
+    return (boolean) hcorrect;
+}
+
+boolean test_aa_wall_struct_alignment(cl_device_id device, cl_context context, boolean verbose) {
+    aa_wall *haa_walls;
+    cl_mem gaa_walls;
+    cl_ulong NUMWALLS = 10;
+
+    cl_int ret;
+    cl_bool hcorrect = TRUE;
+    cl_mem gcorrect;
+
+    if (verbose) printf("\nTesting aa_wall struct alignment.\n");
+
+    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
+                                 "test_aa_wall_struct_alignment", verbose);
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+
+    haa_walls = malloc(sizeof(aa_wall) * NUMWALLS);
+
+    for (cl_ulong i = 0; i < NUMWALLS; i++) {
+        haa_walls[i].normal = (cl_float3) {20, 21, 22};
+        haa_walls[i].max = (cl_float3) {23, 24, 25};
+        haa_walls[i].min = (cl_float3) {26, 27, 28};
+    }
+
+    gaa_walls = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(aa_wall) * NUMWALLS, NULL, &ret);
+    gcorrect = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(boolean), NULL, &ret);
+
+    ret = aa_wallsToDevice(queue, gaa_walls, &haa_walls, NUMWALLS);
+    ret = clEnqueueWriteBuffer(queue, gcorrect, CL_TRUE, 0, sizeof(boolean), &hcorrect, 0, NULL, NULL);
+
+    ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), &gaa_walls);
+    ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), &gcorrect);
+
+    ret = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, (size_t *) &NUMWALLS, 0, NULL, NULL, NULL);
+
+    aa_wallsToHost(queue, gaa_walls, &haa_walls, NUMWALLS);
+    ret = clEnqueueReadBuffer(queue, gcorrect, CL_TRUE, 0, sizeof(boolean), &hcorrect, 0, NULL, NULL);
+
+    ret = clFinish(queue);
+
+    if (!hcorrect) {
+        return FALSE;
+    }
+    for (int i = 0; i < NUMWALLS; i++) {
+        aa_wall wall = haa_walls[i];
+        if (!(wall.normal.x == 80
+              && wall.normal.y == 81
+              && wall.normal.z == 82
+              && wall.max.x == 83
+              && wall.max.y == 84
+              && wall.max.z == 85
+              && wall.min.x == 86
+              && wall.min.y == 87
+              && wall.min.z == 88
         )) {
             hcorrect = FALSE;
         }

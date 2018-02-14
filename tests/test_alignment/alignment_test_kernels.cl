@@ -75,3 +75,29 @@ __kernel void test_pw_collision_struct_alignment(__global pw_collision *pw_colli
 //        pp_collisions[gid].friction_coefficient = 84;
 //        pp_collisions[gid].friction_stiffness = 85;
 }
+
+__kernel void test_aa_wall_struct_alignment(__global aa_wall *aa_walls, __global bool *correct) {
+    int gid = get_global_id(0);
+
+    if (!(aa_walls[gid].normal.x == 20
+          && aa_walls[gid].normal.y == 21
+          && aa_walls[gid].normal.z == 22
+          && aa_walls[gid].max.x == 23
+          && aa_walls[gid].max.y == 24
+          && aa_walls[gid].max.z == 25
+          && aa_walls[gid].min.x == 26
+          && aa_walls[gid].min.y == 27
+          && aa_walls[gid].min.z == 28)) {
+        *correct = false;
+    }
+
+    aa_walls[gid].normal.x = 80;
+    aa_walls[gid].normal.y = 81;
+    aa_walls[gid].normal.z = 82;
+    aa_walls[gid].max.x = 83;
+    aa_walls[gid].max.y = 84;
+    aa_walls[gid].max.z = 85;
+    aa_walls[gid].min.x = 86;
+    aa_walls[gid].min.y = 87;
+    aa_walls[gid].min.z = 88;
+}

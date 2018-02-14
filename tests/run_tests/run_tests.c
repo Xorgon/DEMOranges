@@ -28,6 +28,11 @@ boolean run_all_tests(cl_device_id device, cl_context context, boolean verbose){
         return FALSE;
     }
 
+    if (!test_aa_wall_struct_alignment(device, context, verbose)) {
+        fprintf(stderr, "\nFAILED AT test_aa_wall_struct_alignment\n");
+        return FALSE;
+    }
+
     if (!test_atomics(device, context, verbose)) {
         fprintf(stderr, "\nFAILED AT test_atomics\n");
         return FALSE;
