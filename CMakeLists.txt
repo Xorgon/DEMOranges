@@ -44,13 +44,6 @@ if (NOT(WIN32))
     target_link_libraries(run_tests m)
 endif()
 
-#file(GLOB_RECURSE clEnqueueNDRangeKernel_SOURCE_FILES
-#        "util/*.h" "util/*.c"
-#        "structures/*.h"
-#        clEnqueueNDRangeKernel/host.c)
-#add_executable(clEnqueueNDRangeKernel ${clEnqueueNDRangeKernel_SOURCE_FILES})
-#target_link_libraries(clEnqueueNDRangeKernel ${OpenCL_LIBRARY} m)
-
 file(GLOB_RECURSE particle_ball_SOURCE_FILES
         "util/*.h" "util/*.c"
         "util/particleUtils.c" "util/particleUtils.h"
