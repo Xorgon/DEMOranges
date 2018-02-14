@@ -1,17 +1,24 @@
+#ifndef get_gravity
+//float3 get_gravity(particle p, float delta_t) {
+//    return ((float) -9.81) * normalize(p.pos);
+//}
+float3 get_gravity(particle p, float delta_t) {
+    return (float3) {0, -9.81, 0};
+}
+#endif
+
+#ifndef get_vel_fluid
+float3 get_vel_fluid(particle p, float delta_t) {
+    return (float3) {0, 0, 0};
+}
+#endif
+
 float get_tau(particle p, float delta_t) {
     return p.density * p.diameter * p.diameter / (18 * p.fluid_viscosity);
 }
 
 float get_mass(particle p) {
     return p.density * M_PI_F * pow(p.diameter, 3) / 6;
-}
-
-float3 get_gravity(particle p, float delta_t) {
-    return ((float) -9.81) * normalize(p.pos);
-}
-
-float3 get_vel_fluid(particle p, float delta_t) {
-    return (float3) {0, 0, 0};
 }
 
 float3 get_accel(particle p, float delta_t) {
