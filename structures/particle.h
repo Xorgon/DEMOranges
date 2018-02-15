@@ -14,11 +14,12 @@ typedef struct particle {
     cl_ulong id;
     cl_ulong cv_array_idx;
     cl_float diameter;
+    cl_float effect_diameter;
     cl_float density;
     cl_float fluid_viscosity;
     // Structure memory alignment for Visual Studio and GCC compilers.
 #if defined(_MSC_VER)
-    cl_char padding[52];
+    cl_char padding[48];
 } __declspec(align(128)) particle;
 #elif defined(__GNUC__) || defined(__GNUG__) || defined(__MINGW_GCC_VERSION)
 } __attribute__((aligned (128))) particle;

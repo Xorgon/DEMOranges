@@ -30,8 +30,9 @@ boolean test_particle_struct_alignment(cl_device_id device, cl_context context, 
         hparticles[i].id = 29;
         hparticles[i].cv_array_idx = 30;
         hparticles[i].diameter = 31;
-        hparticles[i].density = 32;
-        hparticles[i].fluid_viscosity = 33;
+        hparticles[i].effect_diameter = 32;
+        hparticles[i].density = 33;
+        hparticles[i].fluid_viscosity = 34;
     }
 
     gparticles = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(particle) * NUMPART, NULL, &ret);
@@ -67,8 +68,9 @@ boolean test_particle_struct_alignment(cl_device_id device, cl_context context, 
               p.id == 89 &&
               p.cv_array_idx == 90 &&
               p.diameter == 91 &&
-              p.density == 92 &&
-              p.fluid_viscosity == 93)) {
+              p.effect_diameter == 92 &&
+              p.density == 93 &&
+              p.fluid_viscosity == 94)) {
             hcorrect = FALSE;
         }
     }
@@ -95,10 +97,6 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
     for (cl_ulong i = 0; i < NUMCOLS; i++) {
         hpp_collisions[i].p1_id = 20;
         hpp_collisions[i].p2_id = 21;
-//        hpp_collisions[i].stiffness = 22;
-//        hpp_collisions[i].damping_coefficient = 23;
-//        hpp_collisions[i].friction_coefficient = 24;
-//        hpp_collisions[i].friction_stiffness = 25;
     }
 
     gpp_collisions = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMCOLS, NULL, &ret);
@@ -124,10 +122,6 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
         pp_collision col = hpp_collisions[i];
         if (!(col.p1_id == 80
               && col.p2_id == 81
-//            &&  col.stiffness == 82 
-//            &&  col.damping_coefficient == 83 
-//            &&  col.friction_coefficient == 84 
-//            &&  col.friction_stiffness == 85
         )) {
             hcorrect = FALSE;
         }
@@ -155,10 +149,6 @@ boolean test_pw_collision_struct_alignment(cl_device_id device, cl_context conte
     for (cl_ulong i = 0; i < NUMCOLS; i++) {
         hpw_collisions[i].p_id = 20;
         hpw_collisions[i].w_id = 21;
-//        hpp_collisions[i].stiffness = 22;
-//        hpp_collisions[i].damping_coefficient = 23;
-//        hpp_collisions[i].friction_coefficient = 24;
-//        hpp_collisions[i].friction_stiffness = 25;
     }
 
     gpw_collisions = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pw_collision) * NUMCOLS, NULL, &ret);
@@ -184,10 +174,6 @@ boolean test_pw_collision_struct_alignment(cl_device_id device, cl_context conte
         pw_collision col = hpw_collisions[i];
         if (!(col.p_id == 80
               && col.w_id == 81
-//            &&  col.stiffness == 82
-//            &&  col.damping_coefficient == 83
-//            &&  col.friction_coefficient == 84
-//            &&  col.friction_stiffness == 85
         )) {
             hcorrect = FALSE;
         }

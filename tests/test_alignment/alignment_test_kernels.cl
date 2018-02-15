@@ -13,8 +13,9 @@ __kernel void test_particle_struct_alignment(__global particle *particles, __glo
               particles[gid].id == 29 &&
               particles[gid].cv_array_idx == 30 &&
               particles[gid].diameter == 31 &&
-              particles[gid].density == 32 &&
-              particles[gid].fluid_viscosity == 33)) {
+              particles[gid].effect_diameter == 32 &&
+              particles[gid].density == 33 &&
+              particles[gid].fluid_viscosity == 34)) {
             *correct = false;
         }
 
@@ -30,8 +31,9 @@ __kernel void test_particle_struct_alignment(__global particle *particles, __glo
         particles[gid].id = 89;
         particles[gid].cv_array_idx = 90;
         particles[gid].diameter = 91;
-        particles[gid].density = 92;
-        particles[gid].fluid_viscosity = 93;
+        particles[gid].effect_diameter = 92;
+        particles[gid].density = 93;
+        particles[gid].fluid_viscosity = 94;
 }
 
 __kernel void test_pp_collision_struct_alignment(__global pp_collision *pp_collisions, __global bool *correct) {
@@ -39,20 +41,12 @@ __kernel void test_pp_collision_struct_alignment(__global pp_collision *pp_colli
 
         if (!(pp_collisions[gid].p1_id == 20
             && pp_collisions[gid].p2_id == 21
-//            && pp_collisions[gid].stiffness == 22
-//            && pp_collisions[gid].damping_coefficient == 23
-//            && pp_collisions[gid].friction_coefficient == 24
-//            && pp_collisions[gid].friction_stiffness == 25
             )) {
             *correct = false;
         }
 
         pp_collisions[gid].p1_id = 80;
         pp_collisions[gid].p2_id = 81;
-//        pp_collisions[gid].stiffness = 82;
-//        pp_collisions[gid].damping_coefficient = 83;
-//        pp_collisions[gid].friction_coefficient = 84;
-//        pp_collisions[gid].friction_stiffness = 85;
 }
 
 __kernel void test_pw_collision_struct_alignment(__global pw_collision *pw_collisions, __global bool *correct) {
@@ -60,20 +54,12 @@ __kernel void test_pw_collision_struct_alignment(__global pw_collision *pw_colli
 
         if (!(pw_collisions[gid].p_id == 20
             && pw_collisions[gid].w_id == 21
-//            && pp_collisions[gid].stiffness == 22
-//            && pp_collisions[gid].damping_coefficient == 23
-//            && pp_collisions[gid].friction_coefficient == 24
-//            && pp_collisions[gid].friction_stiffness == 25
             )) {
             *correct = false;
         }
 
         pw_collisions[gid].p_id = 80;
         pw_collisions[gid].w_id = 81;
-//        pp_collisions[gid].stiffness = 82;
-//        pp_collisions[gid].damping_coefficient = 83;
-//        pp_collisions[gid].friction_coefficient = 84;
-//        pp_collisions[gid].friction_stiffness = 85;
 }
 
 __kernel void test_aa_wall_struct_alignment(__global aa_wall *aa_walls, __global bool *correct) {

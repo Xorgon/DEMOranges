@@ -7,6 +7,7 @@ typedef struct {
     ulong id;
     ulong cv_array_idx;
     float diameter;
+    float effect_diameter;
     float density;
     float fluid_viscosity;
 } __attribute__ ((aligned (128))) particle;
