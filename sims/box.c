@@ -144,7 +144,7 @@ int main() {
     printf("[INIT] Generating box\n");
     NUMWALLS = 6;
     walls = malloc(sizeof(aa_wall) * NUMWALLS);
-    generate_closed_box(&walls, domain_length);
+    generate_closed_box(&walls, domain_length, (cl_float3) {0, 0, 0});
     gwalls = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(aa_wall) * NUMWALLS, NULL, &ret);
     aa_wallsToDevice(queue, gwalls, &walls, NUMWALLS);
 

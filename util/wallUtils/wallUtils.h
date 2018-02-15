@@ -11,7 +11,7 @@
 #ifndef DEMORANGES_WALLUTILS_H
 #define DEMORANGES_WALLUTILS_H
 
-void generate_closed_box(aa_wall **walls, float side_length);
+void generate_closed_box(aa_wall **walls, float side_length, cl_float3 center);
 
 cl_float3 get_aa_wall_normal(aa_wall wall);
 
