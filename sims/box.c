@@ -132,6 +132,7 @@ int main() {
         hparticles[i].density = density;
         hparticles[i].fluid_viscosity = fluid_viscosity;
         hparticles[i].diameter = particle_diameter;
+        hparticles[i].effect_diameter = 0;
         hparticles[i].pos = positions[i];
         hparticles[i].vel = (cl_float3) {0.0, 0.0, 0.0};
         hparticles[i].forces = (cl_float3) {0.0, 0.0, 0.0};
@@ -181,6 +182,7 @@ int main() {
     cl_float restitution_coefficient = 0.8;
     cl_float friction_coefficient = 0.6;
     cl_float friction_stiffness = 1e5;
+    cl_float cohesion_stiffness = 0;
 
     cl_ulong collision_count = 0;
     cl_mem gcollision_count = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong), NULL, &ret);
@@ -199,6 +201,7 @@ int main() {
     ret = clSetKernelArg(calculate_pp_collision, 4, sizeof(cl_float), &restitution_coefficient);
     ret = clSetKernelArg(calculate_pp_collision, 5, sizeof(cl_float), &friction_coefficient);
     ret = clSetKernelArg(calculate_pp_collision, 6, sizeof(cl_float), &friction_stiffness);
+    ret = clSetKernelArg(calculate_pp_collision, 7, sizeof(cl_float), &cohesion_stiffness);
 
     ret = particlesToDevice(queue, gparticles, &hparticles, NUMPART);
 

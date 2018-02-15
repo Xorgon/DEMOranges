@@ -2,6 +2,10 @@ float get_particle_overlap(particle p1, particle p2) {
     return p1.diameter / 2 + p2.diameter / 2 - distance(p1.pos, p2.pos);
 }
 
+float get_particle_effect_overlap(particle p1, particle p2) {
+    return p1.effect_diameter / 2 + p2.effect_diameter / 2 - distance(p1.pos, p2.pos);
+}
+
 float3 get_collision_normal(particle p1, particle p2) {
     return normalize(p2.pos - p1.pos);
 }
@@ -42,11 +46,16 @@ float3 calculate_friction_tangent_force(pp_collision col, particle p1, particle 
     }
 }
 
+float3 calculate_cohesion_force(particle p1, particle p2, float cohesion_stiffness) {
+    return cohesion_stiffness * get_particle_effect_overlap(p1, p2) * get_collision_normal(p1, p2);
+}
+
 /* Kernel to calculate particle-particle collisions. */
 
 __kernel void calculate_pp_collision(__global pp_collision *collisions, __global particle *particles, float delta_t,
                                         float stiffness, float restitution_coefficient,
-                                        float friction_coefficient, float friction_stiffness) {
+                                        float friction_coefficient, float friction_stiffness,
+                                        float cohesion_stiffness) {
     int gid = get_global_id(0);
     ulong p1_id = collisions[gid].p1_id;
     ulong p2_id = collisions[gid].p2_id;
@@ -60,7 +69,8 @@ __kernel void calculate_pp_collision(__global pp_collision *collisions, __global
         float3 tangent_force = calculate_friction_tangent_force(collisions[gid], particles[p1_id], particles[p2_id],
                                                                 normal_force, delta_t, friction_coefficient,
                                                                 friction_stiffness);
-        atomicAdd_float3(&particles[p1_id].forces, - (normal_force + tangent_force));
-        atomicAdd_float3(&particles[p2_id].forces, normal_force + tangent_force);
+        float3 cohesion_force = calculate_cohesion_force(particles[p1_id], particles[p2_id], cohesion_stiffness);
+        atomicAdd_float3(&particles[p1_id].forces, - (normal_force + tangent_force - cohesion_stiffness));
+        atomicAdd_float3(&particles[p2_id].forces, normal_force + tangent_force - cohesion_stiffness);
     }
 }
