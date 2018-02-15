@@ -19,7 +19,8 @@
 
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)
-#define verbose FALSE
+#define VERBOSE FALSE
+#define LOG_DATA FALSE
 
 particle *hparticles;
 cl_mem gparticles;
@@ -72,20 +73,20 @@ int main() {
     }
 
     cl_kernel iterate_particle = getKernel(device, context, "../kernels/iterate_particle.cl",
-                                           "iterate_particle", verbose);
+                                           "iterate_particle", VERBOSE);
     cl_kernel calculate_pp_collision = getKernel(device, context, "../kernels/calculate_pp_collision.cl",
-                                                 "calculate_pp_collision", verbose);
+                                                 "calculate_pp_collision", VERBOSE);
     cl_kernel calculate_pw_collision = getKernel(device, context, "../kernels/calculate_pw_collision.cl",
-                                                 "calculate_pw_collision", verbose);
+                                                 "calculate_pw_collision", VERBOSE);
     cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
-                                                "assign_particle_count", verbose);
+                                                "assign_particle_count", VERBOSE);
     cl_kernel assign_particles = getKernel(device, context, "../kernels/assign_particles.cl",
-                                           "assign_particles", verbose);
+                                           "assign_particles", VERBOSE);
     cl_kernel count_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
-                                              "count_pp_collisions", verbose);
+                                              "count_pp_collisions", VERBOSE);
     cl_kernel make_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
-                                             "make_pp_collisions", verbose);
-    cl_command_queue queue = getCommandQueue(context, device, verbose);
+                                             "make_pp_collisions", VERBOSE);
+    cl_command_queue queue = getCommandQueue(context, device, VERBOSE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
     if (hparticles == NULL) {
@@ -241,9 +242,9 @@ int main() {
     writeParticles(hparticles, 0, "TEST", "", NUMPART);
 
     for (cl_float time = timestep; time <= sim_length; time += timestep) {
-        if (verbose) printf("Time = %f\n", time);
+        if (VERBOSE) printf("Time = %f\n", time);
         // Count how many particles are in each CV.
-        if (verbose) printf("    Counting particles per CV\n");
+        if (VERBOSE) printf("    Counting particles per CV\n");
         memset(particle_count_array, 0, sizeof(cl_int) * NUMCVS); // Reset counts to 0.
         ret = intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
         ret = clEnqueueNDRangeKernel(queue, assign_particle_count, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
@@ -254,11 +255,11 @@ int main() {
         ulongArrayToDevice(queue, gcv_start_array, &cv_start_array, NUMCVS);
         memset(input_count_array, 0, sizeof(cl_int) * NUMCVS); // Reset counts to 0.
         intArrayToDevice(queue, ginput_count_array, &input_count_array, NUMCVS);
-        if (verbose) printf("    Assigning particles to CVs\n");
+        if (VERBOSE) printf("    Assigning particles to CVs\n");
         ret = clEnqueueNDRangeKernel(queue, assign_particles, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
 
         // Count collisions.
-        if (verbose) printf("    Counting collisions\n");
+        if (VERBOSE) printf("    Counting collisions\n");
         collision_count = 0;
         clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
         ret = clEnqueueNDRangeKernel(queue, count_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
@@ -266,7 +267,7 @@ int main() {
         NUMPPCOLS = collision_count;
 
         // Make collisions.
-        if (verbose) printf("    Making %llu collisions\n", collision_count);
+        if (VERBOSE) printf("    Making %llu collisions\n", collision_count);
         ret = clReleaseMemObject(gpp_cols);
         gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMPPCOLS, NULL, &ret);
 
@@ -278,14 +279,14 @@ int main() {
         clEnqueueNDRangeKernel(queue, make_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
 
         // Calculate collisions.
-        if (verbose) printf("    Calculating collisions\n");
+        if (VERBOSE) printf("    Calculating collisions\n");
         ret = clSetKernelArg(calculate_pp_collision, 0, sizeof(cl_mem), &gpp_cols);
         ret = clEnqueueNDRangeKernel(queue, calculate_pp_collision, 1, NULL, &NUMPPCOLS, 0, NULL, NULL, NULL);
         ret = clEnqueueNDRangeKernel(queue, calculate_pw_collision, 1, NULL, &NUMPWCOLS, 0, NULL, NULL, NULL);
         // Iterate particles.
-        if (verbose) printf("    Iterating particles\n");
+        if (VERBOSE) printf("    Iterating particles\n");
         ret = clEnqueueNDRangeKernel(queue, iterate_particle, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
-        if (time - last_write > log_step) {
+        if (LOG_DATA && time - last_write > log_step) {
             ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
             printf("Logging at time: %f\n", time);
             writeParticles(hparticles, time, "TEST", "", NUMPART);
