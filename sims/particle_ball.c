@@ -244,7 +244,7 @@ int main() {
         if (LOG_DATA && time - last_write > log_step) {
             ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
             printf("Logging at time: %f\n", time);
-            writeParticles(hparticles, time, "TEST", "", NUMPART);
+            writeParticles(hparticles, time, "BALL", "", NUMPART);
 
             last_write = time;
         }

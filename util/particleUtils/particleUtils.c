@@ -12,7 +12,7 @@ void printParticle(particle *part) {
 
 void writeParticles(particle *particles, float time, char prefix[], char dir[], cl_ulong NUMPART) {
     char filename[500];
-    sprintf(filename, "%s%s_%i.txt", dir, prefix, (int) roundf(time * 1000));
+    sprintf(filename, "%llu_%s%s_%i.txt", NUMPART, dir, prefix, (int) roundf(time * 1000));
     FILE *fd = fopen(filename, "w");
     for (int i = 0; i < NUMPART; i++) {
         fprintf(fd, "%f,%f,%f\n", particles[i].pos.x, particles[i].pos.y, particles[i].pos.z);
