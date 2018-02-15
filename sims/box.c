@@ -8,14 +8,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../util/clUtils.h"
-#include "../util/particleUtils.h"
-#include "../util/collisionUtils.h"
-#include "../util/cvUtils.h"
+#include "../util/clUtils/clUtils.h"
+#include "../util/particleUtils/particleUtils.h"
+#include "../util/collisionUtils/collisionUtils.h"
+#include "../util/cvUtils/cvUtils.h"
 #include "../structures/particle.h"
 #include "../structures/collision.h"
 #include "../tests/run_tests/run_tests.h"
-#include "../util/wallUtils.h"
+#include "../util/wallUtils/wallUtils.h"
 
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)

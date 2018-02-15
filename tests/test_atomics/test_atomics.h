@@ -6,7 +6,7 @@
 #define DEMORANGES_TEST_ATOMICS_H
 
 #include "CL/cl.h"
-#include "../../util/clUtils.h"
+#include "../../util/clUtils/clUtils.h"
 
 boolean test_atomics(cl_device_id device, cl_context context, boolean verbose);
 

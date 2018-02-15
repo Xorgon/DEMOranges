@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/cl.h>
-#include "../../util/clUtils.h"
+#include "../../util/clUtils/clUtils.h"
 #include "../../structures/particle.h"
 #include "../../structures/collision.h"
 

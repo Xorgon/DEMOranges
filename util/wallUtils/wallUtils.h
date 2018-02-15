@@ -2,10 +2,10 @@
 // Created by Elijah on 14/02/2018.
 //
 
-#include "../structures/wall.h"
+#include "../../structures/wall.h"
 #include <math.h>
 #include <CL/cl.h>
-#include "vectorUtils.h"
+#include "../vectorUtils/vectorUtils.h"
 #include <stdio.h>
 
 #ifndef DEMORANGES_WALLUTILS_H

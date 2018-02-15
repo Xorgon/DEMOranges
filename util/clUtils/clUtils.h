@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/cl.h>
-#include "../structures/particle.h"
-#include "../structures/collision.h"
-#include "../structures/wall.h"
+#include "../../structures/particle.h"
+#include "../../structures/collision.h"
+#include "../../structures/wall.h"
 #include <stdbool.h>
 
 #define MAX_SOURCE_SIZE (0x100000)

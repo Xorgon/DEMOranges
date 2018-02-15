@@ -46,7 +46,7 @@ endif()
 
 file(GLOB_RECURSE particle_ball_SOURCE_FILES
         "util/*.h" "util/*.c"
-        "util/particleUtils.c" "util/particleUtils.h"
+        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
         "structures/*.h" "util/kernelUtils.cl"
         "tests/*/*"
         sims/particle_ball.c)
@@ -58,7 +58,7 @@ endif()
 
 file(GLOB_RECURSE box_SOURCE_FILES
         "util/*.h" "util/*.c"
-        "util/particleUtils.c" "util/particleUtils.h"
+        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
         "structures/*.h" "util/kernelUtils.cl"
         "tests/*/*"
         sims/box.c)

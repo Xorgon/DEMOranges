@@ -5,7 +5,7 @@
 #ifndef DEMORANGES_COLLISIONUTILS_H
 #define DEMORANGES_COLLISIONUTILS_H
 
-#include "particleUtils.h"
+#include "../particleUtils/particleUtils.h"
 
 float get_reduced_particle_mass(particle *p1, particle *p2);
 

@@ -3,7 +3,7 @@
 //
 
 #include "test_assign_particles.h"
-#include "../../util/cvUtils.h"
+#include "../../util/cvUtils/cvUtils.h"
 
 boolean test_assign_particle_count(cl_device_id device, cl_context context, boolean verbose) {
 

@@ -5,7 +5,7 @@
 #ifndef DEMORANGES_PARTICLEUTILS_H
 #define DEMORANGES_PARTICLEUTILS_H
 
-#include "../structures/particle.h"
+#include "../../structures/particle.h"
 #include <stdio.h>
 #include <math.h>
 

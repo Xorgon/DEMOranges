@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/cl.h>
-#include "../../util/clUtils.h"
-#include "../../util/cvUtils.h"
+#include "../../util/clUtils/clUtils.h"
+#include "../../util/cvUtils/cvUtils.h"
 #include "../../structures/particle.h"
 
 boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolean verbose);
