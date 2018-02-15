@@ -63,11 +63,6 @@ boolean run_all_tests(cl_device_id device, cl_context context, boolean verbose){
         return FALSE;
     }
 
-    if (!test_main_loop(device, context, verbose)) {
-        fprintf(stderr, "\nFAILED AT test_main_loop\n");
-        return FALSE;
-    }
-
     printf("All tests passed.\n");
 
     return TRUE;
