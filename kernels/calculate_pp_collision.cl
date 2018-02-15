@@ -60,6 +60,8 @@ __kernel void calculate_pp_collision(__global pp_collision *collisions, __global
     ulong p1_id = collisions[gid].p1_id;
     ulong p2_id = collisions[gid].p2_id;
     float overlap = get_particle_overlap(particles[p1_id], particles[p2_id]);
+    float effect_overlap = get_particle_effect_overlap(particles[p1_id], particles[p2_id]);
+    float3 forces = (float3) {0, 0, 0};
     if (overlap > 0) {
         float reduced_particle_mass = get_reduced_particle_mass(get_particle_mass(particles[p1_id]),
                                                                 get_particle_mass(particles[p2_id]));
@@ -69,8 +71,14 @@ __kernel void calculate_pp_collision(__global pp_collision *collisions, __global
         float3 tangent_force = calculate_friction_tangent_force(collisions[gid], particles[p1_id], particles[p2_id],
                                                                 normal_force, delta_t, friction_coefficient,
                                                                 friction_stiffness);
+        forces += normal_force + tangent_force;
+    }
+    if (effect_overlap > 0) {
         float3 cohesion_force = calculate_cohesion_force(particles[p1_id], particles[p2_id], cohesion_stiffness);
-        atomicAdd_float3(&particles[p1_id].forces, - (normal_force + tangent_force - cohesion_stiffness));
-        atomicAdd_float3(&particles[p2_id].forces, normal_force + tangent_force - cohesion_stiffness);
+        forces += cohesion_force;
+    }
+    if (overlap > 0 || effect_overlap > 0){
+        atomicAdd_float3(&particles[p1_id].forces, - forces);
+        atomicAdd_float3(&particles[p2_id].forces, forces);
     }
 }
