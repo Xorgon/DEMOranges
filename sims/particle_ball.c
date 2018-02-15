@@ -15,15 +15,18 @@
 #include "../structures/particle.h"
 #include "../structures/collision.h"
 #include "../tests/run_tests/run_tests.h"
+#include "../util/simUtils/simUtils.h"
 
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)
 #define VERBOSE FALSE
-#define LOG_DATA FALSE
+#define LOG_DATA TRUE
+
+char *prefix = "BALL";
 
 particle *hparticles;
 cl_mem gparticles;
-cl_ulong NUMPART = 100000;
+cl_ulong NUMPART = 10000;
 
 cl_mem gpp_cols;
 cl_ulong NUMPPCOLS;
@@ -155,9 +158,15 @@ int main() {
     cl_ulong collision_count = 0;
     cl_mem gcollision_count = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong), NULL, &ret);
 
-    printf("\nRunning sim with %i particles.\n", NUMPART);
-    printf("Logging at time: 0.000000\n");
-    writeParticles(hparticles, 0, "TEST", "", NUMPART);
+    writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
+                   friction_coefficient, friction_stiffness, cohesion_stiffness);
+    printf("\nRunning sim with %llu particles.\n", NUMPART);
+
+    writeTime(prefix, "", NUMPART, "Start");
+    if (LOG_DATA) {
+        printf("Logging at time: 0.000000\n");
+        writeParticles(hparticles, 0, prefix, "", NUMPART);
+    }
 
     gparticles = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(particle) * NUMPART, NULL, &ret);
     ret = clSetKernelArg(iterate_particle, 0, sizeof(cl_mem), &gparticles);
@@ -195,6 +204,7 @@ int main() {
     clSetKernelArg(make_pp_collisions, 3, sizeof(cl_int), &cvs_per_edge);
     clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
     clSetKernelArg(make_pp_collisions, 5, sizeof(cl_mem), &gcollision_count);
+
 
     for (cl_float time = timestep; time <= sim_length; time += timestep) {
         if (VERBOSE) printf("Time = %f\n", time);
@@ -244,9 +254,15 @@ int main() {
         if (LOG_DATA && time - last_write > log_step) {
             ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
             printf("Logging at time: %f\n", time);
-            writeParticles(hparticles, time, "BALL", "", NUMPART);
+            writeParticles(hparticles, time, prefix, "", NUMPART);
 
             last_write = time;
         }
     }
+
+    if (LOG_DATA) {
+        printf("Logging at time: %f\n", sim_length);
+        writeParticles(hparticles, 0, prefix, "", NUMPART);
+    }
+    writeTime(prefix, "", NUMPART, "End");
 }

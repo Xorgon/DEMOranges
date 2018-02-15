@@ -13,7 +13,7 @@
 
 void printParticle(particle *p);
 
-void writeParticles(particle *particles, float time, char *prefix, char *dir, cl_ulong NUMPART);
+
 
 float get_particle_mass(particle *p);
 
