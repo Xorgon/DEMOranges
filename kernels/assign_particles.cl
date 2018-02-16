@@ -5,7 +5,7 @@ __kernel void assign_particle_count(__global particle *particles, __global int *
     int gid = get_global_id(0);
     int3 cv_coords = pos_to_cv_coords(particles[gid].pos, domain_length, cv_length);
     if (cv_coords.x == -1 && cv_coords.y == -1 && cv_coords.z == -1) {
-        printf("assign_particle_count: Failed to get CV coordinates.");
+        printf("assign_particle_count: Failed to get CV coordinates.\n");
         return;
     }
     int cv_array_idx = cv_coords_to_cv_array_idx(cv_coords, cvs_per_edge);
@@ -22,7 +22,7 @@ __kernel void assign_particles(__global particle *particles, __global ulong *cv_
     int cv_array_idx = particles[gid].cv_array_idx;
     int cv_pid_mini_idx = atomic_inc(&(input_count_array[cv_array_idx])); // Index within the CV.
     if (cv_start_array[cv_array_idx] == (ulong) -1) {
-        printf("WARNING: Particle assigned to array with particle count of 0.");
+        printf("WARNING: Particle assigned to array with particle count of 0.\n");
         return;
     }
     int cv_pid_idx = cv_start_array[cv_array_idx] + cv_pid_mini_idx;
