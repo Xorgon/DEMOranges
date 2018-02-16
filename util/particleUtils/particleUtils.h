@@ -13,8 +13,8 @@
 
 void printParticle(particle *p);
 
-
-
 float get_particle_mass(particle *p);
+
+boolean checkPositions(particle *particles, cl_ulong NUMPARTS, cl_float domain_length);
 
 #endif //DEMORANGES_PARTICLEUTILS_H

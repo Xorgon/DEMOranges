@@ -93,7 +93,8 @@ int main() {
 
     hparticles = malloc(sizeof(particle) * NUMPART);
     if (hparticles == NULL) {
-        fprintf(stderr, "Particles memory allocation failed.");
+        fprintf(stderr, "Particles memory allocation failed.\n");
+        return 1;
     }
 
     cl_float density = 2000;
@@ -103,7 +104,8 @@ int main() {
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
 
     if (positions == NULL) {
-        fprintf(stderr, "Position memory allocation failed.");
+        fprintf(stderr, "Position memory allocation failed.\n");
+        return 1;
     }
 
     srand(0);
@@ -144,6 +146,10 @@ int main() {
 
     free(positions);
 
+    if (!checkPositions(hparticles, NUMPART, domain_length)) {
+        fprintf(stderr, "Particles outside domain limits.\n");
+        return 1;
+    }
 
     printf("[INIT] Generating box\n");
     NUMWALLS = 6;

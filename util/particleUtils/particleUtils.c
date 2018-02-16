@@ -13,3 +13,15 @@ void printParticle(particle *part) {
 float get_particle_mass(particle *p) {
     return (float) ((*p).density * PI * powf((*p).diameter, 3) / 6);
 }
+
+boolean checkPositions(particle *particles, cl_ulong NUMPARTS, cl_float domain_length) {
+    boolean correct = TRUE;
+    for (cl_ulong i = 0; i < NUMPARTS; i++) {
+        if (fabs(particles[i].pos.x) > domain_length / 2
+                || fabs(particles[i].pos.y) > domain_length / 2
+                || fabs(particles[i].pos.z) > domain_length / 2) {
+            correct = FALSE;
+        }
+    }
+    return correct;
+}
