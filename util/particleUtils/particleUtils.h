@@ -8,6 +8,14 @@
 #include "../../structures/particle.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
+
+// If boolean is not correctly defined.
+#if !defined(boolean)
+#define boolean bool
+#define TRUE true
+#define FALSE false
+#endif
 
 #define PI 3.14159265358979323846
 
