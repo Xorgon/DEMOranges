@@ -1,7 +1,4 @@
 #ifndef get_gravity
-//float3 get_gravity(particle p, float delta_t) {
-//    return ((float) -9.81) * normalize(p.pos);
-//}
 float3 get_gravity(particle p, float delta_t) {
     return (float3) {0, -9.81, 0};
 }
