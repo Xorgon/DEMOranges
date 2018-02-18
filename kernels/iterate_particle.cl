@@ -1,10 +1,10 @@
-#ifndef get_gravity
+#ifndef DEFAULT_PARTICLE_GRAVITY
 float3 get_gravity(particle p, float delta_t) {
     return (float3) {0, -9.81, 0};
 }
 #endif
 
-#ifndef get_vel_fluid
+#ifndef DEFAULT_PARTICLE_FLUID_VEL
 float3 get_vel_fluid(particle p, float delta_t) {
     return (float3) {0, 0, 0};
 }
@@ -38,7 +38,6 @@ __kernel void iterate_particle(__global particle *particles, float delta_t) {
         int gid = get_global_id(0);
         float3 next_vel = iterate_velocity(particles[gid], delta_t);
         float3 next_pos = iterate_position(particles[gid], delta_t, next_vel);
-
         particles[gid].pos = next_pos;
         particles[gid].vel = next_vel;
 

@@ -66,8 +66,10 @@ int main() {
         return 1;
     }
 
-    cl_kernel iterate_particle = getKernelWithUtils(device, context, "../kernels/iterate_particle.cl",
-                                                    "iterate_particle", VERBOSE);
+    char *iterate_particle_files[] = {"../util/kernelUtils.cl",
+                                      "../kernels/get_gravity/point_gravity.cl",
+                                      "../kernels/iterate_particle.cl"};
+    cl_kernel iterate_particle = getKernel(device, context, iterate_particle_files, 3, "iterate_particle", VERBOSE);
     cl_kernel calculate_pp_collision = getKernelWithUtils(device, context, "../kernels/calculate_pp_collision.cl",
                                                           "calculate_pp_collision", VERBOSE);
     cl_kernel assign_particle_count = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
@@ -258,6 +260,7 @@ int main() {
         // Iterate particles.
         if (VERBOSE) printf("    Iterating particles\n");
         ret = clEnqueueNDRangeKernel(queue, iterate_particle, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
+
         if (LOG_DATA && time - last_write > log_step) {
             ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
             printf("Logging at time: %f\n", time);
