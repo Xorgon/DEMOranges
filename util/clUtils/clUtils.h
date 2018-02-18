@@ -31,7 +31,11 @@ cl_command_queue getCommandQueue(cl_context context, cl_device_id device, boolea
 
 cl_context getContext(cl_device_id **devices, cl_uint num_devices, boolean verbose);
 
-cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], char kernelName[], boolean verbose);
+cl_kernel getKernelWithUtils(cl_device_id device, cl_context context, char *fileName, char *kernelName, boolean verbose);
+
+cl_kernel
+getKernel(cl_device_id device, cl_context context, char **fileNames, u_int numFiles, char *kernelName,
+          boolean verbose);
 
 cl_int particlesToDevice(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART);
 

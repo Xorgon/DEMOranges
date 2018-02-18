@@ -21,8 +21,8 @@ boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolea
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);
-    cl_kernel count_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
-                                              "count_pp_collisions", verbose);
+    cl_kernel count_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+                                                       "count_pp_collisions", verbose);
 
     particle_count_array = calloc(27, sizeof(cl_int));
     particle_count_array[0] = 1; // CV 0, 0, 0
@@ -101,8 +101,8 @@ boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);
-    cl_kernel make_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
-                                             "make_pp_collisions", verbose);
+    cl_kernel make_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+                                                      "make_pp_collisions", verbose);
 
 
     gcv_start_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong) * NUMCVS, NULL, &ret);

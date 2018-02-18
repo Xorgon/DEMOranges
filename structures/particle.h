@@ -25,6 +25,4 @@ typedef struct particle {
 } __attribute__((aligned (128))) particle;
 #endif
 
-// TODO: Pack or align this correctly. https://stackoverflow.com/questions/35167229/how-to-use-user-defined-structure-in-opencl
-
 #endif //DEMORANGES_PARTICLE_H

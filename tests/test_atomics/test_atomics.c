@@ -14,8 +14,8 @@ boolean test_atomics(cl_device_id device, cl_context context, boolean verbose) {
 
     if (verbose) printf("\nTesting atomic float addition.\n");
 
-    cl_kernel kernel = getKernel(device, context, "../tests/test_atomics/test_atomics.cl",
-                                 "test_atomics", verbose);
+    cl_kernel kernel = getKernelWithUtils(device, context, "../tests/test_atomics/test_atomics.cl",
+                                          "test_atomics", verbose);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);

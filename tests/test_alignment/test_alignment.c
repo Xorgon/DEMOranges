@@ -17,8 +17,8 @@ boolean test_particle_struct_alignment(cl_device_id device, cl_context context, 
 
     if (verbose) printf("\nTesting particle struct alignment.\n");
 
-    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
-                                 "test_particle_struct_alignment", verbose);
+    cl_kernel kernel = getKernelWithUtils(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
+                                          "test_particle_struct_alignment", verbose);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
@@ -88,8 +88,8 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
 
     if (verbose) printf("\nTesting pp_collision struct alignment.\n");
 
-    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
-                                 "test_pp_collision_struct_alignment", verbose);
+    cl_kernel kernel = getKernelWithUtils(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
+                                          "test_pp_collision_struct_alignment", verbose);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
 
     hpp_collisions = malloc(sizeof(pp_collision) * NUMCOLS);
@@ -140,8 +140,8 @@ boolean test_pw_collision_struct_alignment(cl_device_id device, cl_context conte
 
     if (verbose) printf("\nTesting pw_collision struct alignment.\n");
 
-    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
-                                 "test_pw_collision_struct_alignment", verbose);
+    cl_kernel kernel = getKernelWithUtils(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
+                                          "test_pw_collision_struct_alignment", verbose);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
 
     hpw_collisions = malloc(sizeof(pw_collision) * NUMCOLS);
@@ -192,8 +192,8 @@ boolean test_aa_wall_struct_alignment(cl_device_id device, cl_context context, b
 
     if (verbose) printf("\nTesting aa_wall struct alignment.\n");
 
-    cl_kernel kernel = getKernel(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
-                                 "test_aa_wall_struct_alignment", verbose);
+    cl_kernel kernel = getKernelWithUtils(device, context, "../tests/test_alignment/alignment_test_kernels.cl",
+                                          "test_aa_wall_struct_alignment", verbose);
     cl_command_queue queue = getCommandQueue(context, device, verbose);
 
     haa_walls = malloc(sizeof(aa_wall) * NUMWALLS);

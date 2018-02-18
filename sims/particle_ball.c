@@ -66,18 +66,18 @@ int main() {
         return 1;
     }
 
-    cl_kernel iterate_particle = getKernel(device, context, "../kernels/iterate_particle.cl",
-                                           "iterate_particle", VERBOSE);
-    cl_kernel calculate_pp_collision = getKernel(device, context, "../kernels/calculate_pp_collision.cl",
-                                                 "calculate_pp_collision", VERBOSE);
-    cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
-                                                "assign_particle_count", VERBOSE);
-    cl_kernel assign_particles = getKernel(device, context, "../kernels/assign_particles.cl",
-                                           "assign_particles", VERBOSE);
-    cl_kernel count_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
-                                              "count_pp_collisions", VERBOSE);
-    cl_kernel make_pp_collisions = getKernel(device, context, "../kernels/make_pp_collisions.cl",
-                                             "make_pp_collisions", VERBOSE);
+    cl_kernel iterate_particle = getKernelWithUtils(device, context, "../kernels/iterate_particle.cl",
+                                                    "iterate_particle", VERBOSE);
+    cl_kernel calculate_pp_collision = getKernelWithUtils(device, context, "../kernels/calculate_pp_collision.cl",
+                                                          "calculate_pp_collision", VERBOSE);
+    cl_kernel assign_particle_count = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
+                                                         "assign_particle_count", VERBOSE);
+    cl_kernel assign_particles = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
+                                                    "assign_particles", VERBOSE);
+    cl_kernel count_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+                                                       "count_pp_collisions", VERBOSE);
+    cl_kernel make_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+                                                      "make_pp_collisions", VERBOSE);
     cl_command_queue queue = getCommandQueue(context, device, VERBOSE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);

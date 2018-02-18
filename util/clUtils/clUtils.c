@@ -211,8 +211,17 @@ cl_command_queue getCommandQueue(cl_context context, cl_device_id device, boolea
     return queue;
 }
 
-//TODO: Add boolean to only optionally include utils and make util includes work.
-cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], char kernelName[], boolean verbose) {
+cl_kernel
+getKernelWithUtils(cl_device_id device, cl_context context, char *fileName, char *kernelName, boolean verbose) {
+    char *fileNames[] = {"../util/kernelUtils.cl", fileName};
+    return getKernel(device, context, fileNames, 2, kernelName, verbose);
+}
+
+/**
+ * Returns a kernel created with specified files.
+ */
+cl_kernel getKernel(cl_device_id device, cl_context context, char **fileNames, u_int numFiles, char *kernelName,
+                    boolean verbose) {
     FILE *fp;
     char *source_str;
     size_t source_size;
@@ -222,32 +231,30 @@ cl_kernel getKernel(cl_device_id device, cl_context context, char fileName[], ch
     cl_int ret;
 
     if (verbose) printf("[INIT] Creating %s kernel\n", kernelName);
-    // load source code containing utilities.
-    fp = fopen("../util/kernelUtils.cl", "r");
-//    fopen_s(&fp, "../util/kernelUtils.cl", "r");
-    if (!fp) {
-        fprintf(stderr, "Failed to load util file.\n");
-        exit(1);
-    }
-    utils_str = (char *) malloc(MAX_SOURCE_SIZE);
-    utils_size = fread(utils_str, 1, MAX_SOURCE_SIZE, fp);
-    fclose(fp);
 
-    // load source code containing kernel
-    fp = fopen(fileName, "r");
-//    fopen_s(&fp, fileName, "r");
-    if (!fp) {
-        if (verbose) fprintf(stderr, "Failed to load kernel.\n");
-        exit(1);
+    source_str = (char *) malloc(MAX_SOURCE_SIZE * numFiles);
+    source_size = 0;
+
+    for (int i = 0; i < numFiles; i++) {
+        fp = fopen(fileNames[i], "r");
+        if (!fp) {
+            fprintf(stderr, "Failed to load file %s.\n", fileNames[i]);
+            exit(1);
+        }
+        char *file_str = malloc(MAX_SOURCE_SIZE);
+        size_t file_size = fread(file_str, 1, MAX_SOURCE_SIZE, fp);
+        for (int j = 0; j < file_size; j++) {
+            source_str[source_size + j] = file_str[j];
+        }
+        source_size += file_size;
+        fclose(fp);
     }
-    source_str = (char *) malloc(MAX_SOURCE_SIZE);
-    source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
-    fclose(fp);
-    const char *strings[] = {utils_str, source_str};
-    const size_t sizes[] = {utils_size, source_size};
+
+    const char *strings[] = {source_str};
+    const size_t sizes[] = {source_size};
     // Create kernel program from source
     cl_program program = NULL;
-    program = clCreateProgramWithSource(context, 2, strings, sizes, &ret);
+    program = clCreateProgramWithSource(context, 1, strings, sizes, &ret);
     if (verbose) printf("       Create kernel program: ");
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
@@ -334,7 +341,7 @@ pw_collisionsToHost(cl_command_queue queue, cl_mem gpw_collisions, pw_collision 
 
 cl_int aa_wallsToDevice(cl_command_queue queue, cl_mem gaa_walls, aa_wall **haa_walls, cl_ulong NUMWALLS) {
     return clEnqueueWriteBuffer(queue, gaa_walls, CL_TRUE, 0, sizeof(aa_wall) * NUMWALLS, *haa_walls, 0,
-                               NULL, NULL);
+                                NULL, NULL);
 }
 
 cl_int aa_wallsToHost(cl_command_queue queue, cl_mem gaa_walls, aa_wall **haa_walls, cl_ulong NUMWALLS) {

@@ -26,8 +26,8 @@ boolean test_assign_particle_count(cl_device_id device, cl_context context, bool
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);
-    cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
-                                                "assign_particle_count", verbose);
+    cl_kernel assign_particle_count = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
+                                                         "assign_particle_count", verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
 
@@ -128,10 +128,10 @@ boolean test_assign_particles(cl_device_id device, cl_context context, boolean v
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);
-    cl_kernel assign_particle_count = getKernel(device, context, "../kernels/assign_particles.cl",
-                                                "assign_particle_count", verbose);
-    cl_kernel assign_particles = getKernel(device, context, "../kernels/assign_particles.cl",
-                                           "assign_particles", verbose);
+    cl_kernel assign_particle_count = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
+                                                         "assign_particle_count", verbose);
+    cl_kernel assign_particles = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
+                                                    "assign_particles", verbose);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
 

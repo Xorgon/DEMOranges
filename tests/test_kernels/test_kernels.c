@@ -39,7 +39,7 @@ boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
             printf("Kernel name: %s\n", kernelNames[i]);
         }
 
-        cl_kernel kernel = getKernel(device, context, fileNames[i], kernelNames[i], verbose);
+        cl_kernel kernel = getKernelWithUtils(device, context, fileNames[i], kernelNames[i], verbose);
         if (kernel == NULL) {
             return FALSE;
         }
