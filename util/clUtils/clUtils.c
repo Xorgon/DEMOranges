@@ -260,7 +260,7 @@ cl_kernel getKernel(cl_device_id device, cl_context context, char **fileNames, u
         if (verbose) printf("SUCCESS\n");
     } else {
         if (verbose) {
-            printf("FAILED (%d)\n", ret);
+            fprintf(stderr, "FAILED to create kernel program (%d)\n", ret);
             getchar();
         }
         return NULL;
@@ -273,7 +273,7 @@ cl_kernel getKernel(cl_device_id device, cl_context context, char **fileNames, u
     if ((int) ret == 0) {
         if (verbose) printf("SUCCESS\n");
     } else {
-        if (verbose) printf("FAILED (%d)\n", ret);
+        fprintf(stderr, "FAILED to build kernel program (%d)\n", ret);
         // Determine the size of the log
         size_t log_size;
         clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
@@ -299,7 +299,7 @@ cl_kernel getKernel(cl_device_id device, cl_context context, char **fileNames, u
         if (verbose) printf("SUCCESS\n");
     } else {
         if (verbose) {
-            printf("FAILED (%d)\n", ret);
+            fprintf(stderr, "FAILED to create kernel (%d)\n", ret);
             getchar();
         }
         return NULL;
