@@ -78,6 +78,11 @@ __kernel void calculate_pp_collision(__global pp_collision *collisions, __global
         forces += cohesion_force;
     }
     if (overlap > 0 || effect_overlap > 0){
+        if (overlap > particles[p1_id].diameter / 2 || overlap > particles[p2_id].diameter / 2) {
+            printf("Warning: Excessive particle overlap (%f), p1: (%f, %f, %f), p2: (%f, %f, %f)\n", overlap,
+                    particles[p1_id].pos.x, particles[p1_id].pos.y, particles[p1_id].pos.z,
+                    particles[p2_id].pos.x, particles[p2_id].pos.y, particles[p2_id].pos.z);
+        }
         atomicAdd_float3(&particles[p1_id].forces, - forces);
         atomicAdd_float3(&particles[p2_id].forces, forces);
     }
