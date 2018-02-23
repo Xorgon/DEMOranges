@@ -27,7 +27,7 @@ char *prefix = "BOX";
 
 particle *hparticles;
 cl_mem gparticles;
-cl_ulong NUMPART = 10000;
+cl_ulong NUMPART = 10000000;
 
 cl_mem gpp_cols;
 cl_ulong NUMPPCOLS;
@@ -278,26 +278,39 @@ int main() {
         collision_count = 0;
         clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
         ret = clEnqueueNDRangeKernel(queue, count_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
-        clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
+        ret = clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL,
+                                  NULL);
+        if (ret != 0) {
+            fprintf(stderr, "Error: Failed to read from collision count buffer. %i\n", ret);
+            return 1;
+        }
         NUMPPCOLS = collision_count;
 
-        // Make collisions.
-        if (VERBOSE) printf("    Making %llu collisions\n", collision_count);
-        ret = clReleaseMemObject(gpp_cols);
-        gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMPPCOLS, NULL, &ret);
+        if (NUMPPCOLS > 0) {
+            // Make collisions.
+            if (VERBOSE) printf("    Making %llu collisions\n", collision_count);
+            ret = clReleaseMemObject(gpp_cols);
+            gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMPPCOLS, NULL, &ret);
+            if (ret != 0) {
+                fprintf(stderr, "Error: Failed to create collision buffer. %i\n", ret);
+                return 1;
+            }
 
-        collision_count = 0;
-        clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
+            collision_count = 0;
+            clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL,
+                                 NULL);
 
-        clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
+            clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
 
-        clEnqueueNDRangeKernel(queue, make_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
+            clEnqueueNDRangeKernel(queue, make_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
 
-        // Calculate collisions.
-        if (VERBOSE) printf("    Calculating collisions\n");
-        ret = clSetKernelArg(calculate_pp_collision, 0, sizeof(cl_mem), &gpp_cols);
-        ret = clEnqueueNDRangeKernel(queue, calculate_pp_collision, 1, NULL, &NUMPPCOLS, 0, NULL, NULL, NULL);
-        ret = clEnqueueNDRangeKernel(queue, calculate_pw_collision, 1, NULL, &NUMPWCOLS, 0, NULL, NULL, NULL);
+            // Calculate collisions.
+            if (VERBOSE) printf("    Calculating collisions\n");
+            ret = clSetKernelArg(calculate_pp_collision, 0, sizeof(cl_mem), &gpp_cols);
+            ret = clEnqueueNDRangeKernel(queue, calculate_pp_collision, 1, NULL, &NUMPPCOLS, 0, NULL, NULL, NULL);
+            ret = clEnqueueNDRangeKernel(queue, calculate_pw_collision, 1, NULL, &NUMPWCOLS, 0, NULL, NULL, NULL);
+        }
+
         // Iterate particles.
         if (VERBOSE) printf("    Iterating particles\n");
         ret = clEnqueueNDRangeKernel(queue, iterate_particle, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
