@@ -25,7 +25,7 @@
 void setContext(cl_device_id *device, cl_context *context,
                 boolean verbose);
 
-void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uint deviceCount, cl_device_id *devices);
+void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms);
 
 cl_command_queue getCommandQueue(cl_context context, cl_device_id device, boolean verbose);
 
@@ -34,7 +34,7 @@ cl_context getContext(cl_device_id **devices, cl_uint num_devices, boolean verbo
 cl_kernel getKernelWithUtils(cl_device_id device, cl_context context, char *fileName, char *kernelName, boolean verbose);
 
 cl_kernel
-getKernel(cl_device_id device, cl_context context, char **fileNames, u_int numFiles, char *kernelName,
+getKernel(cl_device_id device, cl_context context, char **fileNames, int numFiles, char *kernelName,
           boolean verbose);
 
 cl_int particlesToDevice(cl_command_queue queue, cl_mem gparticles, particle **hparticles, cl_ulong NUMPART);

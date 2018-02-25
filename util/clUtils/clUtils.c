@@ -2,6 +2,7 @@
 // Created by Elijah on 05/12/2017.
 //
 
+#include <CL/cl_platform.h>
 #include "clUtils.h"
 
 void setContext(cl_device_id *device, cl_context *context,
@@ -15,15 +16,8 @@ void setContext(cl_device_id *device, cl_context *context,
     platforms = (cl_platform_id *) malloc(sizeof(cl_platform_id) * platformCount);
     clGetPlatformIDs(platformCount, platforms, NULL);
 
-    for (cl_uint i = 0; i < platformCount; i++) {
-        // get all devices
-        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceCount);
-        devices = (cl_device_id *) malloc(sizeof(cl_device_id) * deviceCount);
-        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, deviceCount, devices, NULL);
-    }
-
     if (verbose) {
-        printDeviceDetails(platformCount, platforms, deviceCount, devices);
+        printDeviceDetails(platformCount, platforms);
     }
 
     // select OpenCL platform and device
@@ -83,11 +77,14 @@ void setContext(cl_device_id *device, cl_context *context,
     *context = getContext(&devices, 1, verbose);
 }
 
-void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uint deviceCount, cl_device_id *devices) {
+void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms) {
 
     cl_uint maxComputeUnits;
     char *value;
     size_t valueSize;
+
+    cl_device_id *devices;
+    cl_uint deviceCount;
 
     if (platformCount == 0) {
         printf("No OpenCL platforms available!\n");
@@ -97,6 +94,12 @@ void printDeviceDetails(cl_uint platformCount, cl_platform_id *platforms, cl_uin
         printf("--------------\n");
         printf(" PLATFORM %d \n", i);
         printf("--------------\n");
+
+        // get all devices
+        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceCount);
+        devices = (cl_device_id *) malloc(sizeof(cl_device_id) * deviceCount);
+        clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, deviceCount, devices, NULL);
+
         // for each device print critical attributes
         for (cl_uint j = 0; j < deviceCount; j++) {
             // print device name
@@ -220,7 +223,7 @@ getKernelWithUtils(cl_device_id device, cl_context context, char *fileName, char
 /**
  * Returns a kernel created with specified files.
  */
-cl_kernel getKernel(cl_device_id device, cl_context context, char **fileNames, u_int numFiles, char *kernelName,
+cl_kernel getKernel(cl_device_id device, cl_context context, char **fileNames, int numFiles, char *kernelName,
                     boolean verbose) {
     FILE *fp;
     char *source_str;
