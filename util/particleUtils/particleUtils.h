@@ -23,6 +23,19 @@ void printParticle(particle *p);
 
 float get_particle_mass(particle *p);
 
+void initializeMonodisperseParticles(particle *particles, cl_ulong NUMPART, float density, float fluid_viscosity,
+                                     float diameter, float effect_diameter, cl_float3 positions[],
+                                     cl_float3 velocities[]);
+
+/**
+ * Populates an array of positions with position vectors arranged in a cube shape.
+ * @param positions cl_float3 array of length NUMPART.
+ * @param NUMPART Number of particles.
+ * @param particle_diameter Diameter of particles, or maximum diameter if polydisperse.
+ * @return Length of cube.
+ */
+float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter);
+
 boolean checkPositions(particle *particles, cl_ulong NUMPARTS, cl_float domain_length);
 
 #endif //DEMORANGES_PARTICLEUTILS_H

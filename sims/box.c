@@ -108,43 +108,14 @@ int main() {
         return 1;
     }
 
-    srand(0);
     printf("[INIT] Creating particle positions.\n");
-    cl_ulong pos_len = 0;
-    auto cubert_NUMPART = (cl_ulong) ceil(pow(NUMPART, 0.334));
-
-    domain_length = (cl_float) (1.25 * 1.2 * cubert_NUMPART * particle_diameter);
-    printf("[INIT] Domain length = %f\n", domain_length);
-
-    for (int x = 0; x < cubert_NUMPART; x++) {
-        for (int y = 0; y < cubert_NUMPART; y++) {
-            for (int z = 0; z < cubert_NUMPART; z++) {
-                if (pos_len < NUMPART) {
-                    float rand_offset = 0.005 * (float) rand() / (float) (RAND_MAX);
-                    cl_float xf = 1.2 * cubert_NUMPART * particle_diameter
-                                  * (-0.5 + rand_offset + ((float) x / cubert_NUMPART));
-                    cl_float yf = 1.2 * cubert_NUMPART * particle_diameter
-                                  * (-0.5 + rand_offset + ((float) y / cubert_NUMPART));
-                    cl_float zf = 1.2 * cubert_NUMPART * particle_diameter
-                                  * (-0.5 + rand_offset + ((float) z / cubert_NUMPART));
-                    positions[pos_len] = (cl_float3) {xf, yf, zf};
-                }
-                pos_len++;
-            }
-        }
-    }
-    for (cl_ulong i = 0; i < NUMPART; i++) {
-        hparticles[i].id = i;
-        hparticles[i].density = density;
-        hparticles[i].fluid_viscosity = fluid_viscosity;
-        hparticles[i].diameter = particle_diameter;
-        hparticles[i].effect_diameter = 0;
-        hparticles[i].pos = positions[i];
-        hparticles[i].vel = (cl_float3) {0.0, 0.0, 0.0};
-        hparticles[i].forces = (cl_float3) {0.0, 0.0, 0.0};
-    }
-
+    float cube_length = createCubePositions(positions, NUMPART, particle_diameter);
+    domain_length = (cl_float) (1.25 * cube_length);
+    initializeMonodisperseParticles(hparticles, NUMPART, density, fluid_viscosity, particle_diameter, 0, positions,
+                                    NULL);
     free(positions);
+
+    printf("[INIT] Domain length = %f\n", domain_length);
 
     if (!checkPositions(hparticles, NUMPART, domain_length)) {
         fprintf(stderr, "Particles outside domain limits.\n");
