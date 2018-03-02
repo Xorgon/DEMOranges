@@ -308,8 +308,8 @@ int main() {
             if (VERBOSE) printf("    Calculating collisions\n");
             ret = clSetKernelArg(calculate_pp_collision, 0, sizeof(cl_mem), &gpp_cols);
             ret = clEnqueueNDRangeKernel(queue, calculate_pp_collision, 1, NULL, &NUMPPCOLS, 0, NULL, NULL, NULL);
-            ret = clEnqueueNDRangeKernel(queue, calculate_pw_collision, 1, NULL, &NUMPWCOLS, 0, NULL, NULL, NULL);
         }
+        ret = clEnqueueNDRangeKernel(queue, calculate_pw_collision, 1, NULL, &NUMPWCOLS, 0, NULL, NULL, NULL);
 
         // Iterate particles.
         if (VERBOSE) printf("    Iterating particles\n");
