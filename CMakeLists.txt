@@ -49,6 +49,7 @@ file(GLOB_RECURSE particle_ball_SOURCE_FILES
         "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
         "structures/*.h" "util/kernelUtils.cl"
         "tests/*/*"
+        "sims/simRunner/*"
         sims/particle_ball.c)
 add_executable(particle_ball ${particle_ball_SOURCE_FILES})
 target_link_libraries(particle_ball ${OpenCL_LIBRARY})

@@ -69,7 +69,6 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     ginput_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
     gcv_pids = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong) * NUMPART, NULL, &ret);
 
-
     if (NUMWALLS > 0) {
         printf("[INIT] Creating particle-wall collisions\n");
         NUMPWCOLS = NUMPART * NUMWALLS;
@@ -130,14 +129,16 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
     clSetKernelArg(make_pp_collisions, 5, sizeof(cl_mem), &gcollision_count);
 
-    clSetKernelArg(calculate_pw_collision, 0, sizeof(cl_mem), &gpw_cols);
-    clSetKernelArg(calculate_pw_collision, 1, sizeof(cl_mem), &gparticles);
-    clSetKernelArg(calculate_pw_collision, 2, sizeof(cl_float), &timestep);
-    clSetKernelArg(calculate_pw_collision, 3, sizeof(cl_mem), &gwalls);
-    clSetKernelArg(calculate_pw_collision, 4, sizeof(cl_float), &stiffness);
-    clSetKernelArg(calculate_pw_collision, 5, sizeof(cl_float), &restitution_coefficient);
-    clSetKernelArg(calculate_pw_collision, 6, sizeof(cl_float), &friction_coefficient);
-    clSetKernelArg(calculate_pw_collision, 7, sizeof(cl_float), &friction_stiffness);
+    if (NUMWALLS > 0) {
+        clSetKernelArg(calculate_pw_collision, 0, sizeof(cl_mem), &gpw_cols);
+        clSetKernelArg(calculate_pw_collision, 1, sizeof(cl_mem), &gparticles);
+        clSetKernelArg(calculate_pw_collision, 2, sizeof(cl_float), &timestep);
+        clSetKernelArg(calculate_pw_collision, 3, sizeof(cl_mem), &gwalls);
+        clSetKernelArg(calculate_pw_collision, 4, sizeof(cl_float), &stiffness);
+        clSetKernelArg(calculate_pw_collision, 5, sizeof(cl_float), &restitution_coefficient);
+        clSetKernelArg(calculate_pw_collision, 6, sizeof(cl_float), &friction_coefficient);
+        clSetKernelArg(calculate_pw_collision, 7, sizeof(cl_float), &friction_stiffness);
+    }
 
     printf("\nRunning sim with %llu particles.\n", NUMPART);
 
