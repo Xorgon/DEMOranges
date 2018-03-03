@@ -61,7 +61,8 @@ file(GLOB_RECURSE box_SOURCE_FILES
         "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
         "structures/*.h" "util/kernelUtils.cl"
         "tests/*/*"
-        sims/box.c)
+        sims/box.c
+        "sims/simRunner/*")
 add_executable(box ${box_SOURCE_FILES})
 target_link_libraries(box ${OpenCL_LIBRARY})
 if (NOT(WIN32))
