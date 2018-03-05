@@ -90,6 +90,6 @@ int main() {
                    friction_coefficient, friction_stiffness, cohesion_stiffness);
 
     return runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, stiffness,
-           restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length, prefix,
-           sim_length, timestep, VERBOSE, LOG_DATA, log_step, device, context);
+           restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length, prefix, "",
+           sim_length, timestep, VERBOSE, LOG_DATA, FALSE, log_step, device, context);
 }

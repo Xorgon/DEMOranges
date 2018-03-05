@@ -81,5 +81,5 @@ int main() {
 
     return runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, stiffness,
                   restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length, prefix,
-                  sim_length, timestep, VERBOSE, LOG_DATA, log_step, device, context);
+                  "", sim_length, timestep, VERBOSE, LOG_DATA, FALSE, log_step, device, context);
 }
