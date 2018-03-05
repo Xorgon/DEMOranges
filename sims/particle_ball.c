@@ -13,7 +13,6 @@
 #include "../util/simUtils/simUtils.h"
 #include "simRunner/simRunner.h"
 
-#define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)
 #define VERBOSE FALSE
 #define LOG_DATA TRUE
