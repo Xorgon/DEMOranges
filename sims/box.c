@@ -21,7 +21,7 @@
 char *prefix = "BOX";
 
 particle *hparticles;
-cl_ulong NUMPART = 10000;
+cl_ulong NUMPART = 1000000;
 
 // Particle properties.
 cl_float density = 2000;

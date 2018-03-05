@@ -88,7 +88,7 @@ int main() {
     float theoretical_overlap = get_particle_mass(&(hparticles[0])) * 9.81 / stiffness;
     printf("Theoretical Overlap = %f\n", theoretical_overlap);
 
-    char dir[] = "../verification/friction/data";
+    char dir[] = "../verification/friction/data/";
     for (int i = 32; i <= 80; i += 16) {
         timestep = collision_time / i;
 
