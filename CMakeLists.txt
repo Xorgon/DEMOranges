@@ -70,5 +70,18 @@ if (NOT(WIN32))
     target_link_libraries(box m)
 endif()
 
+file(GLOB_RECURSE normal_force_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
+        "structures/*.h" "util/kernelUtils.cl"
+        "tests/*/*"
+        "sims/simRunner/*"
+        verification/normal_force/normal_force_sim.c)
+add_executable(normal_force ${normal_force_SOURCE_FILES})
+target_link_libraries(normal_force ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(normal_force m)
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -funroll-loops ") # Optimization stuff, TODO: Investigate.
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
