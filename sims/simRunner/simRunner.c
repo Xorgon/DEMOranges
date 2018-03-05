@@ -9,11 +9,9 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
            aa_wall *walls, cl_ulong NUMWALLS,
            cl_float stiffness, cl_float restitution_coefficient, cl_float friction_coefficient,
            cl_float friction_stiffness, cl_float cohesion_stiffness,
-           cl_float domain_length,
-           char prefix[], float sim_length, float timestep,
-           boolean VERBOSE, boolean LOG_DATA, float log_step,
+           cl_float domain_length, char prefix[], char log_dir[], float sim_length, float timestep,
+           boolean VERBOSE, boolean LOG_DATA, boolean log_vel, float log_step,
            cl_device_id device, cl_context context) {
-
     cl_int ret;
 
     cl_float cv_length;
@@ -39,6 +37,11 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
 
     cl_ulong NUMPWCOLS;
     pw_collision *hpw_cols;
+
+    if (!checkDirExists(log_dir) && LOG_DATA) {
+        fprintf(stderr, "Error: Directory (%s) does not exist.\n", log_dir);
+        return 1;
+    }
 
     // Build all remaining kernels and create command queue.
     cl_kernel calculate_pp_collision = getKernelWithUtils(device, context, "../kernels/calculate_pp_collision.cl",
@@ -142,10 +145,10 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
 
     printf("\nRunning sim with %llu particles.\n", NUMPART);
 
-    writeTime(prefix, "", NUMPART, "Start");
+    writeTime(prefix, log_dir, NUMPART, "Start");
     if (LOG_DATA) {
         printf("Logging at time: 0.000000\n");
-        writeParticles(hparticles, 0, prefix, "", NUMPART);
+        writeParticles(hparticles, 0, prefix, log_dir, NUMPART, log_vel);
     }
 
     cl_float last_write = 0;
@@ -213,10 +216,10 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         // Iterate particles.
         if (VERBOSE) printf("    Iterating particles\n");
         ret = clEnqueueNDRangeKernel(queue, iterate_particle, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
-        if (LOG_DATA && time - last_write > log_step) {
+        if (LOG_DATA && time - last_write >= log_step) {
             ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
             printf("Logging at time: %f\n", time);
-            writeParticles(hparticles, time, prefix, "", NUMPART);
+            writeParticles(hparticles, time, prefix, log_dir, NUMPART, log_vel);
 
             last_write = time;
         }
@@ -224,8 +227,9 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
 
     if (LOG_DATA) {
         printf("Logging at time: %f\n", sim_length);
-        writeParticles(hparticles, 0, prefix, "", NUMPART);
+        writeParticles(hparticles, sim_length, prefix, log_dir, NUMPART, log_vel);
     }
 
-    writeTime(prefix, "", NUMPART, "End");
+    writeTime(prefix, log_dir, NUMPART, "End");
+    return 0;
 }
