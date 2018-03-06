@@ -50,7 +50,7 @@ def plot_pos_and_vel():
     for t in times:
         positions.append(get_pos(t, mass, friction_coeff, u_0, g))
         velocities.append(get_vel(t, mass, friction_coeff, u_0, g))
-    times = np.append(times, 2.5)
+    times = np.append(times, 0.5)
     positions.append(positions[-1])
     velocities.append(0)
 
@@ -64,6 +64,7 @@ def plot_pos_and_vel():
             i = int(name_match.group(1))
             if increments.count(i) == 0:
                 increments.append(i)
+    increments.sort()
     for i in increments:
         timestep_data = np.array([]).reshape((0, 3))  # Times, Positions, Velocities
         for filename in data_dir:
@@ -75,25 +76,52 @@ def plot_pos_and_vel():
                 data_match = re.match("(-?\d+\.\d+),(-?\d+\.\d+),(-?\d+\.\d+),(-?\d+\.\d+),(-?\d+\.\d+),(-?\d+\.\d+)",
                                       line)
                 if data_match:
-                    timestep_data = np.append(timestep_data, [[time, data_match.group(1), data_match.group(4)]], axis=0)
+                    timestep_data = np.append(timestep_data,
+                                              [[time, float(data_match.group(1)), float(data_match.group(4))]], axis=0)
         timestep_data = timestep_data[timestep_data[:, 0].argsort()]  # Sort by time
         data.append(timestep_data)
 
-    fig, ax1 = plt.subplots()
-    ax1.plot(times, positions, 'b')
-    for timestep_data in data:
-        ax1.plot(timestep_data[:, 0], timestep_data[:, 1], 'b--')
-    ax1.set_xlabel('time (s)')
-    # Make the y-axis label, ticks and tick labels match the line color.
-    ax1.set_ylabel('Position', color='b')
-    # ax1.tick_params('y', colors='b')
+    # Normalize Data
+    # Normalize Data
+    for incr_data in data:
+        for n in range(len(incr_data)):
+            incr_data[n, 0] = incr_data[n, 0] / col_duration  # Normalize time with collision duration
+            incr_data[n, 1] = incr_data[n, 1] / diameter  # Normalize position with particle diameter
+            incr_data[n, 2] = incr_data[n, 2] / u_0  # Normalize velocity with initial velocity
 
-    ax2 = ax1.twinx()
-    ax2.plot(times, velocities, 'r')
-    for timestep_data in data:
-        ax2.plot(timestep_data[:, 0], timestep_data[:, 2], 'r--')
-    ax2.set_ylabel('Velocity', color='r')
-    # ax2.tick_params('y', colors='r')
+    for n in range(len(positions)):
+        times[n] = times[n] / col_duration
+        positions[n] = positions[n] / diameter
+        velocities[n] = velocities[n] / u_0
+
+    # Plot Data
+    fig = plt.figure(figsize=(8, 10))
+    fig.patch.set_facecolor('white')
+    ax1 = fig.add_subplot(211)
+    ax1_lines = []
+    analytic_line, = ax1.plot(times, positions, 'k', label="Analytic")
+    ax1_lines.append(analytic_line)
+    for i in range(len(data)):
+        timestep_data = data[i]
+        timestep_label = "$t_{collision} / " + str(increments[i]) + "$"
+        line, = ax1.plot(timestep_data[:, 0], timestep_data[:, 1], '--', label=timestep_label)
+        ax1_lines.append(line)
+    ax1.set_xlabel('$t / t_{collision}$')
+    ax1.set_ylabel('$x / d_p$')
+    ax1.legend(handles=ax1_lines, loc=4)
+
+    ax2 = fig.add_subplot(212)
+    ax2_lines = []
+    analytic_line, = ax2.plot(times, velocities, 'k', label="Analytic")
+    ax2_lines.append(analytic_line)
+    for i in range(len(data)):
+        timestep_data = data[i]
+        timestep_label = "$t_{collision} / " + str(increments[i]) + "$"
+        line, = ax2.plot(timestep_data[:, 0], timestep_data[:, 2], '--', label=timestep_label)
+        ax2_lines.append(line)
+    ax2.set_ylabel('$u / u_0$')
+    ax2.set_xlabel('$t / t_{collision}$')
+    ax2.legend(handles=ax2_lines, loc=1)
 
     fig.tight_layout()
     plt.show()

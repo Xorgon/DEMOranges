@@ -41,7 +41,7 @@ cl_float cohesion_stiffness = 0;
 cl_float initial_vel_x = 1;
 
 cl_float timestep;
-cl_float sim_length = 2.5;
+cl_float sim_length = 0.5;
 cl_float log_step = 0.03125;
 
 cl_float domain_length;
