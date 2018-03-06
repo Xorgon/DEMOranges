@@ -89,7 +89,10 @@ int main() {
     writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
                    friction_coefficient, friction_stiffness, cohesion_stiffness);
 
-    return runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, stiffness,
+    int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, stiffness,
            restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length, prefix, "",
            sim_length, timestep, VERBOSE, LOG_DATA, FALSE, log_step, device, context);
+
+    clReleaseContext(context);
+    return sim_ret;
 }
