@@ -42,7 +42,7 @@ def plot_pos_and_vel():
 
     # Generate Analytic Solution Data
     t_max = u_0 / (friction_coeff * mass * g)  # From Velocity equation
-    print("t_max = " + str(t_max))
+    # print("t_max = " + str(t_max))
     times = np.arange(0, t_max, col_duration / 16)
     positions = []
     velocities = []

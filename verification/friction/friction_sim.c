@@ -89,7 +89,7 @@ int main() {
     printf("Theoretical Overlap = %f\n", theoretical_overlap);
 
     char dir[] = "../verification/friction/data/";
-    for (int i = 32; i <= 80; i += 16) {
+    for (int i = 8; i <= 64; i *= 2) {
         timestep = collision_time / i;
 
         sprintf(prefix, "friction_%i", i);

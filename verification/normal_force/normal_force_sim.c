@@ -87,7 +87,7 @@ int main() {
     sim_length = (cl_float) (collision_time * 1.5);
 
     char dir[] = "../verification/normal_force/data/";
-    for (int i = 8; i <= 80; i += 24) {
+    for (int i = 8; i <= 64; i *= 2) {
         timestep = collision_time / i;
         log_step = timestep;
 
