@@ -19,7 +19,7 @@
 #define LOG_DATA TRUE
 
 char *prefix = "TGV_BOX";
-char *log_dir = "TGV_BOX/";
+char *log_dir = "TGV_BOX_COHESION/";
 
 particle *hparticles;
 cl_ulong NUMPART = 50000;
@@ -27,14 +27,15 @@ cl_ulong NUMPART = 50000;
 // Particle properties.
 cl_float density = 1000;
 cl_float particle_diameter = 0.1;
+cl_float particle_effect_diameter;
 cl_float fluid_viscosity = 0.0000193 * 10000;
 
 // Collision properties.
 cl_float stiffness = 1e5;
 cl_float restitution_coefficient = 0.8;
-cl_float friction_coefficient = 0.6;
+cl_float friction_coefficient = 0.1;
 cl_float friction_stiffness = 1e5;
-cl_float cohesion_stiffness = 0;
+cl_float cohesion_stiffness = 1e2;
 
 cl_ulong NUMWALLS;
 aa_wall *walls;
@@ -73,10 +74,12 @@ int main() {
     printf("[INIT] Creating particle positions.\n");
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
     float cube_length = createCubePositions(positions, NUMPART, particle_diameter);
-    domain_length = 2 * PI;
+    domain_length = (cl_float) (2 * PI);
 
     // Initialize particles.
-    initializeMonodisperseParticles(hparticles, NUMPART, density, fluid_viscosity, particle_diameter, 0, positions,
+    particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
+    initializeMonodisperseParticles(hparticles, NUMPART, density, fluid_viscosity, particle_diameter,
+                                    particle_effect_diameter, positions,
                                     NULL);
     free(positions);
 
