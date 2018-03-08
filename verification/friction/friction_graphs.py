@@ -19,11 +19,11 @@ def get_reduced_particle_mass(m1, m2):
 
 
 def get_pos(time, mass, friction_coeff, u_0, g):
-    return - friction_coeff * mass * g * time ** 2 / 2 + u_0 * time
+    return - friction_coeff * g * time ** 2 / 2 + u_0 * time
 
 
 def get_vel(time, mass, friction_coeff, u_0, g):
-    return - friction_coeff * mass * g * time + u_0
+    return - friction_coeff * g * time + u_0
 
 
 def plot_pos_and_vel():
@@ -41,7 +41,7 @@ def plot_pos_and_vel():
     col_duration = pi * sqrt(mass / stiffness)
 
     # Generate Analytic Solution Data
-    t_max = u_0 / (friction_coeff * mass * g)  # From Velocity equation
+    t_max = u_0 / (friction_coeff * g)  # From Velocity equation
     # print("t_max = " + str(t_max))
     times = np.arange(0, t_max, col_duration / 16)
     positions = []
