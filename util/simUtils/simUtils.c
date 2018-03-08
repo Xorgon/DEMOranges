@@ -6,7 +6,7 @@
 
 void writeParticles(particle *particles, float time, char prefix[], char dir[], cl_ulong NUMPART, boolean log_vel) {
     char filename[500];
-    sprintf(filename, "%s%llu_%s_%i.txt", dir, NUMPART, prefix, (int) roundf(time * 1e6));
+    sprintf(filename, "%s%llu_%s_%i.txt", dir, NUMPART, prefix, (long) roundf(time * 1e6));
     FILE *fd = fopen(filename, "w");
     for (int i = 0; i < NUMPART; i++) {
         if (log_vel) {
