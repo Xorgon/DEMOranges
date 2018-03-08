@@ -70,6 +70,19 @@ if (NOT(WIN32))
     target_link_libraries(box m)
 endif()
 
+file(GLOB_RECURSE tgv_box_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
+        "structures/*.h" "util/kernelUtils.cl"
+        "tests/*/*"
+        sims/tgv_box.c
+        "sims/simRunner/*")
+add_executable(tgv_box ${tgv_box_SOURCE_FILES})
+target_link_libraries(tgv_box ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(tgv_box m)
+endif()
+
 file(GLOB_RECURSE normal_force_SOURCE_FILES
         "util/*.h" "util/*.c"
         "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
