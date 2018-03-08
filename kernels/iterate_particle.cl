@@ -10,7 +10,7 @@ float3 get_vel_fluid(particle p, float delta_t) {
 }
 #endif
 
-float get_tau(particle p, float delta_t) {
+float get_tau(particle p) {
     return p.density * p.diameter * p.diameter / (18 * p.fluid_viscosity);
 }
 
@@ -19,7 +19,7 @@ float get_mass(particle p) {
 }
 
 float3 get_accel(particle p, float delta_t) {
-    float tau = get_tau(p, delta_t);
+    float tau = get_tau(p);
     float3 non_drag_a = get_gravity(p, delta_t) + p.forces / get_mass(p);
     return (get_vel_fluid(p, delta_t) - p.vel + tau * non_drag_a) / (tau + delta_t);
 }
