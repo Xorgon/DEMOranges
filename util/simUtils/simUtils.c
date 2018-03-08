@@ -21,9 +21,10 @@ void writeParticles(particle *particles, float time, char prefix[], char dir[], 
 
 void writeSetupData(char prefix[], char dir[], cl_ulong NUMPART, cl_float timestep, cl_float sim_length,
                     cl_float domain_length, cl_float stiffness, cl_float restitution_coefficient,
-                    cl_float friction_coefficient, cl_float friction_stiffness, cl_float cohesion_stiffness) {
+                    cl_float friction_coefficient, cl_float friction_stiffness, cl_float cohesion_stiffness,
+                    cl_float particle_diameter, cl_float particle_density, cl_float fluid_viscosity) {
     char filename[500];
-    sprintf(filename, "%llu_%s%s_setup.txt", NUMPART, dir, prefix);
+    sprintf(filename, "%s%llu_%s_setup.txt", dir, NUMPART, prefix);
     FILE *fd = fopen(filename, "w");
     fprintf(fd, "Number of particles: %llu\n", NUMPART);
     fprintf(fd, "Timestep: %f\n", timestep);
@@ -34,6 +35,9 @@ void writeSetupData(char prefix[], char dir[], cl_ulong NUMPART, cl_float timest
     fprintf(fd, "Friction coefficient: %f\n", friction_coefficient);
     fprintf(fd, "Friction stiffness: %f\n", friction_stiffness);
     fprintf(fd, "Cohesion stiffness: %f\n", cohesion_stiffness);
+    fprintf(fd, "Particle diameter: %f\n", particle_diameter);
+    fprintf(fd, "Particle density: %f\n", particle_density);
+    fprintf(fd, "Fluid viscosity: %f\n", fluid_viscosity);
     fclose(fd);
 }
 
