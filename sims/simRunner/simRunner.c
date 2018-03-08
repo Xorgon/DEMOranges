@@ -38,7 +38,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     cl_ulong NUMPWCOLS;
     pw_collision *hpw_cols;
 
-    if (!checkDirExists(log_dir) && LOG_DATA) {
+    if (!checkDirExists(log_dir) && LOG_DATA && strcmp(log_dir, "") != 0) {
         fprintf(stderr, "Error: Directory (%s) does not exist.\n", log_dir);
         return 1;
     }

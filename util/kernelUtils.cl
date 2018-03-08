@@ -96,9 +96,9 @@ float get_particle_mass(particle p) {
 }
 
 float get_reduced_particle_mass(float m1, float m2) {
-    if (m1 = -1 && m2 != -1) {
+    if (m1 == -1 && m2 != -1) {
         m1 = m2;
-    } else if (m2 = -1 && m1 != -1) {
+    } else if (m2 == -1 && m1 != -1) {
         m2 = m1;
     } else if (m1 == -1 && m2 == -1) {
         printf("Warning: Colliding particles with infinite densities.");
