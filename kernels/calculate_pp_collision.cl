@@ -75,7 +75,7 @@ __kernel void calculate_pp_collision(__global pp_collision *collisions, __global
     }
     if (effect_overlap > 0) {
         float3 cohesion_force = calculate_cohesion_force(particles[p1_id], particles[p2_id], cohesion_stiffness);
-        forces += cohesion_force;
+        forces -= cohesion_force;  // Pulling rather than pushing.
     }
     if (overlap > 0 || effect_overlap > 0){
         if (overlap > 3 * particles[p1_id].diameter / 4 || overlap > 3 * particles[p2_id].diameter / 4) {
