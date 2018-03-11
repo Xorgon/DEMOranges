@@ -49,21 +49,22 @@ void initializeMonodisperseParticles(particle *particles, cl_ulong NUMPART, floa
     }
 }
 
-float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter) {
+float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter, float spacing_factor) {
     cl_ulong cubert_NUMPART = (cl_ulong) ceil(pow(NUMPART, 0.334));
     cl_ulong pos_len = 0;
     srand(0);
 
+    float cube_length = spacing_factor * cubert_NUMPART * particle_diameter;
     for (int x = 0; x < cubert_NUMPART; x++) {
         for (int y = 0; y < cubert_NUMPART; y++) {
             for (int z = 0; z < cubert_NUMPART; z++) {
                 if (pos_len < NUMPART) {
                     float rand_offset = 0.005 * (float) rand() / (float) (RAND_MAX);
-                    cl_float xf = 1.2 * cubert_NUMPART * particle_diameter
+                    cl_float xf = cube_length
                                   * (-0.5 + rand_offset + ((float) x / cubert_NUMPART));
-                    cl_float yf = 1.2 * cubert_NUMPART * particle_diameter
+                    cl_float yf = cube_length
                                   * (-0.5 + rand_offset + ((float) y / cubert_NUMPART));
-                    cl_float zf = 1.2 * cubert_NUMPART * particle_diameter
+                    cl_float zf = cube_length
                                   * (-0.5 + rand_offset + ((float) z / cubert_NUMPART));
                     positions[pos_len] = (cl_float3) {xf, yf, zf};
                 }
@@ -72,5 +73,5 @@ float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle
         }
     }
 
-    return (float) (1.2 * cubert_NUMPART * particle_diameter);
+    return (float) cube_length;
 }

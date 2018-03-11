@@ -34,9 +34,10 @@ void initializeMonodisperseParticles(particle *particles, cl_ulong NUMPART, floa
  * @param positions cl_float3 array of length NUMPART.
  * @param NUMPART Number of particles.
  * @param particle_diameter Diameter of particles, or maximum diameter if polydisperse.
+ * @param spacing_factor A factor describing the spacing between particles.
  * @return Length of cube.
  */
-float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter);
+float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter, float spacing_factor);
 
 boolean checkPositions(particle *particles, cl_ulong NUMPARTS, cl_float domain_length);
 
