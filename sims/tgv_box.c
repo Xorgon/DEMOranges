@@ -73,7 +73,8 @@ int main() {
 
     printf("[INIT] Creating particle positions.\n");
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
-    float cube_length = createCubePositions(positions, NUMPART, particle_diameter);
+    // Using particle_effect_diameter so that cohesion effects are considered at the appropriate range.
+    float cube_length = createCubePositions(positions, NUMPART, particle_effect_diameter, 2);
     domain_length = (cl_float) (2 * PI);
 
     // Initialize particles.
