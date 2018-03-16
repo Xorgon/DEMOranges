@@ -58,5 +58,10 @@ dkms.conf
 # CMake Output
 cmake-build*
 
+# Data
 runs/*
 verification/*/data/*
+
+# Cached files
+__pycache__*
+*.pyc
