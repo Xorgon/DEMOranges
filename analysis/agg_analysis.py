@@ -10,7 +10,6 @@ import re
 
 def detect_agglomerates(particles):
     aggs = []
-
     points = []
     for p in particles:
         points.append(p.pos)
@@ -42,7 +41,7 @@ def detect_agglomerates(particles):
     return aggs
 
 
-def agg_property_variation(path, prefix):
+def save_agg_property_variation(path, prefix):
     times = []
     means = []
     stds = []
@@ -68,9 +67,32 @@ def agg_property_variation(path, prefix):
             if num_calculated % 10 == 0:
                 property_file.flush()
     property_file.close()
-    plt.plot(times, means)
-    plt.plot(times, stds)
 
 
-agg_property_variation("../cmake-build-release-gcc/TGV_BOX_COHESION/", "100000_TGV_BOX_")
+def graph_agg_property_variation(path, prefix):
+    property_file = open(path + prefix + "agglomerate_properties.txt", "r")
+    lines = property_file.readlines()
+    data = []
+    for line in lines:
+        split = line.split(",")
+        data.append([float(split[0]), float(split[1]), float(split[2])])
+    data = np.array(data)
+    data.sort(0)
+
+    fig, ax1 = plt.subplots()
+    fig.patch.set_facecolor('white')
+    ax1.plot(data[:, 0], data[:, 1], 'r', label="Label")
+    ax1.set_ylabel("Mean", color='r')
+    ax1.set_xlabel("$t$")
+    handles, labels = ax1.get_legend_handles_labels()
+    ax1.legend(handles, labels, loc=2)
+    ax2 = ax1.twinx()
+    ax2.plot(data[:, 0], data[:, 2], 'b')
+    ax2.set_ylabel("Standard Deviation", color='b')
+    plt.plot()
+    plt.plot()
+
+
+save_agg_property_variation("../cmake-build-release-gcc/TGV_BOX_COHESION/", "10000_TGV_BOX_")
+graph_agg_property_variation("../cmake-build-release-gcc/TGV_BOX_COHESION/", "10000_TGV_BOX_")
 plt.show()
