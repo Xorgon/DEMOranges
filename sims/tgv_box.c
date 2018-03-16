@@ -22,11 +22,11 @@ char *prefix = "TGV_BOX";
 char *log_dir = "TGV_BOX_COHESION/";
 
 particle *hparticles;
-cl_ulong NUMPART = 50000;
+cl_ulong NUMPART = 10000;
 
 // Particle properties.
 cl_float density = 1000;
-cl_float particle_diameter = 0.1;
+cl_float particle_diameter = 0.05;
 cl_float particle_effect_diameter;
 cl_float fluid_viscosity = 0.0000193 * 10000;
 
@@ -35,14 +35,14 @@ cl_float stiffness = 1e5;
 cl_float restitution_coefficient = 0.8;
 cl_float friction_coefficient = 0.1;
 cl_float friction_stiffness = 1e5;
-cl_float cohesion_stiffness = 1e2;
+cl_float cohesion_stiffness = 1e1;
 
 cl_ulong NUMWALLS;
 aa_wall *walls;
 
 cl_float timestep;
-cl_float sim_length = 30;
-cl_float log_step = 0.0333;
+cl_float sim_length = 120;
+cl_float log_step = 5;
 
 cl_float domain_length;
 
@@ -72,13 +72,13 @@ int main() {
     }
 
     printf("[INIT] Creating particle positions.\n");
+    particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
     // Using particle_effect_diameter so that cohesion effects are considered at the appropriate range.
     float cube_length = createCubePositions(positions, NUMPART, particle_effect_diameter, 2);
     domain_length = (cl_float) (2 * PI);
 
     // Initialize particles.
-    particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
     initializeMonodisperseParticles(hparticles, NUMPART, density, fluid_viscosity, particle_diameter,
                                     particle_effect_diameter, positions,
                                     NULL);
