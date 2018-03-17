@@ -15,7 +15,7 @@
 #include "simRunner/simRunner.h"
 
 #define MAX_SOURCE_SIZE (0x100000)
-#define VERBOSE TRUE
+#define VERBOSE FALSE
 #define LOG_DATA FALSE
 
 char *prefix = "BOX";
@@ -68,7 +68,7 @@ int main() {
 
     printf("[INIT] Creating particle positions.\n");
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
-    float cube_length = createCubePositions(positions, NUMPART, particle_diameter);
+    float cube_length = createCubePositions(positions, NUMPART, particle_diameter, 1.2);
     domain_length = (cl_float) (1.25 * cube_length);
 
     // Initialize particles.
