@@ -41,7 +41,7 @@ def detect_agglomerates(particles):
     return aggs
 
 
-def save_agg_property_variation(path, prefix):
+def save_agg_property_variation(path, prefix, min_agg_size=1):
     times = []
     means = []
     stds = []
@@ -57,13 +57,15 @@ def save_agg_property_variation(path, prefix):
             aggs = detect_agglomerates(load_particles(path, filename))
             sizes = []
             for agg in aggs:
-                sizes.append(agg.get_size())
-            mean = np.mean(sizes)
-            means.append(mean)
-            std = np.std(sizes)
-            stds.append(std)
-            property_file.write("{0},{1},{2}\n".format(time, mean, std))
-            num_calculated += 1
+                if agg.get_size() >= min_agg_size:
+                    sizes.append(agg.get_size())
+            if len(sizes) > 0:
+                mean = np.mean(sizes)
+                means.append(mean)
+                std = np.std(sizes)
+                stds.append(std)
+                property_file.write("{0},{1},{2}\n".format(time, mean, std))
+                num_calculated += 1
             if num_calculated % 10 == 0:
                 property_file.flush()
     property_file.close()
@@ -93,6 +95,6 @@ def graph_agg_property_variation(path, prefix):
     plt.plot()
 
 
-save_agg_property_variation("../cmake-build-release-gcc/TGV_BOX_COHESION/", "10000_TGV_BOX_")
-graph_agg_property_variation("../cmake-build-release-gcc/TGV_BOX_COHESION/", "10000_TGV_BOX_")
+save_agg_property_variation("../runs/TGV Cohesion Box/TGV_BOX/", "10000_TGV_BOX_", 1)
+graph_agg_property_variation("../runs/TGV Cohesion Box/TGV_BOX/", "10000_TGV_BOX_")
 plt.show()
