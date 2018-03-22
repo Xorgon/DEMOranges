@@ -38,7 +38,7 @@ def plot_pos_and_vel():
     restitution = 0.8
     u_0 = -2
 
-    damping_coeff = calculate_damping_coefficient(stiffness, restitution, mass, mass)
+    damping_coeff = calculate_damping_coefficient(stiffness, restitution, mass, 1e308)
 
     col_duration = pi * sqrt(mass / stiffness)
 
