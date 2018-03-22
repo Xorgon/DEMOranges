@@ -92,19 +92,24 @@ int3 cv_array_idx_to_cv_coords(ulong cv_array_idx, int cvs_per_edge) {
 }
 
 float get_particle_mass(particle p) {
-    return (float) p.density * M_PI_F * pow(p.diameter, 3) / 6;
+    if (p.density == -1) {
+        return -1;
+    } else {
+        return (float) p.density * M_PI_F * pow(p.diameter, 3) / 6;
+    }
 }
 
 float get_reduced_particle_mass(float m1, float m2) {
     if (m1 == -1 && m2 != -1) {
-        m1 = m2;
+        return m2;
     } else if (m2 == -1 && m1 != -1) {
-        m2 = m1;
+        return m1;
     } else if (m1 == -1 && m2 == -1) {
         printf("Warning: Colliding particles with infinite densities.");
         return 1e99;
+    } else {
+        return m1 * m2 / (m1 + m2);
     }
-    return m1 * m2 / (m1 + m2);
 }
 
 float get_damping_coefficient(float restitution_coeff, float stiffness, float reduced_particle_mass) {
