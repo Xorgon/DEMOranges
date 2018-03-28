@@ -41,6 +41,19 @@ def detect_agglomerates(particles):
     return aggs
 
 
+def calculate_agg_properites(aggs, min_agg_size):
+    sizes = []
+    for agg in aggs:
+        if agg.get_size() >= min_agg_size:
+            sizes.append(agg.get_size())
+    if len(sizes) > 0:
+        mean = np.mean(sizes)
+        std = np.std(sizes)
+        return mean, std
+    else:
+        return None
+
+
 def save_agg_property_variation(path, prefix, min_agg_size=1):
     times = []
     means = []
@@ -55,14 +68,10 @@ def save_agg_property_variation(path, prefix, min_agg_size=1):
             print("Time = " + str(time))
             times.append(time)
             aggs = detect_agglomerates(load_particles(path, filename))
-            sizes = []
-            for agg in aggs:
-                if agg.get_size() >= min_agg_size:
-                    sizes.append(agg.get_size())
-            if len(sizes) > 0:
-                mean = np.mean(sizes)
+            ret = calculate_agg_properites(aggs, min_agg_size)
+            if ret is not None:
+                mean, std = ret
                 means.append(mean)
-                std = np.std(sizes)
                 stds.append(std)
                 property_file.write("{0},{1},{2}\n".format(time, mean, std))
                 num_calculated += 1
@@ -95,6 +104,10 @@ def graph_agg_property_variation(path, prefix):
     plt.plot()
 
 
-save_agg_property_variation("../runs/TGV Cohesion Box/TGV_BOX/", "10000_TGV_BOX_", 1)
-graph_agg_property_variation("../runs/TGV Cohesion Box/TGV_BOX/", "10000_TGV_BOX_")
+# save_agg_property_variation("../runs/TGV Cohesion Box/TGV_BOX/", "10000_TGV_BOX_", 2)
+# graph_agg_property_variation("../runs/TGV Cohesion Box/TGV_BOX/", "10000_TGV_BOX_")
+
+save_agg_property_variation("../cmake-build-release-gcc/TGV_PERIODIC_3/", "10000_TGV_PERIODIC_", 1)
+graph_agg_property_variation("../cmake-build-release-gcc/TGV_PERIODIC_3/", "10000_TGV_PERIODIC_")
+# print(calculate_agg_properites(detect_agglomerates(load_particles("../cmake-build-release-gcc/TGV_PERIODIC_3/", "10000_TGV_PERIODIC_12491837.txt")), 2))
 plt.show()
