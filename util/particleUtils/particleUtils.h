@@ -39,6 +39,8 @@ void initializeMonodisperseParticles(particle *particles, cl_ulong NUMPART, floa
  */
 float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter, float spacing_factor);
 
+void createNormalDistVelocities(cl_float3 *velocities, cl_ulong NUMPART, float mean, float std_dev);
+
 boolean checkPositions(particle *particles, cl_ulong NUMPARTS, cl_float domain_length);
 
 #endif //DEMORANGES_PARTICLEUTILS_H

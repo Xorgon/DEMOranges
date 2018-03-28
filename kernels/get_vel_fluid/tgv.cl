@@ -1,7 +1,7 @@
 #define DEFAULT_PARTICLE_FLUID_VEL 0
 
-#define MAX_FLOW_SPEED 3
-#define VORTEX_FREQ 4
+#define MAX_FLOW_SPEED 0.5
+#define VORTEX_FREQ 3
 
 float3 get_vel_fluid(particle p, float delta_t) {
     float3 vel_fluid = (float3) {0, 0, 0};

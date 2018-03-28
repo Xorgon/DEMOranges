@@ -32,6 +32,15 @@ else()
     set(OpenCL_LIBRARY OpenCL::OpenCL)
 endif()
 
+# General source files
+
+file(GLOB_RECURSE sim_SOURCE_FILES
+        "util/*.h" "util/*.c"
+        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
+        "structures/*.h" "util/kernelUtils.cl"
+        "tests/*/*"
+        "sims/simRunner/*")
+
 # Targets
 
 file(GLOB_RECURSE run_tests_SOURCE_FILES
@@ -44,79 +53,50 @@ if (NOT(WIN32))
     target_link_libraries(run_tests m)
 endif()
 
-file(GLOB_RECURSE particle_ball_SOURCE_FILES
-        "util/*.h" "util/*.c"
-        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
-        "structures/*.h" "util/kernelUtils.cl"
-        "tests/*/*"
-        "sims/simRunner/*"
-        sims/particle_ball.c)
-add_executable(particle_ball ${particle_ball_SOURCE_FILES})
+file(GLOB_RECURSE particle_ball_SOURCE_FILES sims/particle_ball.c)
+add_executable(particle_ball ${particle_ball_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(particle_ball ${OpenCL_LIBRARY})
 if (NOT(WIN32))
     target_link_libraries(particle_ball m)
 endif()
 
-file(GLOB_RECURSE box_SOURCE_FILES
-        "util/*.h" "util/*.c"
-        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
-        "structures/*.h" "util/kernelUtils.cl"
-        "tests/*/*"
-        sims/box.c
-        "sims/simRunner/*")
-add_executable(box ${box_SOURCE_FILES})
+file(GLOB_RECURSE box_SOURCE_FILES sims/box.c)
+add_executable(box ${box_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(box ${OpenCL_LIBRARY})
 if (NOT(WIN32))
     target_link_libraries(box m)
 endif()
 
-file(GLOB_RECURSE tgv_box_SOURCE_FILES
-        "util/*.h" "util/*.c"
-        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
-        "structures/*.h" "util/kernelUtils.cl"
-        "tests/*/*"
-        sims/tgv_box.c
-        "sims/simRunner/*")
-add_executable(tgv_box ${tgv_box_SOURCE_FILES})
+file(GLOB_RECURSE tgv_box_SOURCE_FILES sims/tgv_box.c)
+add_executable(tgv_box ${tgv_box_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(tgv_box ${OpenCL_LIBRARY})
 if (NOT(WIN32))
     target_link_libraries(tgv_box m)
 endif()
 
-file(GLOB_RECURSE normal_force_SOURCE_FILES
-        "util/*.h" "util/*.c"
-        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
-        "structures/*.h" "util/kernelUtils.cl"
-        "tests/*/*"
-        "sims/simRunner/*"
-        verification/normal_force/normal_force_sim.c)
-add_executable(normal_force ${normal_force_SOURCE_FILES})
+file(GLOB_RECURSE tgv_periodic_SOURCE_FILES sims/tgv_periodic.c)
+add_executable(tgv_periodic ${tgv_periodic_SOURCE_FILES} ${sim_SOURCE_FILES})
+target_link_libraries(tgv_periodic ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(tgv_periodic m)
+endif()
+
+file(GLOB_RECURSE normal_force_SOURCE_FILES verification/normal_force/normal_force_sim.c)
+add_executable(normal_force ${normal_force_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(normal_force ${OpenCL_LIBRARY})
 if (NOT(WIN32))
     target_link_libraries(normal_force m)
 endif()
 
-file(GLOB_RECURSE friction_SOURCE_FILES
-        "util/*.h" "util/*.c"
-        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
-        "structures/*.h" "util/kernelUtils.cl"
-        "tests/*/*"
-        "sims/simRunner/*"
-        verification/friction/friction_sim.c)
-add_executable(friction ${friction_SOURCE_FILES})
+file(GLOB_RECURSE friction_SOURCE_FILES verification/friction/friction_sim.c)
+add_executable(friction ${friction_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(friction ${OpenCL_LIBRARY})
 if (NOT(WIN32))
     target_link_libraries(friction m)
 endif()
 
-file(GLOB_RECURSE drag_SOURCE_FILES
-        "util/*.h" "util/*.c"
-        "util/particleUtils/particleUtils.c" "util/particleUtils/particleUtils.h"
-        "structures/*.h" "util/kernelUtils.cl"
-        "tests/*/*"
-        "sims/simRunner/*"
-        verification/drag/drag_sim.c)
-add_executable(drag ${drag_SOURCE_FILES})
+file(GLOB_RECURSE drag_SOURCE_FILES verification/drag/drag_sim.c)
+add_executable(drag ${drag_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(drag ${OpenCL_LIBRARY})
 if (NOT(WIN32))
     target_link_libraries(drag m)

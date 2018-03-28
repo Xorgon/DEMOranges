@@ -75,3 +75,25 @@ float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle
 
     return (float) cube_length;
 }
+
+void createNormalDistVelocities(cl_float3 *velocities, cl_ulong NUMPART, float mean, float std_dev) {
+    srand(0);
+
+    for (int i = 0; i < NUMPART; i++) {
+        // Select random speed.
+        // Box-Muller transformation from uniform to normal.
+        float u = (float) rand() / (float) (RAND_MAX);
+        float v =(float) rand() / (float) (RAND_MAX);
+        float speed = (float) (std_dev * sqrtf(-2 * logf(u)) * cos(2 * PI * v)) + mean;
+
+        // Select random direction.
+        float pitch = (float) rand() / (float) (RAND_MAX) * PI; // From -ve z (0) to +ve z (pi).
+        float yaw = (float) rand() / (float) (RAND_MAX) * 2 * PI; // +ve x = 0, -ve y = pi/2, -ve x = pi, +ve y = 3pi/4.
+
+        float x = speed * cosf(pitch) * cosf(yaw);
+        float y = speed * cosf(pitch) * sinf(yaw);
+        float z = speed * sinf(pitch);
+
+        velocities[i] = (cl_float3) {x, y, z};
+    }
+}
