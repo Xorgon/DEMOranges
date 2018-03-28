@@ -38,9 +38,12 @@ boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolea
     cl_mem gcollision_count = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong), NULL, &ret);
     ret = clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
 
+    cl_int int_periodic = 0;
+
     clSetKernelArg(count_pp_collisions, 0, sizeof(cl_mem), &gparticle_count_array);
     clSetKernelArg(count_pp_collisions, 1, sizeof(cl_int), &cvs_per_edge);
     clSetKernelArg(count_pp_collisions, 2, sizeof(cl_mem), &gcollision_count);
+    clSetKernelArg(count_pp_collisions, 3, sizeof(cl_int), &int_periodic);
 
     ret = clEnqueueNDRangeKernel(queue, count_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
     clFinish(queue);
@@ -117,12 +120,15 @@ boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean
     pp_collisionsToDevice(queue, gcollisions, &collisions, NUMCOLS);
     clEnqueueWriteBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL, NULL);
 
+    cl_int int_periodic = 0;
+
     clSetKernelArg(make_pp_collisions, 0, sizeof(cl_mem), &gcv_start_array);
     clSetKernelArg(make_pp_collisions, 1, sizeof(cl_mem), &gparticle_count_array);
     clSetKernelArg(make_pp_collisions, 2, sizeof(cl_mem), &gcv_pids);
     clSetKernelArg(make_pp_collisions, 3, sizeof(cl_int), &cvs_per_edge);
     clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gcollisions);
     clSetKernelArg(make_pp_collisions, 5, sizeof(cl_mem), &gcollision_count);
+    clSetKernelArg(make_pp_collisions, 6, sizeof(cl_int), &int_periodic);
 
     clEnqueueNDRangeKernel(queue, make_pp_collisions, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
 

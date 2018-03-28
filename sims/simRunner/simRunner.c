@@ -6,7 +6,7 @@
 
 
 int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, cl_float particle_diameter,
-           aa_wall *walls, cl_ulong NUMWALLS,
+           aa_wall *walls, cl_ulong NUMWALLS, cl_bool periodic,
            cl_float stiffness, cl_float restitution_coefficient, cl_float friction_coefficient,
            cl_float friction_stiffness, cl_float cohesion_stiffness,
            cl_float domain_length, char prefix[], char log_dir[], float sim_length, float timestep,
@@ -96,10 +96,17 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     gparticles = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(particle) * NUMPART, NULL, &ret);
     ret = particlesToDevice(queue, gparticles, &hparticles, NUMPART);
 
-
+    int int_periodic;
+    if (periodic) {
+        int_periodic = 1;
+    } else {
+        int_periodic = 0;
+    }
     printf("[INIT] Setting kernel arguments\n");
     ret = clSetKernelArg(iterate_particle, 0, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(iterate_particle, 1, sizeof(cl_float), &timestep);
+    ret = clSetKernelArg(iterate_particle, 2, sizeof(cl_int), &int_periodic);
+    ret = clSetKernelArg(iterate_particle, 3, sizeof(cl_float), &domain_length);
 
     ret = clSetKernelArg(calculate_pp_collision, 0, sizeof(cl_mem), &gpp_cols);
     ret = clSetKernelArg(calculate_pp_collision, 1, sizeof(cl_mem), &gparticles);
@@ -124,6 +131,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     clSetKernelArg(count_pp_collisions, 0, sizeof(cl_mem), &gparticle_count_array);
     clSetKernelArg(count_pp_collisions, 1, sizeof(cl_int), &cvs_per_edge);
     clSetKernelArg(count_pp_collisions, 2, sizeof(cl_mem), &gcollision_count);
+    clSetKernelArg(count_pp_collisions, 3, sizeof(cl_int), &int_periodic);
 
     clSetKernelArg(make_pp_collisions, 0, sizeof(cl_mem), &gcv_start_array);
     clSetKernelArg(make_pp_collisions, 1, sizeof(cl_mem), &gparticle_count_array);
@@ -131,6 +139,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     clSetKernelArg(make_pp_collisions, 3, sizeof(cl_int), &cvs_per_edge);
     clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
     clSetKernelArg(make_pp_collisions, 5, sizeof(cl_mem), &gcollision_count);
+    clSetKernelArg(make_pp_collisions, 6, sizeof(cl_int), &int_periodic);
 
     if (NUMWALLS > 0) {
         clSetKernelArg(calculate_pw_collision, 0, sizeof(cl_mem), &gpw_cols);
@@ -143,7 +152,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         clSetKernelArg(calculate_pw_collision, 7, sizeof(cl_float), &friction_stiffness);
     }
 
-    printf("\nRunning sim with %llu particles.\n", NUMPART);
+    printf("\nRunning sim with %llu particles, timestep %f, and log step %f.\n", NUMPART, timestep, log_step);
 
     writeTime(prefix, log_dir, NUMPART, "Start");
     if (LOG_DATA) {

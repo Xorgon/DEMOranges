@@ -7,7 +7,13 @@ This is essentially what a naive approach does but for a limited number of parti
 */
 
 __kernel void count_pp_collisions(__global int *particle_count_array, int cvs_per_edge,
-                                    __global ulong *collision_count){
+                                    __global ulong *collision_count, int int_periodic){
+    bool periodic;
+    if (int_periodic == 0) {
+        periodic = false;
+    } else {
+        periodic = true;
+    }
     ulong cv_idx = get_global_id(0);
     ulong count_to_add = 0;
     int3 coords = cv_array_idx_to_cv_coords(cv_idx, cvs_per_edge);
@@ -26,7 +32,10 @@ __kernel void count_pp_collisions(__global int *particle_count_array, int cvs_pe
                 int3 other_cv_coords = (int3) {x, y, z};
                 ulong other_cv_idx = cv_coords_to_cv_array_idx(other_cv_coords, cvs_per_edge);
                 if (other_cv_idx == cv_idx) {
-                    count_to_add += particle_count_array[cv_idx] * (particle_count_array[cv_idx] - 1) / 2;
+                    // Don't do collisions for periodic edge CVs.
+                    if (!periodic && !(cv_idx == 0 || cv_idx == cvs_per_edge - 1)) {
+                        count_to_add += particle_count_array[cv_idx] * (particle_count_array[cv_idx] - 1) / 2;
+                    }
                 } else if (other_cv_idx > cv_idx) { // To avoid counting the same collisions twice.
                     count_to_add += particle_count_array[cv_idx] * particle_count_array[other_cv_idx];
                 }
@@ -38,7 +47,13 @@ __kernel void count_pp_collisions(__global int *particle_count_array, int cvs_pe
 
 __kernel void make_pp_collisions(__global ulong *cv_start_array, __global int *particle_count_array,
                                     __global ulong *cv_pids, int cvs_per_edge, __global pp_collision *collisions,
-                                    __global ulong *collision_count){
+                                    __global ulong *collision_count, int int_periodic){
+    bool periodic;
+    if (int_periodic == 0) {
+        periodic = false;
+    } else {
+        periodic = true;
+    }
     ulong cv_idx = get_global_id(0);
     int3 coords = cv_array_idx_to_cv_coords(cv_idx, cvs_per_edge);
     for (int i = 0; i < particle_count_array[cv_idx]; i++) {
@@ -56,6 +71,9 @@ __kernel void make_pp_collisions(__global ulong *cv_start_array, __global int *p
                     }
                     int3 other_cv_coords = (int3) {x, y, z};
                     ulong other_cv_idx = cv_coords_to_cv_array_idx(other_cv_coords, cvs_per_edge);
+                    if (other_cv_idx == cv_idx && periodic && (cv_idx == 0 || cv_idx == cvs_per_edge - 1)) {
+                        continue; // Don't do collisions for periodic edge CVs.
+                    }
                     for (int j = 0; j < particle_count_array[other_cv_idx]; j++){
                         ulong this_pid = cv_pids[cv_start_array[cv_idx] + i];
                         ulong other_pid = cv_pids[cv_start_array[other_cv_idx] + j];

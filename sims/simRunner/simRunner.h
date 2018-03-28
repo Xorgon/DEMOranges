@@ -11,7 +11,7 @@
 #define DEMORANGES_SIMRUNNER_H
 
 int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, cl_float particle_diameter,
-           aa_wall *walls, cl_ulong NUMWALLS,
+           aa_wall *walls, cl_ulong NUMWALLS, cl_bool periodic,
            cl_float stiffness, cl_float restitution_coefficient, cl_float friction_coefficient,
            cl_float friction_stiffness, cl_float cohesion_stiffness,
            cl_float domain_length, char prefix[], char log_dir[], float sim_length, float timestep,

@@ -34,14 +34,40 @@ float3 iterate_position(particle p, float delta_t, float3 next_vel) {
 }
 
 /* Kernel to iterate particles. */
-__kernel void iterate_particle(__global particle *particles, float delta_t) {
-        int gid = get_global_id(0);
-        if (particles[gid].density == -1) {
-            return; // -1 is used to denote infinite density.
+__kernel void iterate_particle(__global particle *particles, float delta_t, int int_periodic, float domain_length) {
+    bool periodic;
+    if (int_periodic == 0) {
+        periodic = false;
+    } else {
+        periodic = true;
+    }
+    int gid = get_global_id(0);
+    if (particles[gid].density == -1) {
+        return; // -1 is used to denote infinite density.
+    }
+    float3 next_vel = iterate_velocity(particles[gid], delta_t);
+    float3 next_pos = iterate_position(particles[gid], delta_t, next_vel);
+    particles[gid].pos = next_pos;
+    particles[gid].vel = next_vel;
+    particles[gid].forces = (float3) {0, 0, 0};
+
+    if (periodic) {
+        if (particles[gid].pos.x > domain_length / 2) {
+            particles[gid].pos.x -= domain_length;
+        } else if (particles[gid].pos.x < - domain_length / 2) {
+            particles[gid].pos.x += domain_length;
         }
-        float3 next_vel = iterate_velocity(particles[gid], delta_t);
-        float3 next_pos = iterate_position(particles[gid], delta_t, next_vel);
-        particles[gid].pos = next_pos;
-        particles[gid].vel = next_vel;
-        particles[gid].forces = (float3) {0, 0, 0};
+
+        if (particles[gid].pos.y > domain_length / 2) {
+            particles[gid].pos.y -= domain_length;
+        } else if (particles[gid].pos.y < - domain_length / 2) {
+            particles[gid].pos.y += domain_length;
+        }
+
+        if (particles[gid].pos.z > domain_length / 2) {
+            particles[gid].pos.z -= domain_length;
+        } else if (particles[gid].pos.z < - domain_length / 2) {
+            particles[gid].pos.z += domain_length;
+        }
+    }
 }
