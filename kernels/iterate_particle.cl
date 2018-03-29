@@ -35,12 +35,7 @@ float3 iterate_position(particle p, float delta_t, float3 next_vel) {
 
 /* Kernel to iterate particles. */
 __kernel void iterate_particle(__global particle *particles, float delta_t, int int_periodic, float domain_length) {
-    bool periodic;
-    if (int_periodic == 0) {
-        periodic = false;
-    } else {
-        periodic = true;
-    }
+    bool periodic = (bool) int_periodic;
     int gid = get_global_id(0);
     if (particles[gid].density == -1) {
         return; // -1 is used to denote infinite density.

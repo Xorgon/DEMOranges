@@ -116,6 +116,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     ret = clSetKernelArg(calculate_pp_collision, 5, sizeof(cl_float), &friction_coefficient);
     ret = clSetKernelArg(calculate_pp_collision, 6, sizeof(cl_float), &friction_stiffness);
     ret = clSetKernelArg(calculate_pp_collision, 7, sizeof(cl_float), &cohesion_stiffness);
+    ret = clSetKernelArg(calculate_pp_collision, 8, sizeof(cl_float), &domain_length);
 
     ret = clSetKernelArg(assign_particle_count, 0, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(assign_particle_count, 1, sizeof(cl_mem), &gparticle_count_array);

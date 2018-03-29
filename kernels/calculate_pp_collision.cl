@@ -55,33 +55,41 @@ float3 calculate_cohesion_force(particle p1, particle p2, float cohesion_stiffne
 __kernel void calculate_pp_collision(__global pp_collision *collisions, __global particle *particles, float delta_t,
                                         float stiffness, float restitution_coefficient,
                                         float friction_coefficient, float friction_stiffness,
-                                        float cohesion_stiffness) {
+                                        float cohesion_stiffness, float domain_length) {
     int gid = get_global_id(0);
     ulong p1_id = collisions[gid].p1_id;
     ulong p2_id = collisions[gid].p2_id;
-    float overlap = get_particle_overlap(particles[p1_id], particles[p2_id]);
-    float effect_overlap = get_particle_effect_overlap(particles[p1_id], particles[p2_id]);
+
+    particle p1 = particles[p1_id];
+    particle p2 = particles[p2_id];
+
+    p1.pos.x -= domain_length * collisions[gid].cross_boundary_x;
+    p1.pos.y -= domain_length * collisions[gid].cross_boundary_y;
+    p1.pos.z -= domain_length * collisions[gid].cross_boundary_z;
+
+    float overlap = get_particle_overlap(p1, p2);
+    float effect_overlap = get_particle_effect_overlap(p1, p2);
     float3 forces = (float3) {0, 0, 0};
     if (overlap > 0) {
-        float reduced_particle_mass = get_reduced_particle_mass(get_particle_mass(particles[p1_id]),
-                                                                get_particle_mass(particles[p2_id]));
+        float reduced_particle_mass = get_reduced_particle_mass(get_particle_mass(p1),
+                                                                get_particle_mass(p2));
         float damping_coefficient = get_damping_coefficient(restitution_coefficient, stiffness, reduced_particle_mass);
-        float3 normal_force = calculate_collision_normal_force(collisions[gid], particles[p1_id], particles[p2_id],
+        float3 normal_force = calculate_collision_normal_force(collisions[gid], p1, p2,
                                                                 stiffness, damping_coefficient);
-        float3 tangent_force = calculate_friction_tangent_force(collisions[gid], particles[p1_id], particles[p2_id],
+        float3 tangent_force = calculate_friction_tangent_force(collisions[gid], p1, p2,
                                                                 normal_force, delta_t, friction_coefficient,
                                                                 friction_stiffness);
         forces += normal_force + tangent_force;
     }
     if (effect_overlap > 0) {
-        float3 cohesion_force = calculate_cohesion_force(particles[p1_id], particles[p2_id], cohesion_stiffness);
+        float3 cohesion_force = calculate_cohesion_force(p1, p2, cohesion_stiffness);
         forces -= cohesion_force;  // Pulling rather than pushing.
     }
     if (overlap > 0 || effect_overlap > 0){
-        if (overlap > 3 * particles[p1_id].diameter / 4 || overlap > 3 * particles[p2_id].diameter / 4) {
+        if (overlap > 3 * p1.diameter / 4 || overlap > 3 * p2.diameter / 4) {
             printf("Warning: Excessive particle overlap (%f), p1: (%f, %f, %f), p2: (%f, %f, %f)\n", overlap,
-                    particles[p1_id].pos.x, particles[p1_id].pos.y, particles[p1_id].pos.z,
-                    particles[p2_id].pos.x, particles[p2_id].pos.y, particles[p2_id].pos.z);
+                    p1.pos.x, p1.pos.y, p1.pos.z,
+                    p2.pos.x, p2.pos.y, p2.pos.z);
         }
         atomicAdd_float3(&particles[p1_id].forces, - forces);
         atomicAdd_float3(&particles[p2_id].forces, forces);

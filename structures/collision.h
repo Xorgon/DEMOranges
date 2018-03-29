@@ -11,6 +11,17 @@ typedef struct pp_collision {
     cl_ulong p1_id;
     cl_ulong p2_id;
 
+    /*
+     * These variables can be one of three values:
+     *
+     * 1: p1 is colliding through a boundary in the positive direction onto p2.
+     * 0: Not a cross-boundary collision.
+     * -1: p1 is colliding through a boundary in the negative direction onto p2.
+     */
+    cl_char cross_boundary_x;
+    cl_char cross_boundary_y;
+    cl_char cross_boundary_z;
+
 //    cl_float stiffness;
 //    cl_float damping_coefficient;
 //    cl_float friction_coefficient;

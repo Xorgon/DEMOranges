@@ -15,6 +15,9 @@ typedef struct {
 typedef struct {
     ulong p1_id;
     ulong p2_id;
+    char cross_boundary_x;
+    char cross_boundary_y;
+    char cross_boundary_z;
 
 //    float stiffness;
 //    float damping_coefficient;
