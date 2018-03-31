@@ -1,4 +1,5 @@
 from analysis.util.objects import *
+import re
 
 
 def load_particles(path, filename):
@@ -15,3 +16,12 @@ def load_particles(path, filename):
         particles.append(particle)
 
     return particles
+
+
+def get_property(name, file_contents):
+    pattern = name + ": (\d+.\d+)\n"
+    match = re.search(pattern, file_contents)
+    if match is not None:
+        return float(match.group(1))
+    else:
+        print("Warning: " + name + " is None.")
