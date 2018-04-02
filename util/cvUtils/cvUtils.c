@@ -24,7 +24,7 @@ void set_array_starts(cl_int *particle_count_array, cl_ulong *cv_array_starts, c
             cv_array_starts[i] = idx;
             idx += count;
         } else {
-            cv_array_starts[i] = -1;
+            cv_array_starts[i] = (cl_ulong) -1;
         }
     }
 }
