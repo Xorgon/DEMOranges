@@ -65,7 +65,7 @@ int main() {
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
 
     printf("[INIT] Creating particle positions.\n");
-    float cube_length = createCubePositions(positions, NUMPART, particle_diameter);
+    float cube_length = createCubePositions(positions, NUMPART, particle_diameter, 1.2);
     domain_length = (cl_float) (1.25 * cube_length);
     initializeMonodisperseParticles(hparticles, NUMPART, density, fluid_viscosity, particle_diameter, 0, positions,
                                     NULL);
@@ -80,7 +80,7 @@ int main() {
                    friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,
                    fluid_viscosity);
 
-    int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, stiffness,
+    int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, FALSE, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,
                          prefix,
                          "", sim_length, timestep, VERBOSE, LOG_DATA, FALSE, log_step, device, context);

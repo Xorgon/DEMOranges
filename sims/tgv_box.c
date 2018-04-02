@@ -25,10 +25,10 @@ particle *hparticles;
 cl_ulong NUMPART = 10000;
 
 // Particle properties.
-cl_float density = 1000;
+cl_float density = 2000;
 cl_float particle_diameter = 0.05;
 cl_float particle_effect_diameter;
-cl_float fluid_viscosity = 0.0000193 * 10000;
+cl_float fluid_viscosity = 0.0000193 * 1000;
 
 // Collision properties.
 cl_float stiffness = 1e5;
@@ -39,6 +39,7 @@ cl_float cohesion_stiffness = 1e1;
 
 cl_ulong NUMWALLS;
 aa_wall *walls;
+cl_bool periodic = CL_FALSE;
 
 cl_float timestep;
 cl_float sim_length = 120;
@@ -100,7 +101,7 @@ int main() {
                    friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,
                    fluid_viscosity);
 
-    int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, stiffness,
+    int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, periodic, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,
                          prefix, log_dir,
                          sim_length, timestep, VERBOSE, LOG_DATA, FALSE, log_step, device, context);
