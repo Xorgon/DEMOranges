@@ -10,6 +10,10 @@ void printParticle(particle *part) {
            p.fluid_viscosity, p.pos.x, p.pos.y, p.pos.z, p.vel.x, p.vel.y, p.vel.z, p.forces.x, p.forces.y, p.forces.z);
 }
 
+float get_particle_mass_from_values(float density, float diameter) {
+    return (float) density * PI * powf(diameter, 3) / 6);
+}
+
 float get_particle_mass(particle *p) {
     return (float) ((*p).density * PI * powf((*p).diameter, 3) / 6);
 }

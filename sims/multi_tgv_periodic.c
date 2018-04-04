@@ -81,7 +81,8 @@ int main() {
         for (int j = -1; j < 2; j++) {
             restitution_coefficient = getRestitutionFromSy(particle_effect_diameter - particle_diameter,
                                                            cohesion_stiffness, 0.7839 * 5,
-                                                           get_particle_mass(&(hparticles[0])), powf(10, i));
+                                                           get_particle_mass_from_values(density, particle_diameter),
+                                                           powf(10, i));
             fluid_viscosity = getFluidViscFromStks(particle_diameter, density, 0.7839 * 5, PI / 3, powf(10, j));
 
             sprintf(log_dir, "TGV_PERIODIC_%i_%i/", i, j);

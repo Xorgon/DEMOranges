@@ -21,6 +21,8 @@
 
 void printParticle(particle *p);
 
+float get_particle_mass_from_values(float density, float diameter);
+
 float get_particle_mass(particle *p);
 
 float get_tau(particle p);
