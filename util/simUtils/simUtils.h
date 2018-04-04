@@ -31,4 +31,8 @@ void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]);
 
 boolean checkDirExists(char dir[]);
 
+float getFluidViscFromStks(float diameter, float density, float flow_speed, float length, float stks);
+
+float getRestitutionFromSy(float eff_len, float k_c, float u, float mass, float sy);
+
 #endif //DEMORANGES_SIMUTILS_H

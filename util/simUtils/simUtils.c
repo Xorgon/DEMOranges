@@ -63,3 +63,11 @@ boolean checkDirExists(char dir[]) {
         return FALSE;
     }
 }
+
+float getFluidViscFromStks(float diameter, float density, float flow_speed, float length, float stks) {
+    return density * diameter * diameter * flow_speed / (18 * stks * length);
+}
+
+float getRestitutionFromSy(float eff_len, float k_c, float u, float mass, float sy) {
+    return eff_len * sqrtf(k_c) / (sy * sqrtf(eff_len * eff_len * k_c + u * u * mass));
+}

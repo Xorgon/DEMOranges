@@ -81,6 +81,13 @@ if (NOT(WIN32))
     target_link_libraries(tgv_periodic m)
 endif()
 
+file(GLOB_RECURSE multi_tgv_periodic_SOURCE_FILES sims/multi_tgv_periodic.c)
+add_executable(multi_tgv_periodic ${multi_tgv_periodic_SOURCE_FILES} ${sim_SOURCE_FILES})
+target_link_libraries(multi_tgv_periodic ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(multi_tgv_periodic m)
+endif()
+
 file(GLOB_RECURSE normal_force_SOURCE_FILES verification/normal_force/normal_force_sim.c)
 add_executable(normal_force ${normal_force_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(normal_force ${OpenCL_LIBRARY})
