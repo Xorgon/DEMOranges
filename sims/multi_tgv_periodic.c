@@ -75,6 +75,8 @@ int main() {
         return 1;
     }
 
+    particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
+
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             restitution_coefficient = getRestitutionFromSy(particle_effect_diameter - particle_diameter,
@@ -85,7 +87,6 @@ int main() {
             sprintf(log_dir, "TGV_PERIODIC_%i_%i/", i, j);
 
             printf("[INIT] Creating particle positions.\n");
-            particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
             cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
             // Using particle_effect_diameter so that cohesion effects are considered at the appropriate range.
             float cube_length = createCubePositions(positions, NUMPART, particle_effect_diameter, 2);
