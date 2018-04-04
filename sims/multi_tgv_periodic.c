@@ -19,7 +19,7 @@
 #define LOG_DATA TRUE
 
 char *prefix = "TGV_PERIODIC";
-char *log_dir;
+char *log_dir[100];
 
 particle *hparticles;
 cl_ulong NUMPART = 10000;

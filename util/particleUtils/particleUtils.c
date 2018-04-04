@@ -11,7 +11,7 @@ void printParticle(particle *part) {
 }
 
 float get_particle_mass_from_values(float density, float diameter) {
-    return (float) density * PI * powf(diameter, 3) / 6);
+    return (float) density * PI * powf(diameter, 3) / 6;
 }
 
 float get_particle_mass(particle *p) {
