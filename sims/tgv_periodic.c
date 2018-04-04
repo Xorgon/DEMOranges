@@ -28,7 +28,7 @@ cl_ulong NUMPART = 10000;
 cl_float density = 500;
 cl_float particle_diameter = 0.05;
 cl_float particle_effect_diameter;
-cl_float fluid_viscosity = 0.0193;
+cl_float fluid_viscosity = 0.193;
 
 // Collision properties.
 cl_float stiffness = 1e5;
