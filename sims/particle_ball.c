@@ -65,7 +65,7 @@ int main() {
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
 
     printf("[INIT] Creating particle positions.\n");
-    float cube_length = createCubePositions(positions, NUMPART, particle_diameter, 1.2);
+    float cube_length = createCubePositions(positions, NUMPART, particle_diameter, 1.2, (cl_float3) {0, 0, 0});
     domain_length = (cl_float) (1.25 * cube_length);
     initializeMonodisperseParticles(hparticles, NUMPART, density, fluid_viscosity, particle_diameter, 0, positions,
                                     NULL);

@@ -39,7 +39,7 @@ void initializeMonodisperseParticles(particle *particles, cl_ulong NUMPART, floa
  * @param spacing_factor A factor describing the spacing between particles.
  * @return Length of cube.
  */
-float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter, float spacing_factor);
+float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter, float spacing_factor, cl_float3 center);
 
 void createNormalDistVelocities(cl_float3 *velocities, cl_ulong NUMPART, float mean, float std_dev);
 

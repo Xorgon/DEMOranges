@@ -53,7 +53,7 @@ void initializeMonodisperseParticles(particle *particles, cl_ulong NUMPART, floa
     }
 }
 
-float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter, float spacing_factor) {
+float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle_diameter, float spacing_factor, cl_float3 center) {
     cl_ulong cubert_NUMPART = (cl_ulong) ceil(pow(NUMPART, 0.334));
     cl_ulong pos_len = 0;
     srand(0);
@@ -65,11 +65,11 @@ float createCubePositions(cl_float3 *positions, cl_ulong NUMPART, float particle
                 if (pos_len < NUMPART) {
                     float rand_offset = 0.005 * (float) rand() / (float) (RAND_MAX);
                     cl_float xf = cube_length
-                                  * (-0.5 + rand_offset + ((float) x / cubert_NUMPART));
+                                  * (-0.5 + rand_offset + ((float) x / cubert_NUMPART)) + center.x;
                     cl_float yf = cube_length
-                                  * (-0.5 + rand_offset + ((float) y / cubert_NUMPART));
+                                  * (-0.5 + rand_offset + ((float) y / cubert_NUMPART)) + center.y;
                     cl_float zf = cube_length
-                                  * (-0.5 + rand_offset + ((float) z / cubert_NUMPART));
+                                  * (-0.5 + rand_offset + ((float) z / cubert_NUMPART)) + center.z;
                     positions[pos_len] = (cl_float3) {xf, yf, zf};
                 }
                 pos_len++;
