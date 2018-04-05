@@ -70,13 +70,12 @@ int main() {
     }
 
     printf("[INIT] Creating particle positions.\n");
+    float spacing_fact = 1.2;
+    float cube_center_offset = 0.75 * spacing_fact * ceil(pow(NUMPART, 0.334)) * particle_diameter;
+
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
-    cl_float3 particle_cube_center = (cl_float3) {1.2, 1.2, 0};
-    float cube_length = createCubePositions(positions, NUMPART, particle_diameter, 1.2, particle_cube_center);
-    if (cube_length / 2.1 > 1.2) {
-        printf("Particle cube center is wrong. Cube length = %f", cube_length);
-        return 1;
-    }
+    cl_float3 particle_cube_center = (cl_float3) {cube_center_offset, cube_center_offset, 0};
+    float cube_length = createCubePositions(positions, NUMPART, particle_diameter, spacing_fact, particle_cube_center);
     domain_length = (cl_float) (3 * cube_length);
 
     // Initialize particles.
@@ -92,7 +91,7 @@ int main() {
     printf("[INIT] Generating walls\n");
     NUMWALLS = (cl_ulong) generate_hourglass(&walls, 3 * cube_length * sqrtf(2), 4 * particle_diameter);
 
-    print_walls(walls, NUMWALLS);
+//    print_walls(walls, NUMWALLS);
 
     writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
                    friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,

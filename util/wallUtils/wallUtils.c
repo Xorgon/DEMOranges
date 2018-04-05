@@ -18,8 +18,9 @@ int generate_hourglass(aa_wall **walls, float height, float gap_width) {
     float aa_gap_height = gap_width / sqrtf(2);
     float box_length = height / (2 * sqrtf(2)) + aa_gap_height / 2;
 
-    printf("Box length = %f, offset = %f, gap offset = %f\n", box_length, 0.5 * (box_length - aa_gap_height),
-           aa_gap_height);
+    printf("Box length = %f, offset = %f, gap offset (pre_trans) = %f\n", box_length,
+           0.5 * (box_length - aa_gap_height),
+           0.5 - aa_gap_height / box_length);
 
     cl_float3 top_box_center = (cl_float3) {0.5 * (box_length - aa_gap_height), 0.5 * (box_length - aa_gap_height), 0};
     generate_box_geometry(*walls, box_length, top_box_center);
@@ -40,11 +41,15 @@ int generate_hourglass(aa_wall **walls, float height, float gap_width) {
     (*walls)[8] = (*walls)[10];
 
     // Make the top box sides cover the whole arrangement.
-    (*walls)[2].min = (cl_float3) {-(box_length - 0.5 * aa_gap_height), -(box_length - 0.5 * aa_gap_height), -box_length / 2};
-    (*walls)[2].max = (cl_float3) {(box_length - 0.5 * aa_gap_height), (box_length - 0.5 * aa_gap_height), -box_length / 2};
+    (*walls)[2].min = (cl_float3) {-(box_length - 0.5 * aa_gap_height), -(box_length - 0.5 * aa_gap_height),
+                                   -box_length / 2};
+    (*walls)[2].max = (cl_float3) {(box_length - 0.5 * aa_gap_height), (box_length - 0.5 * aa_gap_height),
+                                   -box_length / 2};
 
-    (*walls)[5].min = (cl_float3) {-(box_length - 0.5 * aa_gap_height), -(box_length - 0.5 * aa_gap_height), box_length / 2};
-    (*walls)[5].max = (cl_float3) {(box_length - 0.5 * aa_gap_height), (box_length - 0.5 * aa_gap_height), box_length / 2};
+    (*walls)[5].min = (cl_float3) {-(box_length - 0.5 * aa_gap_height), -(box_length - 0.5 * aa_gap_height),
+                                   box_length / 2};
+    (*walls)[5].max = (cl_float3) {(box_length - 0.5 * aa_gap_height), (box_length - 0.5 * aa_gap_height),
+                                   box_length / 2};
     return 10;
 }
 
