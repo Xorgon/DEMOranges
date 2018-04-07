@@ -7,7 +7,7 @@ def get_mass(density, diameter):
     return density * pi * diameter ** 3 / 6
 
 
-def get_stokes_number(path, prefix, flow_speed=0.7839 * 0.5, length=pi / 3):
+def get_stokes_number(path, prefix, flow_speed=0.7839 * 5, length=pi / 3):
     property_file = open(path + prefix + "setup.txt")
     contents = property_file.read()
     p_diameter = get_property("Particle diameter", contents)
@@ -17,7 +17,7 @@ def get_stokes_number(path, prefix, flow_speed=0.7839 * 0.5, length=pi / 3):
     return p_density * p_diameter ** 2 * flow_speed / (18 * fluid_visc * length)
 
 
-def get_stickyness_number(path, prefix, flow_speed=0.7839 * 0.5, length=pi / 3):
+def get_stickyness_number(path, prefix, flow_speed=0.7839 * 5):
     property_file = open(path + prefix + "setup.txt")
     contents = property_file.read()
     restitution = get_property("Restitution coefficient", contents)

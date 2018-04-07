@@ -52,6 +52,7 @@ def calc_size_stats(aggs, min_agg_size):
         std = np.std(sizes)
         return mean, std
     else:
+        print("No agglomerates found.")
         return None
 
 
@@ -65,16 +66,37 @@ def calc_void_frac_stats(aggs, min_agg_size):
         std = np.std(void_fracs)
         return mean, std
     else:
+        print("No agglomerates found.")
         return None
 
 
-def save_agg_property_variation(path, prefix, min_agg_size=1):
+def check_bounds(particles, domain_length):
+    outside = 0
+    for p in particles:
+        if fabs(p.pos[0]) > domain_length / 2 or fabs(p.pos[1]) > domain_length or fabs(p.pos[2] > domain_length):
+            outside += 1
+    return outside
+
+
+def save_agg_property_variation(path, prefix, min_agg_size=1, override=False):
     times = []
     size_means = []
     size_stds = []
     void_frac_means = []
     void_frac_stds = []
+
+    if not os.path.exists(path):
+        print(path + " does not exist.")
+        return
+
     data_dir = os.listdir(path)
+
+    if os.path.exists(path + prefix + "agglomerate_properties.txt") and not override:
+        print(path + " has already been analysed.")
+        return
+
+    print("Analysing " + path)
+
     property_file = open(path + prefix + "agglomerate_properties.txt", "w")
     num_calculated = 0
     for filename in data_dir:
@@ -83,9 +105,13 @@ def save_agg_property_variation(path, prefix, min_agg_size=1):
             time = int(name_match.group(1)) / 1e6
             print("Time = " + str(time))
             times.append(time)
-            aggs = detect_agglomerates(load_particles(path, filename))
+            particles = load_particles(path, filename)
+            out_of_bounds = check_bounds(particles, 2 * pi)
+            if out_of_bounds > 0:
+                print(str(out_of_bounds) + " particles are out of bounds.")
+            aggs = detect_agglomerates(particles)
             size_ret = calc_size_stats(aggs, min_agg_size)
-            void_frac_ret = calc_void_frac_stats(aggs, max(min_agg_size, 2))
+            void_frac_ret = calc_void_frac_stats(aggs, min_agg_size)
             if size_ret is not None and void_frac_ret is not None:
                 size_mean, size_std = size_ret
                 size_means.append(size_mean)
@@ -105,6 +131,14 @@ def save_agg_property_variation(path, prefix, min_agg_size=1):
 
 
 def graph_agg_property_variation(path, prefix):
+    if not os.path.exists(path):
+        print(path + " does not exist.")
+        return
+
+    if not os.path.exists(path + prefix + "agglomerate_properties.txt"):
+        print(path + prefix + " has not been analysed.")
+        return
+
     property_file = open(path + prefix + "agglomerate_properties.txt", "r")
     lines = property_file.readlines()
     data = []
@@ -121,34 +155,32 @@ def graph_agg_property_variation(path, prefix):
     fig.patch.set_facecolor('white')
     ax1 = fig.add_subplot(211)
     ax1.set_title("Stokes = {0:2f}, Stickyness = {1:2f}".format(stokes, sticky))
-    ax1.plot(data[:, 0], data[:, 1], 'r', label="Size")
-    ax1.set_ylabel("Mean", color='r')
+    ax1.plot(data[:, 0], data[:, 1], 'k', label="Size Mean")
+    ax1.set_ylabel("Mean")
     ax1.set_xlabel("$t$")
-    handles, labels = ax1.get_legend_handles_labels()
-    ax1.legend(handles, labels, loc=2)
     ax2 = ax1.twinx()
-    ax2.plot(data[:, 0], data[:, 2], 'b')
-    ax2.set_ylabel("Standard Deviation", color='b')
+    ax2.plot(data[:, 0], data[:, 2], 'k--', label="Size Standard Deviation")
+    ax2.set_ylabel("Standard Deviation")
+    handles1, labels1 = ax1.get_legend_handles_labels()
+    handles2, labels2 = ax2.get_legend_handles_labels()
+    ax1.legend(handles1 + handles2, labels1 + labels2, loc=4)
 
     ax3 = fig.add_subplot(212)
-    ax3.plot(data[:, 0], data[:, 3], 'r', label="Void Fraction")
-    ax3.set_ylabel("Mean", color='r')
+    ax3.plot(data[:, 0], data[:, 3], 'k', label="Void Fraction Mean")
+    ax3.set_ylabel("Mean")
     ax3.set_xlabel("$t$")
-    handles, labels = ax3.get_legend_handles_labels()
-    ax3.legend(handles, labels, loc=2)
     ax4 = ax3.twinx()
-    ax4.plot(data[:, 0], data[:, 4], 'b')
-    ax4.set_ylabel("Standard Deviation", color='b')
-
+    ax4.plot(data[:, 0], data[:, 4], 'k--', label="Void Fraction Standard Deviation")
+    ax4.set_ylabel("Standard Deviation")
+    handles3, labels3 = ax3.get_legend_handles_labels()
+    handles4, labels4 = ax4.get_legend_handles_labels()
+    ax3.legend(handles3 + handles4, labels3 + labels4, loc=4)
     plt.plot()
 
 
-save_agg_property_variation("../runs/TGV_PERIODIC_LONG/", "10000_TGV_PERIODIC_", 1)
-graph_agg_property_variation("../runs/TGV_PERIODIC_LONG/", "10000_TGV_PERIODIC_")
-# save_agg_property_variation("../runs/TGV_PERIODIC_LONG_2/", "10000_TGV_PERIODIC_", 1)
-graph_agg_property_variation("../runs/TGV_PERIODIC_LONG_2/", "10000_TGV_PERIODIC_")
+for i in [-1, 0, 1]:
+    for j in [-1, 0, 1]:
+        save_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_", 1)
+        graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
 
-# save_agg_property_variation("../cmake-build-release-gcc/TGV_PERIODIC_3/", "10000_TGV_PERIODIC_", 1)
-# graph_agg_property_variation("../cmake-build-release-gcc/TGV_PERIODIC_3/", "10000_TGV_PERIODIC_")
-# print(calc_size_stats(detect_agglomerates(load_particles("../cmake-build-release-gcc/TGV_PERIODIC_3/", "10000_TGV_PERIODIC_12491837.txt")), 2))
 plt.show()

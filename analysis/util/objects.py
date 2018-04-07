@@ -27,6 +27,8 @@ class Agglomerate:
         return max_dist
 
     def get_void_fraction(self):
+        if self.get_size() == 1:
+            return 1
         volume_filled = 0
         bounding_sphere_volume = math.pi * self.get_max_length() ** 3 / 6
         for particle in self.particles:
