@@ -5,7 +5,7 @@ __kernel void assign_particle_count(__global particle *particles, __global int *
     int gid = get_global_id(0);
     int3 cv_coords = pos_to_cv_coords(particles[gid].pos, domain_length, cv_length, cvs_per_edge);
     if (cv_coords.x == -1 && cv_coords.y == -1 && cv_coords.z == -1) {
-	particles[gid].cv_array_idx = -1;
+	    particles[gid].cv_array_idx = -1;
         return;
     }
     int cv_array_idx = cv_coords_to_cv_array_idx(cv_coords, cvs_per_edge);

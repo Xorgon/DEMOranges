@@ -83,6 +83,7 @@ int main() {
                                                            cohesion_stiffness, 0.7839 * 5,
                                                            get_particle_mass_from_values(density, particle_diameter),
                                                            powf(10, i));
+
             fluid_viscosity = getFluidViscFromStks(particle_diameter, density, 0.7839 * 5, PI / 3, powf(10, j));
 
             sprintf(log_dir, "TGV_PERIODIC_%i_%i/", i, j);
@@ -90,7 +91,8 @@ int main() {
             printf("[INIT] Creating particle positions.\n");
             cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
             // Using particle_effect_diameter so that cohesion effects are considered at the appropriate range.
-            float cube_length = createCubePositions(positions, NUMPART, particle_effect_diameter, 2, (cl_float3) {0, 0, 0});
+            float cube_length = createCubePositions(positions, NUMPART, particle_effect_diameter, 2,
+                                                    (cl_float3) {0, 0, 0});
             domain_length = (cl_float) (2 * PI);
 
             cl_float3 *velocities = malloc(sizeof(cl_float3) * NUMPART);
@@ -113,6 +115,11 @@ int main() {
                            restitution_coefficient,
                            friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,
                            fluid_viscosity);
+
+            if (restitution_coefficient > 1 || restitution_coefficient < 0) {
+                printf("Restitution coefficient invalid. Skipping simulation.");
+                continue;
+            }
 
             int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, periodic, stiffness,
                                  restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness,

@@ -153,7 +153,8 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         clSetKernelArg(calculate_pw_collision, 7, sizeof(cl_float), &friction_stiffness);
     }
 
-    printf("\nRunning sim with %llu particles, timestep %f, and log step %f.\n", NUMPART, timestep, log_step);
+    printf("\nRunning sim with %llu particles, timestep %f, and log step %f, length %f.\n", NUMPART, timestep, log_step,
+           sim_length);
 
     writeTime(prefix, log_dir, NUMPART, "Start");
     if (LOG_DATA) {

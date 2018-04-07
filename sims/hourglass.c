@@ -22,16 +22,16 @@ char *prefix = "HOURGLASS";
 char *log_dir = "HOURGLASS/";
 
 particle *hparticles;
-cl_ulong NUMPART = 5000;
+cl_ulong NUMPART = 250000;
 
 // Particle properties.
 cl_float density = 2000;
-cl_float particle_diameter = 0.1;
+cl_float particle_diameter = 0.05;
 cl_float fluid_viscosity = 0.0000193 * 100;
 
 // Collision properties.
 cl_float stiffness = 1e5;
-cl_float restitution_coefficient = 0.8;
+cl_float restitution_coefficient = 0.4;
 cl_float friction_coefficient = 0.6;
 cl_float friction_stiffness = 1e5;
 cl_float cohesion_stiffness = 0;
@@ -39,8 +39,8 @@ cl_float cohesion_stiffness = 0;
 cl_ulong NUMWALLS;
 aa_wall *walls;
 
-cl_float timestep = 0.0005;
-cl_float sim_length = 5;
+cl_float timestep;
+cl_float sim_length = 300;
 cl_float log_step = 0.0333;
 
 cl_float domain_length;
@@ -71,7 +71,7 @@ int main() {
 
     printf("[INIT] Creating particle positions.\n");
     float spacing_fact = 1.2;
-    float cube_center_offset = 0.75 * spacing_fact * ceil(pow(NUMPART, 0.334)) * particle_diameter;
+    float cube_center_offset = 0.5 * spacing_fact * ceil(pow(NUMPART, 0.334)) * particle_diameter + particle_diameter;
 
     cl_float3 *positions = malloc(sizeof(cl_float3) * NUMPART);
     cl_float3 particle_cube_center = (cl_float3) {cube_center_offset, cube_center_offset, 0};
@@ -92,6 +92,8 @@ int main() {
     NUMWALLS = (cl_ulong) generate_hourglass(&walls, 3 * cube_length * sqrtf(2), 4 * particle_diameter);
 
 //    print_walls(walls, NUMWALLS);
+
+    timestep = (cl_float) (PI * sqrt(get_particle_mass(&(hparticles[0])) / stiffness) / 16);
 
     writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
                    friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,
