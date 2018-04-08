@@ -71,3 +71,7 @@ float getFluidViscFromStks(float diameter, float density, float flow_speed, floa
 float getRestitutionFromSy(float eff_len, float k_c, float u, float mass, float sy) {
     return eff_len * sqrtf(k_c) / (sy * sqrtf(eff_len * eff_len * k_c + u * u * mass));
 }
+
+float getCohesionFromSy(float eff_len, float restitution, float u, float mass, float sy) {
+    return powf(sy * restitution * u, 2) * mass / (powf(eff_len, 2) * (1 - powf(sy * restitution, 2)));
+}

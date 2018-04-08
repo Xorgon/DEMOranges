@@ -35,4 +35,6 @@ float getFluidViscFromStks(float diameter, float density, float flow_speed, floa
 
 float getRestitutionFromSy(float eff_len, float k_c, float u, float mass, float sy);
 
+float getCohesionFromSy(float eff_len, float restitution, float u, float mass, float sy);
+
 #endif //DEMORANGES_SIMUTILS_H

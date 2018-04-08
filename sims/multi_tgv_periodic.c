@@ -32,7 +32,7 @@ cl_float fluid_viscosity;
 
 // Collision properties.
 cl_float stiffness = 1e5;
-cl_float restitution_coefficient;
+cl_float restitution_coefficient = 0.5;
 cl_float friction_coefficient = 0.1;
 cl_float friction_stiffness = 1e5;
 cl_float cohesion_stiffness = 1e2;
@@ -77,10 +77,10 @@ int main() {
 
     particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
 
-    for (int i = -1; i < 2; i++) {
+    for (int i = -1; i < 0; i++) {
         for (int j = -1; j < 2; j++) {
-            restitution_coefficient = getRestitutionFromSy(particle_effect_diameter - particle_diameter,
-                                                           cohesion_stiffness, 0.7839 * 5,
+            cohesion_stiffness = getCohesionFromSy(particle_effect_diameter - particle_diameter,
+                                                           restitution_coefficient, 0.7839 * 5,
                                                            get_particle_mass_from_values(density, particle_diameter),
                                                            powf(10, i));
 
