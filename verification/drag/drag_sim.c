@@ -88,8 +88,8 @@ int main() {
         hparticles[0].pos = (cl_float3) {0, 0, 0};
         hparticles[0].vel = (cl_float3) {0, 0, 0};
 
-        runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, stiffness,
-               restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,
+        runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, FALSE, stiffness,
+               restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness, domain_length,
                prefix, dir, sim_length, timestep, VERBOSE, LOG_DATA, TRUE, log_step, device, context);
     }
 }
