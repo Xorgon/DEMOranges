@@ -102,6 +102,13 @@ if (NOT(WIN32))
     target_link_libraries(normal_force m)
 endif()
 
+file(GLOB_RECURSE cohesion_SOURCE_FILES verification/cohesion/cohesion_sim.c)
+add_executable(cohesion ${cohesion_SOURCE_FILES} ${sim_SOURCE_FILES})
+target_link_libraries(cohesion ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(cohesion m)
+endif()
+
 file(GLOB_RECURSE friction_SOURCE_FILES verification/friction/friction_sim.c)
 add_executable(friction ${friction_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(friction ${OpenCL_LIBRARY})
