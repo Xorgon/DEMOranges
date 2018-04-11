@@ -32,7 +32,7 @@ cl_float fluid_viscosity;
 
 // Collision properties.
 cl_float stiffness = 1e5;
-cl_float restitution_coefficient = 0.5;
+cl_float restitution_coefficient = 0.01;
 cl_float friction_coefficient = 0.1;
 cl_float friction_stiffness = 1e5;
 cl_float cohesion_stiffness = 1e2;
@@ -77,14 +77,21 @@ int main() {
 
     particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
 
-    for (int i = -1; i < 0; i++) {
-        for (int j = -1; j < 2; j++) {
-            cohesion_stiffness = getCohesionFromSy(particle_effect_diameter - particle_diameter,
-                                                           restitution_coefficient, 0.7839 * 5,
-                                                           get_particle_mass_from_values(density, particle_diameter),
-                                                           powf(10, i));
+    float effect_diameters[] = {1.5f * particle_diameter, 1.5f * particle_diameter,
+                                2 * particle_diameter, 1.5f * particle_diameter};
+    float sys[] = {0.1, 1, 1.5, 0.6};
+    float rests[] = {0.5, 0.173618, 0.15, 0.2};
 
-            fluid_viscosity = getFluidViscFromStks(particle_diameter, density, 0.7839 * 5, PI / 3, powf(10, j));
+    for (int i = -1; i < 3; i++) {
+        for (int j = 2; j < 3; j++) {
+            particle_effect_diameter = effect_diameters[i + 1];
+            restitution_coefficient = rests[i + 1];
+            cohesion_stiffness = getCohesionFromSy(effect_diameters[i + 1] - particle_diameter,
+                                                   rests[i + 1], 0.7839 * 5,
+                                                   get_particle_mass_from_values(density, particle_diameter),
+                                                   sys[i + 1]);
+
+            fluid_viscosity = getFluidViscFromStks(particle_diameter, density, 0.7839 * 5, PI / 3, 5);
 
             sprintf(log_dir, "TGV_PERIODIC_%i_%i/", i, j);
 
@@ -112,9 +119,8 @@ int main() {
             timestep = (cl_float) (PI * sqrt(get_particle_mass(&(hparticles[0])) / stiffness) / 8);
 
             writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness,
-                           restitution_coefficient,
-                           friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,
-                           fluid_viscosity);
+                           restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness,
+                           particle_diameter, particle_effect_diameter, density, fluid_viscosity);
 
             if (restitution_coefficient > 1 || restitution_coefficient < 0) {
                 printf("Restitution coefficient invalid. Skipping simulation.");
