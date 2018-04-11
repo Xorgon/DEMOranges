@@ -87,7 +87,7 @@ int main() {
     generate_closed_box(&walls, domain_length, (cl_float3) {0, 0, 0});
 
     writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
-                   friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,
+                   friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, 0, density,
                    fluid_viscosity);
 
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, FALSE, stiffness,

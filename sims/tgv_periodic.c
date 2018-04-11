@@ -46,7 +46,7 @@ float init_speed_std_dev = 0.1;
 
 cl_float timestep;
 cl_float sim_length = 120;
-cl_float log_step = 1.0/30;
+cl_float log_step = 1.0 / 30;
 
 cl_float domain_length;
 
@@ -98,8 +98,8 @@ int main() {
     timestep = (cl_float) (PI * sqrt(get_particle_mass(&(hparticles[0])) / stiffness) / 8);
 
     writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
-                   friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, density,
-                   fluid_viscosity);
+                   friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter,
+                   particle_effect_diameter, density, fluid_viscosity);
 
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, periodic, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,
