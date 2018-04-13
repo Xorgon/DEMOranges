@@ -5,6 +5,8 @@ from analysis.util.objects import *
 from analysis.util.file_io import *
 from analysis.util.sim_utils import *
 from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 import os
 import re
 
@@ -178,9 +180,74 @@ def graph_agg_property_variation(path, prefix):
     plt.plot()
 
 
-for i in [-1, 0, 1]:
-    for j in [-1, 0, 1]:
+def get_representative_data(path, prefix, min=500, max=550):
+    if not os.path.exists(path):
+        print(path + " does not exist.")
+        return
+
+    if not os.path.exists(path + prefix + "agglomerate_properties.txt"):
+        print(path + prefix + " has not been analysed.")
+        return
+
+    property_file = open(path + prefix + "agglomerate_properties.txt", "r")
+    lines = property_file.readlines()
+    data = []
+    for line in lines:
+        split = line.split(",")
+        data.append([float(split[0]), float(split[1]), float(split[2]), float(split[3]), float(split[4])])
+    data = np.array(data)
+    data.sort(0)
+
+    size_sum = 0
+    void_frac_sum = 0
+    count = 0
+
+    for item in data:
+        if min <= item[0] <= max:
+            size_sum += item[1]
+            void_frac_sum += item[3]
+            count += 1
+
+    size_mean = size_sum / count
+    void_frac_mean = void_frac_sum / count
+
+    stokes = get_stokes_number(path, prefix)
+    sticky = get_stickyness_number(path, prefix)
+
+    return stokes, sticky, size_mean, void_frac_mean
+
+
+def plot_3d_sy_stk_variation():
+    points = []
+    for i in [-1, 0, 1, 2]:
+        for j in [-1, 0, 1, 2]:
+            data = get_representative_data("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
+            if data is not None:
+                points.append(data)
+
+    points = np.array(points)
+    fig = plt.figure()
+    fig.patch.set_facecolor('white')
+    ax = fig.gca(projection='3d')
+    ax.plot_trisurf(points[:, 0], points[:, 1], points[:, 2], cmap=cm.coolwarm)
+    ax.set_xlabel("Stokes")
+    ax.set_ylabel("Stickiness")
+    ax.set_zlabel("Mean Size")
+
+    fig = plt.figure()
+    fig.patch.set_facecolor('white')
+    ax = fig.gca(projection='3d')
+    ax.plot_trisurf(points[:, 0], points[:, 1], points[:, 3], cmap=cm.coolwarm)
+    ax.set_xlabel("Stokes")
+    ax.set_ylabel("Stickiness")
+    ax.set_zlabel("Mean Void Fraction")
+
+
+for i in [-1, 0, 1, 2]:
+    for j in [-1, 0, 1, 2]:
         save_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_", 1)
-        graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
+        # graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
+
+plot_3d_sy_stk_variation()
 
 plt.show()

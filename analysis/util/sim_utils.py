@@ -23,7 +23,9 @@ def get_stickyness_number(path, prefix, flow_speed=0.7839 * 5):
     restitution = get_property("Restitution coefficient", contents)
     cohesion_stiffness = get_property("Cohesion stiffness", contents)
     p_diameter = get_property("Particle diameter", contents)
-    effect_diameter = 1.5 * p_diameter
+    effect_diameter = get_property("Effect diameter", contents)
+    if effect_diameter is None:
+        effect_diameter = 1.5 * p_diameter
     p_density = get_property("Particle density", contents)
 
     e_len = effect_diameter - p_diameter

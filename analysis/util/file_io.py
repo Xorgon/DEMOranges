@@ -25,3 +25,4 @@ def get_property(name, file_contents):
         return float(match.group(1))
     else:
         print("Warning: " + name + " is None.")
+        return None
