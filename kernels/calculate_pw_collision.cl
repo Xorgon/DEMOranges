@@ -37,14 +37,13 @@ float3 calculate_normal_force(particle p, aa_wall wall, float overlap, float3 no
     return stiffness * overlap * normal - damping_coefficient * get_normal_velocity(p, normal);
 }
 
-float3 calculate_tangential_force(particle p, float friction_coefficient, float friction_stiffness,
-                                  float3 normal_force, float3 normal, float delta_t) {
+float3 calculate_tangential_force(particle p, float friction_coefficient, float friction_stiffness, float3 normal_force,
+                                    float3 normal, float delta_t, float stiffness) {
     float3 tangent = get_collision_tangent(p, normal);
 
     float3 f_dynamic = - friction_coefficient * length(normal_force) * tangent;
-
-    float tang_displacement = length(get_tangent_velocity(p, tangent) * delta_t);
-    float3 f_static = - friction_stiffness * tang_displacement * tangent;
+    float tang_displacement = length(get_tangent_velocity(p, tangent) * M_PI_F * sqrt(get_particle_mass(p) / stiffness));
+    float3 f_static =  - friction_stiffness * tang_displacement * tangent;
 
     if (fast_length(f_dynamic) < fast_length(f_static)) {
         return f_dynamic;
@@ -69,7 +68,7 @@ __kernel void calculate_pw_collision(__global pw_collision *collisions, __global
         float3 normal_force =  calculate_normal_force(particles[p_id], walls[w_id], overlap, normal, stiffness,
                                                                 damping_coefficient);
         float3 tangential_force = calculate_tangential_force(particles[p_id], friction_coefficient, friction_stiffness,
-                                                                normal_force, normal, delta_t);
+                                                                normal_force, normal, delta_t, stiffness);
         atomicAdd_float3(&particles[p_id].forces, normal_force + tangential_force);
     }
 }

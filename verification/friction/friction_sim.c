@@ -35,7 +35,7 @@ cl_float fluid_viscosity = 0.0000193 * 100;
 cl_float stiffness = 1e5;
 cl_float restitution_coefficient = 0.8;
 cl_float friction_coefficient = 0.6;
-cl_float friction_stiffness = 1e6;
+cl_float friction_stiffness = 1e5;
 cl_float cohesion_stiffness = 0;
 
 cl_float initial_vel_x = 1;
@@ -89,7 +89,7 @@ int main() {
     printf("Theoretical Overlap = %f\n", theoretical_overlap);
 
     char dir[] = "../verification/friction/data/";
-    for (int i = 8; i <= 128; i *= 2) {
+    for (int i = 8; i <= 64; i *= 2) {
         timestep = collision_time / i;
 
         sprintf(prefix, "friction_%i", i);

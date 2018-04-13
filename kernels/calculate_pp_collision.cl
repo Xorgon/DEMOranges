@@ -15,16 +15,12 @@ float3 get_normal_velocity(particle p1, particle p2) {
     return dot(p2.vel - p1.vel, normal) * normal;
 }
 
-float3 get_tangential_velocity(particle p1, particle p2) {
+float3 get_tangent_velocity(particle p1, particle p2) {
     return p2.vel - p1.vel - get_normal_velocity(p1, p1);
 }
 
 float3 get_collision_tangent(particle p1, particle p2) {
     return p2.vel - p1.vel - get_normal_velocity(p1, p2);
-}
-
-float get_tangential_displacement(particle p1, particle p2, float delta_t) {
-    return length(get_tangential_velocity(p1, p2)) * delta_t;
 }
 
 float3 calculate_collision_normal_force(pp_collision col, particle p1, particle p2, float stiffness,
@@ -35,10 +31,12 @@ float3 calculate_collision_normal_force(pp_collision col, particle p1, particle 
 }
 
 float3 calculate_friction_tangent_force(pp_collision col, particle p1, particle p2, float3 normal_force, float delta_t,
-                                        float friction_coefficient, float friction_stiffness) {
+                                        float friction_coefficient, float friction_stiffness, float stiffness) {
     float3 f_dyn = - friction_coefficient * length(normal_force) * get_collision_tangent(p1, p2);
-    float3 f_static = - friction_stiffness * get_tangential_displacement(p1, p2, delta_t)
-                        * get_collision_tangent(p1, p2);
+
+    float tang_displacement = length(get_tangent_velocity(p1, p2) * M_PI_F * sqrt(get_reduced_particle_mass(get_particle_mass(p1), get_particle_mass(p2)) / stiffness));
+    float3 f_static = - friction_stiffness * tang_displacement * get_collision_tangent(p1, p2);
+
     if (fast_length(f_dyn) < fast_length(f_static)) {
         return f_dyn;
     } else {
@@ -76,9 +74,13 @@ __kernel void calculate_pp_collision(__global pp_collision *collisions, __global
         float damping_coefficient = get_damping_coefficient(restitution_coefficient, stiffness, reduced_particle_mass);
         float3 normal_force = calculate_collision_normal_force(collisions[gid], p1, p2,
                                                                 stiffness, damping_coefficient);
+        float nf = fast_length(normal_force);
+        if (nf > 10000) {
+            printf("force = %f, stiff = %f, overlap = %f, damping_coeff = %f, vel = %f\n", nf, stiffness, get_particle_overlap(p1, p2), damping_coefficient, fast_length(get_normal_velocity(p1, p2)));
+        }
         float3 tangent_force = calculate_friction_tangent_force(collisions[gid], p1, p2,
                                                                 normal_force, delta_t, friction_coefficient,
-                                                                friction_stiffness);
+                                                                friction_stiffness, stiffness);
         forces += normal_force + tangent_force;
     }
     if (effect_overlap > 0) {

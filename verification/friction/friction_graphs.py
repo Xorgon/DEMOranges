@@ -82,7 +82,6 @@ def plot_pos_and_vel():
         data.append(timestep_data)
 
     # Normalize Data
-    # Normalize Data
     for incr_data in data:
         for n in range(len(incr_data)):
             incr_data[n, 0] = incr_data[n, 0] / col_duration  # Normalize time with collision duration
