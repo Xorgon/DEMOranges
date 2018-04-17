@@ -33,6 +33,8 @@ writeCVStats(char prefix[], char dir[], cl_ulong NUMPART, cl_int *particle_count
 
 void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]);
 
+void writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART, float time);
+
 boolean checkDirExists(char dir[]);
 
 float getFluidViscFromStks(float diameter, float density, float flow_speed, float length, float stks);

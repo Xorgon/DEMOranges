@@ -17,7 +17,7 @@
 #define MAX_SOURCE_SIZE (0x100000)
 #define VERBOSE FALSE
 #define LOG_DATA TRUE
-#define LOG_CV_STATS TRUE
+#define LOG_COL_STATS TRUE
 
 char *prefix = "TGV_PERIODIC";
 char *log_dir[100];
@@ -132,7 +132,7 @@ int main() {
             int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, periodic, stiffness,
                                  restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness,
                                  domain_length, prefix, log_dir, sim_length, timestep, VERBOSE, LOG_DATA, FALSE,
-                                 LOG_CV_STATS, log_step, device, context);
+                                 LOG_COL_STATS, log_step, device, context);
 
             clReleaseContext(context);
         }

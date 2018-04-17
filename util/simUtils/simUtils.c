@@ -75,6 +75,16 @@ void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]) {
     fclose(fd);
 }
 
+void writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART, float time) {
+    char filename[500];
+    sprintf(filename, "%s%llu_%s_cols.txt", dir, NUMPART, prefix);
+
+    FILE *fd = fopen(filename, "a");
+
+    fprintf(fd, "%f, %llu", time, NUMCOLS);
+    fclose(fd);
+}
+
 boolean checkDirExists(char dir[]) {
     const char *folderr;
     struct stat sb;

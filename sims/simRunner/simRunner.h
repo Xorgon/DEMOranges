@@ -15,7 +15,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
            cl_float stiffness, cl_float restitution_coefficient, cl_float friction_coefficient,
            cl_float friction_stiffness, cl_float cohesion_stiffness,
            cl_float domain_length, char prefix[], char log_dir[], float sim_length, float timestep,
-           boolean VERBOSE, boolean LOG_DATA, boolean log_vel, boolean log_cv_stats, float log_step,
+           boolean VERBOSE, boolean LOG_DATA, boolean log_vel, boolean log_col_stats, float log_step,
            cl_device_id device, cl_context context);
 
 #endif //DEMORANGES_SIMRUNNER_H
