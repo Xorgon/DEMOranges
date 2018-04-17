@@ -104,7 +104,7 @@ int main() {
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, periodic, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,
                          prefix, log_dir,
-                         sim_length, timestep, VERBOSE, LOG_DATA, FALSE, log_step, device, context);
+                         sim_length, timestep, VERBOSE, LOG_DATA, FALSE, FALSE, log_step, device, context);
 
     clReleaseContext(context);
     return sim_ret;

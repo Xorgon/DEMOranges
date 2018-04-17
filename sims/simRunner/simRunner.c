@@ -10,7 +10,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
            cl_float stiffness, cl_float restitution_coefficient, cl_float friction_coefficient,
            cl_float friction_stiffness, cl_float cohesion_stiffness,
            cl_float domain_length, char prefix[], char log_dir[], float sim_length, float timestep,
-           boolean VERBOSE, boolean LOG_DATA, boolean log_vel, float log_step,
+           boolean VERBOSE, boolean LOG_DATA, boolean log_vel, boolean log_cv_stats, float log_step,
            cl_device_id device, cl_context context) {
     cl_int ret;
 
@@ -38,6 +38,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     cl_ulong NUMPWCOLS;
     pw_collision *hpw_cols;
 
+    // TODO: Add directory checker for Linux gcc.
     if (!checkDirExists(log_dir) && LOG_DATA && strcmp(log_dir, "") != 0) {
         fprintf(stderr, "Error: Directory (%s) does not exist.\n", log_dir);
         return 1;
@@ -231,6 +232,10 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
             ret = particlesToHost(queue, gparticles, &hparticles, NUMPART);
             printf("Logging at time: %f\n", time);
             writeParticles(hparticles, time, prefix, log_dir, NUMPART, log_vel);
+
+            if (log_cv_stats) {
+                writeCVStats(prefix, log_dir, NUMPART, particle_count_array, NUMCVS, time);
+            }
 
             last_write = time;
         }

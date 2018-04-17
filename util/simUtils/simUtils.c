@@ -43,6 +43,26 @@ void writeSetupData(char prefix[], char dir[], cl_ulong NUMPART, cl_float timest
     fclose(fd);
 }
 
+void
+writeCVStats(char prefix[], char dir[], cl_ulong NUMPART, cl_int *particle_count_array, cl_ulong NUMCVS, float time) {
+    char filename[500];
+    sprintf(filename, "%s%llu_%s_cv_stats_%i.txt", dir, NUMPART, prefix, (long) roundf(time * 1e6));
+    FILE *fd = fopen(filename, "w");
+
+    cl_ulong *stat_array = calloc(NUMPART, sizeof(cl_ulong));
+
+    for (cl_ulong i = 0; i < NUMCVS; i++) {
+        stat_array[particle_count_array[i]] += 1;
+    }
+
+    for (cl_ulong i = 0; i < NUMPART; i++) {
+        fprintf(fd, "%llu", stat_array[i]);
+    }
+
+    fclose(fd);
+    free(stat_array);
+}
+
 void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]) {
     char filename[500];
     sprintf(filename, "%s%llu_%s_setup.txt", dir, NUMPART, prefix);
@@ -51,7 +71,7 @@ void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]) {
 
     time_t now;
     now = time(NULL);
-    fprintf(fd, "%s: %s", label, ctime(&now));
+    fprintf(fd, "%s: %s\n", label, ctime(&now));
     fclose(fd);
 }
 

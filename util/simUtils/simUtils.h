@@ -28,6 +28,9 @@ void writeSetupData(char prefix[], char dir[], cl_ulong NUMPART, cl_float timest
                     cl_float particle_diameter, cl_float effect_diameter, cl_float particle_density,
                     cl_float fluid_viscosity);
 
+void
+writeCVStats(char prefix[], char dir[], cl_ulong NUMPART, cl_int *particle_count_array, cl_ulong NUMCVS, float time);
+
 void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]);
 
 boolean checkDirExists(char dir[]);
