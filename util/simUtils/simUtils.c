@@ -56,7 +56,7 @@ writeCVStats(char prefix[], char dir[], cl_ulong NUMPART, cl_int *particle_count
     }
 
     for (cl_ulong i = 0; i < NUMPART; i++) {
-        fprintf(fd, "%llu", stat_array[i]);
+        fprintf(fd, "%llu\n", stat_array[i]);
     }
 
     fclose(fd);
@@ -81,7 +81,7 @@ void writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART,
 
     FILE *fd = fopen(filename, "a");
 
-    fprintf(fd, "%f, %llu", time, NUMCOLS);
+    fprintf(fd, "%f, %llu\n", time, NUMCOLS);
     fclose(fd);
 }
 

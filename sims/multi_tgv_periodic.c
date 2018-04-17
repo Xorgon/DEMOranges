@@ -84,8 +84,8 @@ int main() {
     float rests[] = {0.5, 0.173618, 0.15, 0.2};
     float stks[] = {0.1, 1, 10, 5};
 
-    for (int i = 2; i < 3; i++) {
-        for (int j = -1; j < 2; j++) {
+    for (int i = -1; i < 3; i++) {
+        for (int j = 1; j < 2; j++) {
             particle_effect_diameter = effect_diameters[i + 1];
             restitution_coefficient = rests[i + 1];
             cohesion_stiffness = getCohesionFromSy(effect_diameters[i + 1] - particle_diameter,
