@@ -82,7 +82,7 @@ int main() {
                                 2 * particle_diameter, 1.5f * particle_diameter};
     float sys[] = {0.1, 1, 1.5, 0.6};
     float rests[] = {0.5, 0.173618, 0.15, 0.2};
-    float fluid_viscs[] = {0.1, 1, 10, 5};
+    float stks[] = {0.1, 1, 10, 5};
 
     for (int i = 2; i < 3; i++) {
         for (int j = -1; j < 2; j++) {
@@ -93,7 +93,7 @@ int main() {
                                                    get_particle_mass_from_values(density, particle_diameter),
                                                    sys[i + 1]);
 
-            fluid_viscosity = getFluidViscFromStks(particle_diameter, density, 0.7839 * 5, PI / 3, fluid_viscs[j + 1]);
+            fluid_viscosity = getFluidViscFromStks(particle_diameter, density, 0.7839 * 5, PI / 3, stks[j + 1]);
 
             sprintf(log_dir, "TGV_PERIODIC_%i_%i/", i, j);
 
