@@ -243,11 +243,85 @@ def plot_3d_sy_stk_variation():
     ax.set_zlabel("Mean Void Fraction")
 
 
+def plot_num_cols(path, prefix):
+    if not os.path.exists(path):
+        print(path + " does not exist.")
+        return
+
+    if not os.path.exists(path + prefix + "cols.txt"):
+        print(path + prefix + "cols.txt does not exist.")
+        return
+
+    cols_file = open(path + prefix + "cols.txt", "r")
+    lines = cols_file.readlines()
+    num_cols = []
+    times = []
+    for line in lines:
+        split = line.split(",")
+        num_cols.append(int(split[1]))
+        times.append(float(split[0]))
+
+    stokes = get_stokes_number(path, prefix)
+    sticky = get_stickyness_number(path, prefix)
+
+    fig = plt.figure()
+    fig.patch.set_facecolor('white')
+    ax = fig.gca()
+    ax.plot(times, num_cols)
+    ax.set_title("Stokes = {0:2f}, Stickyness = {1:2f}".format(stokes, sticky))
+
+
+def get_mean_sy_stk_num_cols(path, prefix):
+    if not os.path.exists(path):
+        print(path + " does not exist.")
+        return
+
+    if not os.path.exists(path + prefix + "cols.txt"):
+        print(path + prefix + "cols.txt does not exist.")
+        return
+
+    cols_file = open(path + prefix + "cols.txt", "r")
+    lines = cols_file.readlines()
+    num_cols = []
+    times = []
+    for line in lines:
+        split = line.split(",")
+        num_cols.append(int(split[1]))
+        times.append(float(split[0]))
+
+    stokes = get_stokes_number(path, prefix)
+    sticky = get_stickyness_number(path, prefix)
+
+    return sticky, stokes, np.mean(num_cols)
+
+
+def plot_mean_sy_num_cols(stk=1):
+    points = []
+    for i in [-1, 0, 1, 2]:
+        for j in [stk]:
+            data = get_mean_sy_stk_num_cols("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
+            if data is not None:
+                points.append(data)
+
+    points = np.array(points)
+    points = np.sort(points, 0)
+
+    fig = plt.figure()
+    fig.patch.set_facecolor('white')
+    ax = fig.gca()
+    ax.plot(points[:, 0], points[:, 2], "x-")
+    ax.set_title("Stokes = {0:2f}".format(points[0, 1]))
+
+
 for i in [-1, 0, 1, 2]:
     for j in [-1, 0, 1, 2]:
         save_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_", 1)
+        plot_num_cols("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
         # graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
 
+# graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(1, -1), "10000_TGV_PERIODIC_")
+# graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(2, -1), "10000_TGV_PERIODIC_")
 plot_3d_sy_stk_variation()
+# plot_mean_sy_num_cols(1)
 
 plt.show()
