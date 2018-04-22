@@ -132,7 +132,7 @@ def save_agg_property_variation(path, prefix, min_agg_size=1, override=False):
     property_file.close()
 
 
-def graph_agg_property_variation(path, prefix):
+def graph_agg_property_variation(path, prefix, title=True):
     if not os.path.exists(path):
         print(path + " does not exist.")
         return
@@ -156,7 +156,8 @@ def graph_agg_property_variation(path, prefix):
     fig = plt.figure(figsize=(8, 10))
     fig.patch.set_facecolor('white')
     ax1 = fig.add_subplot(211)
-    ax1.set_title("Stokes = {0:2f}, Stickyness = {1:2f}".format(stokes, sticky))
+    if title:
+        ax1.set_title("Stokes = {0:2f}, Stickyness = {1:2f}".format(stokes, sticky))
     ax1.plot(data[:, 0], data[:, 1], 'k', label="Size Mean")
     ax1.set_ylabel("Mean")
     ax1.set_xlabel("$t$")
@@ -319,8 +320,8 @@ for i in [-1, 0, 1, 2]:
         plot_num_cols("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
         # graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(i, j), "10000_TGV_PERIODIC_")
 
-# graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(1, -1), "10000_TGV_PERIODIC_")
-# graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(2, -1), "10000_TGV_PERIODIC_")
+graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(1, 2), "10000_TGV_PERIODIC_", False)
+graph_agg_property_variation("../runs/Multi/TGV_PERIODIC_{0}_{1}/".format(-1, 0), "10000_TGV_PERIODIC_", False)
 plot_3d_sy_stk_variation()
 # plot_mean_sy_num_cols(1)
 

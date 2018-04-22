@@ -50,6 +50,11 @@ def plot_pos_and_vel():
     for t in times:
         positions.append(get_pos(t, mass, friction_coeff, u_0, g))
         velocities.append(get_vel(t, mass, friction_coeff, u_0, g))
+
+    times = np.append(times, t_max)
+    positions.append(positions[-1])
+    velocities.append(0)
+
     times = np.append(times, 0.5)
     positions.append(positions[-1])
     velocities.append(0)
@@ -95,6 +100,7 @@ def plot_pos_and_vel():
 
     # Plot Data
     fig = plt.figure(figsize=(8, 10))
+    plt.rc('axes', labelsize=15)
     fig.patch.set_facecolor('white')
     ax1 = fig.add_subplot(211)
     ax1_lines = []
