@@ -99,6 +99,6 @@ int main() {
 
         runSim(hparticles, NUMPART, iterate_particle, particle_diameter, hwalls, NUMWALLS, FALSE, stiffness,
                restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness, domain_length,
-               prefix, dir, sim_length, timestep, VERBOSE, LOG_DATA, TRUE, log_step, device, context);
+               prefix, dir, sim_length, timestep, VERBOSE, LOG_DATA, TRUE, FALSE, log_step, device, context);
     }
 }

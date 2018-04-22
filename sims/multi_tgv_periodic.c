@@ -79,7 +79,7 @@ int main() {
     particle_effect_diameter = (cl_float) (1.5 * particle_diameter);
 
     float effect_diameters[] = {1.5f * particle_diameter, 1.5f * particle_diameter,
-                                2 * particle_diameter, 1.5f * particle_diameter};
+                                1.5f * particle_diameter, 1.5f * particle_diameter};
     float sys[] = {0.1, 1, 1.5, 0.6};
     float rests[] = {0.5, 0.173618, 0.15, 0.2};
     float stks[] = {0.1, 1, 10, 5};
