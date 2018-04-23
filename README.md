@@ -39,4 +39,25 @@ This directory also contains `kernelUtils.cl` which contains all of the utility 
 
 #### verification/
 This directory contains all of the verification test cases.
-Actual simulations can be run using their targets and the resulting data can be graphed against the analytic solutions with the Python script in each directory.   
+Actual simulations can be run using their targets and the resulting data can be graphed against the analytic solutions with the Python script in each directory.
+
+## Building the project
+This project uses CMake to easily build and compile. Building and compiling has been tested with the following systems:
+
+- Windows, MSVC, AMD
+- Windows, gcc, AMD
+- Linux, gcc, NVIDIA
+
+For Linux systems CMake should be able to find the OpenCL SDK with `find_package(OpenCL REQUIRED)` however on an Environment Variable `OCL_ROOT` should be set that points to the diretory containing the lib and include directories.
+Again, Windows compilation has only been tested with the AMD OpenCL SDK installed so the NVIDIA OpenCL SDK may need slight modifications to `CMakeLists.txt`.
+
+There are targets for each verification test case and simulation as well as a unit test runner.
+To add a new simulation simply add the following code to `CMakeLists.txt` and replace the name and main file (indicated by <>):
+```
+file(GLOB_RECURSE <target_name>_SOURCE_FILES <simulation .c file location>)
+add_executable(<target_name> ${<target_name>_SOURCE_FILES} ${sim_SOURCE_FILES})
+target_link_libraries(<target_name> ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(<target_name> m)
+endif()
+```
