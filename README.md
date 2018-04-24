@@ -49,8 +49,8 @@ This project uses CMake to easily build and compile. Building and compiling has 
 - Windows, gcc, AMD
 - Linux, gcc, NVIDIA
 
-For Linux systems CMake should be able to find the OpenCL SDK with `find_package(OpenCL REQUIRED)` however on an Environment Variable `OCL_ROOT` should be set that points to the diretory containing the lib and include directories.
-Again, Windows compilation has only been tested with the AMD OpenCL SDK installed so the NVIDIA OpenCL SDK may need slight modifications to `CMakeLists.txt`.
+For Linux systems CMake should be able to find the OpenCL SDK with `find_package(OpenCL REQUIRED)` however on Windows an Environment Variable `OCL_ROOT` may need to be set that points to the diretory containing the lib and include directories.
+Windows compilation has only been tested with the AMD OpenCL SDK installed so the NVIDIA OpenCL SDK may need slight modifications to `CMakeLists.txt`.
 
 There are targets for each verification test case and simulation as well as a unit test runner.
 To add a new simulation simply add the following code to `CMakeLists.txt` and replace the name and main file (indicated by <>):
