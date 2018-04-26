@@ -69,55 +69,55 @@ __kernel void make_pp_collisions(__global ulong *cv_start_array, __global int *p
     bool periodic = (bool) int_periodic;
     ulong cv_idx = get_global_id(0);
     int3 coords = cv_array_idx_to_cv_coords(cv_idx, cvs_per_edge);
-    for (int i = 0; i < particle_count_array[cv_idx]; i++) {
-        for (int x = coords.x - 1; x <= coords.x + 1; x++) {
-            if ((x >= cvs_per_edge || x < 0) && !periodic) {
+    for (int x = coords.x - 1; x <= coords.x + 1; x++) {
+        if (!periodic && (x >= cvs_per_edge || x < 0)) {
+            continue;
+        }
+        char cross_boundary_x = 0;
+        int other_x;
+        if (x >= cvs_per_edge) {
+            other_x = 0;
+            cross_boundary_x = 1;
+        } else if (x < 0) {
+            other_x = cvs_per_edge - 1;
+            cross_boundary_x = -1;
+        } else {
+            other_x = x;
+        }
+        for (int y = coords.y - 1; y <= coords.y + 1; y++) {
+            if (!periodic && (y >= cvs_per_edge || y < 0)) {
                 continue;
             }
-            char cross_boundary_x = 0;
-            int other_x;
-            if (x >= cvs_per_edge) {
-                other_x = 0;
-                cross_boundary_x = 1;
-            } else if (x < 0) {
-                other_x = cvs_per_edge - 1;
-                cross_boundary_x = -1;
+            char cross_boundary_y = 0;
+            int other_y;
+            if (y >= cvs_per_edge) {
+                other_y = 0;
+                cross_boundary_y = 1;
+            } else if (y < 0) {
+                other_y = cvs_per_edge - 1;
+                cross_boundary_y = -1;
             } else {
-                other_x = x;
+                other_y = y;
             }
-            for (int y = coords.y - 1; y <= coords.y + 1; y++) {
-                if ((y >= cvs_per_edge || y < 0) && !periodic) {
+            for (int z = coords.z - 1; z <= coords.z + 1; z++) {
+                if (!periodic && (z >= cvs_per_edge || z < 0)) {
                     continue;
                 }
-                char cross_boundary_y = 0;
-                int other_y;
-                if (y >= cvs_per_edge) {
-                    other_y = 0;
-                    cross_boundary_y = 1;
-                } else if (y < 0) {
-                    other_y = cvs_per_edge - 1;
-                    cross_boundary_y = -1;
+                char cross_boundary_z = 0;
+                int other_z;
+                if (z >= cvs_per_edge) {
+                    other_z = 0;
+                    cross_boundary_z = 1;
+                } else if (z < 0) {
+                    other_z = cvs_per_edge - 1;
+                    cross_boundary_z = -1;
                 } else {
-                    other_y = y;
+                    other_z = z;
                 }
-                for (int z = coords.z - 1; z <= coords.z + 1; z++) {
-                    if ((z >= cvs_per_edge || z < 0) && !periodic) {
-                        continue;
-                    }
-                    char cross_boundary_z = 0;
-                    int other_z;
-                    if (z >= cvs_per_edge) {
-                        other_z = 0;
-                        cross_boundary_z = 1;
-                    } else if (z < 0) {
-                        other_z = cvs_per_edge - 1;
-                        cross_boundary_z = -1;
-                    } else {
-                        other_z = z;
-                    }
 
-                    int3 other_cv_coords = (int3) {other_x, other_y, other_z};
-                    ulong other_cv_idx = cv_coords_to_cv_array_idx(other_cv_coords, cvs_per_edge);
+                int3 other_cv_coords = (int3) {other_x, other_y, other_z};
+                ulong other_cv_idx = cv_coords_to_cv_array_idx(other_cv_coords, cvs_per_edge);
+                for (int i = 0; i < particle_count_array[cv_idx]; i++) {
                     for (int j = 0; j < particle_count_array[other_cv_idx]; j++){
                         ulong this_pid = cv_pids[cv_start_array[cv_idx] + i];
                         ulong other_pid = cv_pids[cv_start_array[other_cv_idx] + j];
