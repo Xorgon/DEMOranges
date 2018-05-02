@@ -7,9 +7,18 @@ MESSAGE(CMake\ Version: \ ${CMAKE_VERSION})
 
 # Fix Windows path environment variable.
 if (WIN32)
-    STRING(REGEX REPLACE "\\\\" "/" OCL_ROOT $ENV{OCL_ROOT})
+    if(DEFINED ENV{OCL_ROOT})
+        STRING(REGEX REPLACE "\\\\" "/" OCL_ROOT $ENV{OCL_ROOT})
+    endif()
+    if(DEFINED ENV{CUDA_PATH})
+        STRING(REGEX REPLACE "\\\\" "/" CUDA_PATH $ENV{CUDA_PATH})
+    endif()
 endif(WIN32)
-if (NOT ${OCL_ROOT} STREQUAL "")
+if(DEFINED OCL_ROOT AND DEFINED CUDA_PATH)
+    MESSAGE("Both AMD and NVIDIA OpenCL SDKs have been found. Defaulting to AMD.")
+endif()
+if (DEFINED OCL_ROOT)
+    MESSAGE("Building with AMD OpenCL SDK.")
     # Set required OpenCL CMake build options.
     set(OpenCL_INCLUDE_DIR ${OCL_ROOT}/include/)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -18,6 +27,22 @@ if (NOT ${OCL_ROOT} STREQUAL "")
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
         # 32 bits
         set(OpenCL_LIBRARY ${OCL_ROOT}/lib/x86/OpenCL.lib)
+    endif()
+
+    # Add OpenCL stuff.
+    find_package(OpenCL REQUIRED)
+    #add_library(OpenCL ${OpenCL_LIBRARY})
+    include_directories(${OpenCL_INCLUDE_DIR})
+    #SET_TARGET_PROPERTIES(OpenCL PROPERTIES LINKER_LANGUAGE C)
+elseif(DEFINED CUDA_PATH)
+    MESSAGE("Building with NVIDIA OpenCL SDK (CUDA Toolkit).")
+    set(OpenCL_INCLUDE_DIR ${CUDA_PATH}/include/)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        # 64 bits
+        set(OpenCL_LIBRARY ${CUDA_PATH}/lib/x64/OpenCL.lib)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        # 32 bits
+        set(OpenCL_LIBRARY ${CUDA_PATH}/lib/Win32/OpenCL.lib)
     endif()
 
 
