@@ -6,6 +6,8 @@ This implementation was created for my Individual Project, the project report ca
 The purpose of this implementation is to achieve a functional DEM implementation for large numbers of particles (10^7) that runs in O(N) time.
 
 The project structure and build instructions are below. Further documentation can be found in the Wiki [here](https://github.com/Xorgon/DEMOranges/wiki).
+
+Some of the OpenCL utility functions in this project are constructed from code in Andrew Chow's project [here](https://github.com/chowder/IP-particle-fluid-sim).
 ## Project Structure
 The project is organised into relevant directories. The contents of each of these is described below.
 
