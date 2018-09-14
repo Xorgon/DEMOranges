@@ -12,32 +12,34 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
            cl_float domain_length, char prefix[], char log_dir[], float sim_length, float timestep,
            boolean VERBOSE, boolean LOG_DATA, boolean log_vel, boolean log_col_stats, float log_step,
            cl_device_id device, cl_context context) {
-    cl_int ret;
+    cl_int ret;  // Variable in which to store OpenCL return values.
 
-    cl_float cv_length;
-    cl_int cvs_per_edge;
+    cl_float cv_length;  // Side length of CVs.
+    cl_int cvs_per_edge;  // The number of CVs along one edge of the domain.
     cl_ulong NUMCVS; // Total number of CVs.
 
-    cl_int *particle_count_array; // Array of CVs with just the number of particles in each CV.
+    cl_int *particle_count_array; // Array of CVs with the number of particles in each CV.
     cl_int *input_count_array; // Array of CVs with a count of how many particles have been input for each CV.
     cl_ulong *cv_start_array; // Array of CVs with the index of where the CV starts in cv_pids.
 
-    cl_mem gparticle_count_array;
-    cl_mem ginput_count_array;
-    cl_mem gcv_start_array;
-    cl_mem gcv_pids;
-    cl_mem gparticles;
-    cl_mem gwalls;
-    cl_mem gpw_cols;
+    cl_ulong NUMPPCOLS;  // Variable to store total number of particle-particle collisions.
+    cl_ulong collision_count = 0;  // Variable to count up the number of collisions.
+
+    cl_ulong NUMPWCOLS;  // Variable to store total number of particle-wall collisions.
+    pw_collision *hpw_cols;  // Array in which to store particle-wall collisions on the host device.
+
+    cl_mem gparticle_count_array;  // GPU version of particle_count_array.
+    cl_mem ginput_count_array; // GPU version of input_count_array.
+    cl_mem gcv_start_array; // GPU version of cv_start_array.
+    cl_mem gcv_pids;  // GPU array of the particle IDs sorted into control volumes.
+    cl_mem gparticles;  // GPU array of particles.
+    cl_mem gwalls;  // GPU array of walls.
+    cl_mem gpw_cols;  // GPU version of hpw_cols.
     cl_mem gpp_cols = 0; // Set to 0 to avoid uninitialized errors.
-    cl_mem gcollision_count;
+    cl_mem gcollision_count;  // GPU version of collision_count.
 
-    cl_ulong NUMPPCOLS;
-    cl_ulong collision_count = 0;
 
-    cl_ulong NUMPWCOLS;
-    pw_collision *hpw_cols;
-
+    // Check that the logging directory exists if needed.
     if (!checkDirExists(log_dir) && LOG_DATA && strcmp(log_dir, "") != 0) {
         fprintf(stderr, "Error: Directory (%s) does not exist.\n", log_dir);
         return 1;
@@ -72,6 +74,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     ginput_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
     gcv_pids = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong) * NUMPART, NULL, &ret);
 
+    // Create particle-wall collisions (all possible collisions, i.e. no broad phase for particle-wall collisions).
     if (NUMWALLS > 0) {
         printf("[INIT] Creating particle-wall collisions\n");
         NUMPWCOLS = NUMPART * NUMWALLS;
@@ -91,17 +94,21 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         aa_wallsToDevice(queue, gwalls, &walls, NUMWALLS);
     }
 
+    // Create gcollision_count buffer.
     gcollision_count = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_ulong), NULL, &ret);
 
+    // Create gparticles buffer and copy particles into it.
     gparticles = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(particle) * NUMPART, NULL, &ret);
     ret = particlesToDevice(queue, gparticles, &hparticles, NUMPART);
 
-    int int_periodic;
+    int int_periodic;  // Enumerated version of periodic boolean as booleans can't be passed to GPU by default.
     if (periodic) {
         int_periodic = 1;
     } else {
         int_periodic = 0;
     }
+
+    // Set all kernel arguments. Note that if the cl_mem object changes they must be reset (e.g. gpp_cols).
     printf("[INIT] Setting kernel arguments\n");
     ret = clSetKernelArg(iterate_particle, 0, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(iterate_particle, 1, sizeof(cl_float), &timestep);
@@ -129,18 +136,18 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     ret = clSetKernelArg(assign_particles, 2, sizeof(cl_mem), &ginput_count_array);
     ret = clSetKernelArg(assign_particles, 3, sizeof(cl_mem), &gcv_pids);
 
-    clSetKernelArg(count_pp_collisions, 0, sizeof(cl_mem), &gparticle_count_array);
-    clSetKernelArg(count_pp_collisions, 1, sizeof(cl_int), &cvs_per_edge);
-    clSetKernelArg(count_pp_collisions, 2, sizeof(cl_mem), &gcollision_count);
-    clSetKernelArg(count_pp_collisions, 3, sizeof(cl_int), &int_periodic);
+    ret = clSetKernelArg(count_pp_collisions, 0, sizeof(cl_mem), &gparticle_count_array);
+    ret = clSetKernelArg(count_pp_collisions, 1, sizeof(cl_int), &cvs_per_edge);
+    ret = clSetKernelArg(count_pp_collisions, 2, sizeof(cl_mem), &gcollision_count);
+    ret = clSetKernelArg(count_pp_collisions, 3, sizeof(cl_int), &int_periodic);
 
-    clSetKernelArg(make_pp_collisions, 0, sizeof(cl_mem), &gcv_start_array);
-    clSetKernelArg(make_pp_collisions, 1, sizeof(cl_mem), &gparticle_count_array);
-    clSetKernelArg(make_pp_collisions, 2, sizeof(cl_mem), &gcv_pids);
-    clSetKernelArg(make_pp_collisions, 3, sizeof(cl_int), &cvs_per_edge);
-    clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
-    clSetKernelArg(make_pp_collisions, 5, sizeof(cl_mem), &gcollision_count);
-    clSetKernelArg(make_pp_collisions, 6, sizeof(cl_int), &int_periodic);
+    ret = clSetKernelArg(make_pp_collisions, 0, sizeof(cl_mem), &gcv_start_array);
+    ret = clSetKernelArg(make_pp_collisions, 1, sizeof(cl_mem), &gparticle_count_array);
+    ret = clSetKernelArg(make_pp_collisions, 2, sizeof(cl_mem), &gcv_pids);
+    ret = clSetKernelArg(make_pp_collisions, 3, sizeof(cl_int), &cvs_per_edge);
+    ret = clSetKernelArg(make_pp_collisions, 4, sizeof(cl_mem), &gpp_cols);
+    ret = clSetKernelArg(make_pp_collisions, 5, sizeof(cl_mem), &gcollision_count);
+    ret = clSetKernelArg(make_pp_collisions, 6, sizeof(cl_int), &int_periodic);
 
     if (NUMWALLS > 0) {
         clSetKernelArg(calculate_pw_collision, 0, sizeof(cl_mem), &gpw_cols);
@@ -153,6 +160,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         clSetKernelArg(calculate_pw_collision, 7, sizeof(cl_float), &friction_stiffness);
     }
 
+    // Do pre-simulation output and logging.
     printf("\nRunning sim with %llu particles, timestep %f, and log step %f, length %f.\n", NUMPART, timestep, log_step,
            sim_length);
 
@@ -162,7 +170,9 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         writeParticles(hparticles, 0, prefix, log_dir, NUMPART, log_vel);
     }
 
-    cl_float last_write = 0;
+    cl_float last_write = 0; // Variable to store when logging was last run.
+
+    // Run simulation.
     for (cl_float time = timestep; time <= sim_length; time += timestep) {
         if (VERBOSE) printf("Time = %f\n", time);
 
@@ -189,7 +199,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         ret = clEnqueueReadBuffer(queue, gcollision_count, CL_TRUE, 0, sizeof(cl_ulong), &collision_count, 0, NULL,
                                   NULL);
         if (ret != 0) {
-            fprintf(stderr, "Error: Failed to read from collision count buffer. %i\n", ret);
+            fprintf(stderr, "Error: Failed to read from collision count buffer. Error code %i\n", ret);
             return 1;
         }
         NUMPPCOLS = collision_count;
@@ -202,7 +212,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
             }
             gpp_cols = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(pp_collision) * NUMPPCOLS, NULL, &ret);
             if (ret != 0) {
-                fprintf(stderr, "Error: Failed to create collision buffer. %i\n", ret);
+                fprintf(stderr, "Error: Failed to create collision buffer. Error code %i\n", ret);
                 return 1;
             }
 
