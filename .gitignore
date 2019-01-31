@@ -65,3 +65,7 @@ verification/*/data/*
 # Cached files
 __pycache__*
 *.pyc
+
+# Visual Studio
+.vs/*
+CMakeSettings.json
