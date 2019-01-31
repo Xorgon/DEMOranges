@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 // If boolean is not correctly defined.
 #if !defined(boolean)
