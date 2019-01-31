@@ -116,6 +116,7 @@ boolean test_pp_collision_struct_alignment(cl_device_id device, cl_context conte
     ret = clFinish(queue);
 
     if (!hcorrect) {
+        printf("hcorrect is false after kernel execution (test_pp_collision_struct_alignment).");
         return FALSE;
     }
     for (int i = 0; i < NUMCOLS; i++) {

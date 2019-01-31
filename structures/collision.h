@@ -29,9 +29,10 @@ typedef struct pp_collision {
 //    cl_char padding[96];
 // Structure memory alignment for Visual Studio and GCC compilers.
 #if defined(_MSC_VER)
-} __declspec(align(16)) pp_collision;
+    cl_char padding[13];
+} __declspec(align(32)) pp_collision;
 #elif defined(__GNUC__) || defined(__GNUG__ ) || defined(__MINGW_GCC_VERSION)
-} __attribute__((aligned (16))) pp_collision;
+} __attribute__((aligned (32))) pp_collision;
 #endif
 
 typedef struct pw_collision {

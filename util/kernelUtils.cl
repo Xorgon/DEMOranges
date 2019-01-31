@@ -23,7 +23,7 @@ typedef struct {
 //    float damping_coefficient;
 //    float friction_coefficient;
 //    float friction_stiffness;
-} __attribute__ ((aligned (16))) pp_collision;
+} __attribute__ ((aligned (32))) pp_collision;
 
 typedef struct {
     ulong p_id;
