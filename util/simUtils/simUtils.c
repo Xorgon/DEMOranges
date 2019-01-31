@@ -86,14 +86,22 @@ void writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART,
 }
 
 boolean checkDirExists(char dir[]) {
-    const char *folderr;
+    const char *folder;
     struct stat sb;
 
+#if defined(_MSC_VER)
+    if (GetFileAttributes(dir) == INVALID_FILE_ATTRIBUTES) {
+        return FALSE;
+    } else {
+        return TRUE;
+    }
+#elif defined(__GNUC__) || defined(__GNUG__) || defined(__MINGW_GCC_VERSION)
     if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
         return TRUE;
     } else {
         return FALSE;
     }
+#endif
 }
 
 float getFluidViscFromStks(float diameter, float density, float flow_speed, float length, float stks) {
