@@ -71,7 +71,7 @@ int main() {
     hparticles[0].vel = (cl_float3) {initial_vel_x, 0, 0};
     hparticles[0].forces = (cl_float3) {0, 0, 0};
 
-    float tau = get_tau(hparticles[0]);
+    float tau = get_tau(&(hparticles[0]));
     sim_length = 5 * tau;
 
     domain_length = 1;

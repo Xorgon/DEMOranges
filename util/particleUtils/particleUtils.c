@@ -18,8 +18,8 @@ float get_particle_mass(particle *p) {
     return (float) ((*p).density * PI * powf((*p).diameter, 3) / 6);
 }
 
-float get_tau(particle p) {
-    return p.density * p.diameter * p.diameter / (18 * p.fluid_viscosity);
+float get_tau(particle *p) {
+    return (*p).density * (*p).diameter * (*p).diameter / (18 * (*p).fluid_viscosity);
 }
 
 boolean checkPositions(particle *particles, cl_ulong NUMPARTS, cl_float domain_length) {

@@ -25,7 +25,7 @@ float get_particle_mass_from_values(float density, float diameter);
 
 float get_particle_mass(particle *p);
 
-float get_tau(particle p);
+float get_tau(particle *p);
 
 void initializeMonodisperseParticles(particle *particles, cl_ulong NUMPART, float density, float fluid_viscosity,
                                      float diameter, float effect_diameter, cl_float3 positions[],
