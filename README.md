@@ -49,6 +49,7 @@ This project uses CMake to easily build and compile. Building and compiling has 
 
 - Windows, MSVC, AMD
 - Windows, gcc, AMD
+- Windows, MSVC, NVIDIA
 - Windows, gcc, NVIDIA
 - Linux, gcc, NVIDIA
 
