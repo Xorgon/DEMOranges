@@ -49,6 +49,7 @@ This project uses CMake to easily build and compile. Building and compiling has 
 
 - Windows, MSVC, AMD
 - Windows, gcc, AMD
+- Windows, gcc, NVIDIA
 - Linux, gcc, NVIDIA
 
 For Linux systems CMake should be able to find the OpenCL SDK with `find_package(OpenCL REQUIRED)` however on Windows an Environment Variable `OCL_ROOT` may need to be set that points to the diretory containing the lib and include directories.
