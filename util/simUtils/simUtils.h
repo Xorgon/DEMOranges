@@ -13,6 +13,10 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
+#if defined(_MSC_VER)
+#include <Windows.h>
+#endif
+
 // If boolean is not correctly defined.
 #if !defined(boolean)
 #define boolean bool
