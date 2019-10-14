@@ -15,6 +15,7 @@
 #include "../../util/wallUtils/wallUtils.h"
 #include "../../structures/wall.h"
 #include <math.h>
+#include <malloc.h>
 
 #define MAX_SOURCE_SIZE (0x100000)
 #define VERBOSE FALSE

@@ -7,6 +7,7 @@
 #include <CL/cl.h>
 #include "../vectorUtils/vectorUtils.h"
 #include <stdio.h>
+#include <malloc.h>
 
 #ifndef DEMORANGES_WALLUTILS_H
 #define DEMORANGES_WALLUTILS_H

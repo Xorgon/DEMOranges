@@ -5,6 +5,7 @@
 #ifndef DEMORANGES_TEST_ATOMICS_H
 #define DEMORANGES_TEST_ATOMICS_H
 
+#include <malloc.h>
 #include "CL/cl.h"
 #include "../../util/clUtils/clUtils.h"
 

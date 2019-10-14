@@ -12,6 +12,7 @@
 #include "../../structures/collision.h"
 #include "../../structures/wall.h"
 #include <stdbool.h>
+#include <malloc.h>
 #if defined(_MSC_VER)
 #include <Windows.h>
 #endif

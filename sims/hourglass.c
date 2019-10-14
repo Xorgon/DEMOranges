@@ -7,6 +7,7 @@
 #endif
 
 #include <stdio.h>
+#include <malloc.h>
 #include "../util/clUtils/clUtils.h"
 #include "../util/particleUtils/particleUtils.h"
 #include "../tests/run_tests/run_tests.h"

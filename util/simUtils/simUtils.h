@@ -12,6 +12,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <malloc.h>
 
 #if defined(_MSC_VER)
 #include <Windows.h>

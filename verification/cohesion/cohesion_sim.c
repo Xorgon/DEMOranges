@@ -13,6 +13,7 @@
 #include "../../util/simUtils/simUtils.h"
 #include "../../sims/simRunner/simRunner.h"
 #include <math.h>
+#include <malloc.h>
 
 #define MAX_SOURCE_SIZE (0x100000)
 #define VERBOSE FALSE

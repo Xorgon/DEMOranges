@@ -4,6 +4,7 @@
 
 #include <CL/cl_platform.h>
 #include <math.h>
+#include <malloc.h>
 
 #ifndef DEMORANGES_DOMAINUTILS_H
 #define DEMORANGES_DOMAINUTILS_H

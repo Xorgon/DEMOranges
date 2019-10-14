@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include <CL/cl.h>
 #include "../../util/clUtils/clUtils.h"
 #include "../../structures/particle.h"
