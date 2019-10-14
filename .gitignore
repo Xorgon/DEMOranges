@@ -69,3 +69,4 @@ __pycache__*
 # Visual Studio
 .vs/*
 CMakeSettings.json
+out/*
