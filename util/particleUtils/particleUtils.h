@@ -8,14 +8,19 @@
 #include "../../structures/particle.h"
 #include <stdio.h>
 #include <math.h>
+#if defined(_MSC_VER)
+#include <Windows.h>
+#endif
 #include <stdbool.h>
 #include <stdlib.h>
 
 // If boolean is not correctly defined.
 #if !defined(boolean)
 #define boolean bool
+#if !defined(_MSC_VER)
 #define TRUE true
 #define FALSE false
+#endif
 #endif
 
 #define PI 3.14159265358979323846

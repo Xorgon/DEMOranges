@@ -12,14 +12,19 @@
 #include "../../structures/collision.h"
 #include "../../structures/wall.h"
 #include <stdbool.h>
+#if defined(_MSC_VER)
+#include <Windows.h>
+#endif
 
 #define MAX_SOURCE_SIZE (0x100000)
 
 // If boolean is not correctly defined.
 #if !defined(boolean)
 #define boolean bool
+#if !defined(_MSC_VER)
 #define TRUE true
 #define FALSE false
+#endif
 #endif
 
 void setContext(cl_device_id *device, cl_context *context,

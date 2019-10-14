@@ -20,8 +20,10 @@
 // If boolean is not correctly defined.
 #if !defined(boolean)
 #define boolean bool
+#if !defined(_MSC_VER)
 #define TRUE true
 #define FALSE false
+#endif
 #endif
 
 void writeParticles(particle *particles, float time, char *prefix, char *dir, cl_ulong NUMPART, boolean log_vel);
