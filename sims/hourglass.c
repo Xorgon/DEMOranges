@@ -59,9 +59,9 @@ int main() {
     }
 
     // Build iterate_particle kernel.
-    char *iterate_particle_files[] = {"../util/kernelUtils.cl",
-                                      "../kernels/get_gravity/diag_gravity.cl",
-                                      "../kernels/iterate_particle.cl"};
+    char *iterate_particle_files[] = {PROJECT_DIR "/util/kernelUtils.cl",
+                                      PROJECT_DIR "/kernels/get_gravity/diag_gravity.cl",
+                                      PROJECT_DIR "/kernels/iterate_particle.cl"};
     cl_kernel iterate_particle = getKernel(device, context, iterate_particle_files, 3, "iterate_particle", VERBOSE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);

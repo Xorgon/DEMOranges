@@ -60,9 +60,9 @@ int main() {
         return 1;
     }
 
-    char *iterate_particle_files[] = {"../util/kernelUtils.cl",
-                                      "../kernels/get_vel_fluid/no_drag.cl",
-                                      "../kernels/iterate_particle.cl"};
+    char *iterate_particle_files[] = {PROJECT_DIR "/util/kernelUtils.cl",
+                                      PROJECT_DIR "/kernels/get_vel_fluid/no_drag.cl",
+                                      PROJECT_DIR "/kernels/iterate_particle.cl"};
     cl_kernel iterate_particle = getKernel(device, context, iterate_particle_files, 3, "iterate_particle", TRUE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
@@ -89,7 +89,7 @@ int main() {
     float theoretical_overlap = get_particle_mass(&(hparticles[0])) * 9.81 / stiffness;
     printf("Theoretical Overlap = %f\n", theoretical_overlap);
 
-    char dir[] = "../verification/friction/data/";
+    char dir[] = PROJECT_DIR "/verification/friction/data/";
     for (int i = 8; i <= 64; i *= 2) {
         timestep = collision_time / i;
 

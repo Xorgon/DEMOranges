@@ -57,6 +57,9 @@ else()
     set(OpenCL_LIBRARY OpenCL::OpenCL)
 endif()
 
+# Allow PROJECT_DIR to be used in C source files (useful for runtime kernel compilation)
+add_compile_definitions(PROJECT_DIR="${PROJECT_SOURCE_DIR}/")
+
 # General source files
 
 file(GLOB_RECURSE sim_SOURCE_FILES

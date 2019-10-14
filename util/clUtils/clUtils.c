@@ -216,7 +216,7 @@ cl_command_queue getCommandQueue(cl_context context, cl_device_id device, boolea
 
 cl_kernel
 getKernelWithUtils(cl_device_id device, cl_context context, char *fileName, char *kernelName, boolean verbose) {
-    char *fileNames[] = {"../util/kernelUtils.cl", fileName};
+    char *fileNames[] = {PROJECT_DIR "/util/kernelUtils.cl", fileName};
     return getKernel(device, context, fileNames, 2, kernelName, verbose);
 }
 

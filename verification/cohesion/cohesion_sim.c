@@ -56,10 +56,10 @@ int main() {
         return 1;
     }
 
-    char *iterate_particle_files[] = {"../util/kernelUtils.cl",
-                                      "../kernels/get_gravity/no_gravity.cl",
-                                      "../kernels/get_vel_fluid/no_drag.cl",
-                                      "../kernels/iterate_particle.cl"};
+    char *iterate_particle_files[] = {PROJECT_DIR "/util/kernelUtils.cl",
+                                      PROJECT_DIR "/kernels/get_gravity/no_gravity.cl",
+                                      PROJECT_DIR "/kernels/get_vel_fluid/no_drag.cl",
+                                      PROJECT_DIR "/kernels/iterate_particle.cl"};
     cl_kernel iterate_particle = getKernel(device, context, iterate_particle_files, 4, "iterate_particle", TRUE);
 
     effect_diameter = 1.5f * particle_diameter;
@@ -92,7 +92,7 @@ int main() {
     printf("Collision Duration = %f\n", collision_time);
     sim_length = (cl_float) (collision_time * 4);
 
-    char dir[] = "../verification/cohesion/data/";
+    char dir[] = PROJECT_DIR "/verification/cohesion/data/";
     for (int i = 8; i <= 64; i *= 2) {
         timestep = collision_time / i;
         log_step = timestep;

@@ -50,17 +50,17 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     }
 
     // Build all remaining kernels and create command queue.
-    cl_kernel calculate_pp_collision = getKernelWithUtils(device, context, "../kernels/calculate_pp_collision.cl",
+    cl_kernel calculate_pp_collision = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/calculate_pp_collision.cl",
                                                           "calculate_pp_collision", VERBOSE);
-    cl_kernel calculate_pw_collision = getKernelWithUtils(device, context, "../kernels/calculate_pw_collision.cl",
+    cl_kernel calculate_pw_collision = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/calculate_pw_collision.cl",
                                                           "calculate_pw_collision", VERBOSE);
-    cl_kernel assign_particle_count = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
+    cl_kernel assign_particle_count = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/assign_particles.cl",
                                                          "assign_particle_count", VERBOSE);
-    cl_kernel assign_particles = getKernelWithUtils(device, context, "../kernels/assign_particles.cl",
+    cl_kernel assign_particles = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/assign_particles.cl",
                                                     "assign_particles", VERBOSE);
-    cl_kernel count_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+    cl_kernel count_pp_collisions = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/make_pp_collisions.cl",
                                                        "count_pp_collisions", VERBOSE);
-    cl_kernel make_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+    cl_kernel make_pp_collisions = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/make_pp_collisions.cl",
                                                       "make_pp_collisions", VERBOSE);
     cl_command_queue queue = getCommandQueue(context, device, VERBOSE);
 

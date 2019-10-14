@@ -10,14 +10,14 @@ boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
 
     // Source file variables
     char *fileNames[] = {
-            "../kernels/iterate_particle.cl",
-            "../kernels/assign_particles.cl",
-            "../kernels/assign_particles.cl",
-            "../kernels/make_pp_collisions.cl",
-            "../kernels/make_pp_collisions.cl",
-//        "../kernels/make_pw_collisions.cl",
-            "../kernels/calculate_pp_collision.cl",
-            "../kernels/calculate_pw_collision.cl",
+            PROJECT_DIR "/kernels/iterate_particle.cl",
+            PROJECT_DIR "/kernels/assign_particles.cl",
+            PROJECT_DIR "/kernels/assign_particles.cl",
+            PROJECT_DIR "/kernels/make_pp_collisions.cl",
+            PROJECT_DIR "/kernels/make_pp_collisions.cl",
+//        PROJECT_DIR "/kernels/make_pw_collisions.cl",
+            PROJECT_DIR "/kernels/calculate_pp_collision.cl",
+            PROJECT_DIR "/kernels/calculate_pw_collision.cl",
     };
 
     char *kernelNames[] = {

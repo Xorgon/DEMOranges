@@ -21,7 +21,7 @@ boolean test_count_pp_collisions(cl_device_id device, cl_context context, boolea
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);
-    cl_kernel count_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+    cl_kernel count_pp_collisions = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/make_pp_collisions.cl",
                                                        "count_pp_collisions", verbose);
 
     particle_count_array = calloc(27, sizeof(cl_int));
@@ -104,7 +104,7 @@ boolean test_make_pp_collisions(cl_device_id device, cl_context context, boolean
 
     // Initializing OpenCL.
     cl_command_queue queue = getCommandQueue(context, device, verbose);
-    cl_kernel make_pp_collisions = getKernelWithUtils(device, context, "../kernels/make_pp_collisions.cl",
+    cl_kernel make_pp_collisions = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/make_pp_collisions.cl",
                                                       "make_pp_collisions", verbose);
 
 

@@ -55,10 +55,10 @@ int main() {
         return 1;
     }
 
-    char *iterate_particle_files[] = {"../util/kernelUtils.cl",
-                                      "../kernels/get_gravity/no_gravity.cl",
-                                      "../kernels/get_vel_fluid/x_1_drag.cl",
-                                      "../kernels/iterate_particle.cl"};
+    char *iterate_particle_files[] = {PROJECT_DIR "/util/kernelUtils.cl",
+                                      PROJECT_DIR "/kernels/get_gravity/no_gravity.cl",
+                                      PROJECT_DIR "/kernels/get_vel_fluid/x_1_drag.cl",
+                                      PROJECT_DIR "/kernels/iterate_particle.cl"};
     cl_kernel iterate_particle = getKernel(device, context, iterate_particle_files, 4, "iterate_particle", TRUE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
@@ -79,7 +79,7 @@ int main() {
     printf("Mass = %f\n", get_particle_mass(&(hparticles[0])));
     printf("Tau = %f\n", tau);
 
-    char dir[] = "../verification/drag/data/";
+    char dir[] = PROJECT_DIR "/verification/drag/data/";
     for (int i = 8; i <= 64; i *= 2) {
         timestep = tau / i;
         log_step = timestep;

@@ -58,7 +58,7 @@ int main() {
     }
 
     // Build iterate_particle kernel.
-    cl_kernel iterate_particle = getKernelWithUtils(device, context, "../kernels/iterate_particle.cl",
+    cl_kernel iterate_particle = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/iterate_particle.cl",
                                                     "iterate_particle", VERBOSE);
 
     hparticles = malloc(sizeof(particle) * NUMPART);
