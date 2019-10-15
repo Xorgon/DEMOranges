@@ -116,8 +116,9 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     printf("[INIT] Setting kernel arguments\n");
     ret = clSetKernelArg(iterate_particle, 0, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(iterate_particle, 1, sizeof(cl_float), &timestep);
-    ret = clSetKernelArg(iterate_particle, 2, sizeof(cl_int), &int_periodic);
-    ret = clSetKernelArg(iterate_particle, 3, sizeof(cl_float), &domain_length);
+    //ret = clSetKernelArg(iterate_particle, 2, sizeof(cl_float), &time);  Set during simulation loop.
+    ret = clSetKernelArg(iterate_particle, 3, sizeof(cl_int), &int_periodic);
+    ret = clSetKernelArg(iterate_particle, 4, sizeof(cl_float), &domain_length);
 
     ret = clSetKernelArg(calculate_pp_collision, 0, sizeof(cl_mem), &gpp_cols);
     ret = clSetKernelArg(calculate_pp_collision, 1, sizeof(cl_mem), &gparticles);
@@ -176,9 +177,12 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
 
     cl_float last_write = 0; // Variable to store when logging was last run.
 
+
     // Run simulation.
     for (cl_float time = timestep; time <= sim_length; time += timestep) {
-        if (VERBOSE) printf("Time = %f\n", time);
+        // Set here because otherwise it doesn't work properly.
+        // Presumably the for loop messes up the linking? TODO: Figure out why this is necessary.
+        ret = clSetKernelArg(iterate_particle, 2, sizeof(cl_float), &time);
 
         // Count how many particles are in each CV.
         if (VERBOSE) printf("    Counting particles per CV\n");
