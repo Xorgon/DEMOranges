@@ -85,7 +85,7 @@ int main() {
     float collision_time = 3.14159 * sqrt(get_particle_mass(&(hparticles[1])) / stiffness);
     printf("Mass = %f\n", get_particle_mass(&(hparticles[1])));
     printf("Collision Duration = %f\n", collision_time);
-    sim_length = (float)(collision_time * 1.5);
+    sim_length = (float) (collision_time * 1.5);
 
     char dir[] = PROJECT_DIR "/verification/normal_force/data/";
     for (int i = 8; i <= 64; i *= 2) {
@@ -100,7 +100,7 @@ int main() {
         hparticles[1].pos = (cl_float3) {particle_diameter, 0, 0};
         hparticles[1].vel = (cl_float3) {initial_vel_x, 0, 0};
 
-        runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, FALSE, stiffness,
+        runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, FALSE, stiffness, stiffness,
                restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness,
                domain_length, prefix, dir, sim_length, timestep, VERBOSE, LOG_DATA, TRUE, FALSE, log_step, device,
                context);

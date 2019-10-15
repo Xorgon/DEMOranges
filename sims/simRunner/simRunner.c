@@ -7,7 +7,7 @@
 
 int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, cl_float particle_diameter,
            aa_wall *walls, cl_ulong NUMWALLS, cl_bool periodic,
-           cl_float stiffness, cl_float restitution_coefficient, cl_float friction_coefficient,
+           cl_float stiffness, cl_float wall_stiffness, cl_float restitution_coefficient, cl_float friction_coefficient,
            cl_float friction_stiffness, cl_float cohesion_stiffness,
            cl_float domain_length, char prefix[], char log_dir[], float sim_length, float timestep,
            boolean VERBOSE, boolean LOG_DATA, boolean log_vel, boolean log_col_stats, float log_step,
@@ -37,7 +37,6 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     cl_mem gpw_cols;  // GPU version of hpw_cols.
     cl_mem gpp_cols = 0; // Set to 0 to avoid uninitialized errors.
     cl_mem gcollision_count;  // GPU version of collision_count.
-
 
     // Check that the logging directory exists if needed.
     if (!checkDirExists(log_dir) && LOG_DATA && strcmp(log_dir, "") != 0) {
@@ -159,7 +158,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
         clSetKernelArg(calculate_pw_collision, 1, sizeof(cl_mem), &gparticles);
         clSetKernelArg(calculate_pw_collision, 2, sizeof(cl_float), &timestep);
         clSetKernelArg(calculate_pw_collision, 3, sizeof(cl_mem), &gwalls);
-        clSetKernelArg(calculate_pw_collision, 4, sizeof(cl_float), &stiffness);
+        clSetKernelArg(calculate_pw_collision, 4, sizeof(cl_float), &wall_stiffness);
         clSetKernelArg(calculate_pw_collision, 5, sizeof(cl_float), &restitution_coefficient);
         clSetKernelArg(calculate_pw_collision, 6, sizeof(cl_float), &friction_coefficient);
         clSetKernelArg(calculate_pw_collision, 7, sizeof(cl_float), &friction_stiffness);

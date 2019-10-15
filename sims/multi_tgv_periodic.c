@@ -130,10 +130,10 @@ int main() {
                 continue;
             }
 
-            int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, periodic, stiffness,
-                                 restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness,
-                                 domain_length, prefix, log_dir, sim_length, timestep, VERBOSE, LOG_DATA, FALSE,
-                                 LOG_COL_STATS, log_step, device, context);
+            int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0,
+                                 periodic, stiffness, stiffness, restitution_coefficient, friction_coefficient,
+                                 stiffness, cohesion_stiffness, domain_length, prefix, log_dir, sim_length, timestep,
+                                 VERBOSE, LOG_DATA, FALSE, LOG_COL_STATS, log_step, device, context);
 
             clReleaseContext(context);
         }

@@ -98,7 +98,7 @@ int main() {
         hparticles[0].pos = (cl_float3) {0, particle_diameter / 2 - theoretical_overlap, 0};
         hparticles[0].vel = (cl_float3) {initial_vel_x, 0, 0};
 
-        runSim(hparticles, NUMPART, iterate_particle, particle_diameter, hwalls, NUMWALLS, FALSE, stiffness,
+        runSim(hparticles, NUMPART, iterate_particle, particle_diameter, hwalls, NUMWALLS, FALSE, stiffness, stiffness,
                restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness, domain_length,
                prefix, dir, sim_length, timestep, VERBOSE, LOG_DATA, TRUE, FALSE, log_step, device, context);
     }
