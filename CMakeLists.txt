@@ -95,6 +95,13 @@ if (NOT(WIN32))
     target_link_libraries(box m)
 endif()
 
+file(GLOB_RECURSE rotating_box_SOURCE_FILES sims/rotating_box.c)
+add_executable(rotating_box ${rotating_box_SOURCE_FILES} ${sim_SOURCE_FILES})
+target_link_libraries(rotating_box ${OpenCL_LIBRARY})
+if (NOT(WIN32))
+    target_link_libraries(rotating_box m)
+endif()
+
 file(GLOB_RECURSE tgv_box_SOURCE_FILES sims/tgv_box.c)
 add_executable(tgv_box ${tgv_box_SOURCE_FILES} ${sim_SOURCE_FILES})
 target_link_libraries(tgv_box ${OpenCL_LIBRARY})
