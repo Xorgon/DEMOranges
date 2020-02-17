@@ -11,8 +11,14 @@
 #include <math.h>
 #include <time.h>
 #include <stdio.h>
-#include <sys/stat.h>
 #include <malloc.h>
+
+#if defined(_MSC_VER)
+#include <sys/stat.h>
+#elif defined(__GNUC__) || defined(__GNUG__) || defined(__MINGW_GCC_VERSION)
+#include <dirent.h>
+#include <errno.h>
+#endif
 
 #if defined(_MSC_VER)
 #include <Windows.h>

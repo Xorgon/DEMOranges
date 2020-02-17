@@ -86,19 +86,25 @@ void writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART,
 }
 
 boolean checkDirExists(char dir[]) {
-    const char *folder;
-    struct stat sb;
-
 #if defined(_MSC_VER)
+    struct stat sb;
     if (GetFileAttributes(dir) == INVALID_FILE_ATTRIBUTES) {
         return FALSE;
     } else {
         return TRUE;
     }
 #elif defined(__GNUC__) || defined(__GNUG__) || defined(__MINGW_GCC_VERSION)
-    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+    // https://stackoverflow.com/a/12510903/5270376
+    DIR *dir_obj = opendir(dir);
+    if (dir_obj) {
+        /* Directory exists. */
+        closedir(dir_obj);
         return TRUE;
+    } else if (ENOENT == errno) {
+        /* Directory does not exist. */
+        return FALSE;
     } else {
+        /* opendir() failed for some other reason. */
         return FALSE;
     }
 #endif
