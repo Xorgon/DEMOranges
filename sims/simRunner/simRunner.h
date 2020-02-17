@@ -7,6 +7,7 @@
 #include "../../util/simUtils/simUtils.h"
 #include <CL/cl.h>
 #include <malloc.h>
+#include <string.h>
 
 #ifndef DEMORANGES_SIMRUNNER_H
 #define DEMORANGES_SIMRUNNER_H
