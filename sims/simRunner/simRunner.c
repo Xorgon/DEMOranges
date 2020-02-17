@@ -40,7 +40,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
 
 
     // Check that the logging directory exists if needed.
-    if (!checkDirExists(log_dir) && LOG_DATA && strcmp(log_dir, "") != 0) {
+    if (!checkDirExists(log_dir) && LOG_DATA) {
         fprintf(stderr, "Error: Directory (%s) does not exist or cannot be accessed.\n", log_dir);
         return 1;
     }

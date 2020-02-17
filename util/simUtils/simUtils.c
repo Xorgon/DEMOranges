@@ -120,6 +120,9 @@ int writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART, 
 }
 
 boolean checkDirExists(char dir[]) {
+    if (strcmp(dir, "") == 0) {
+        return TRUE;
+    }
 #if defined(_MSC_VER)
     struct stat sb;
     if (GetFileAttributes(dir) == INVALID_FILE_ATTRIBUTES) {
