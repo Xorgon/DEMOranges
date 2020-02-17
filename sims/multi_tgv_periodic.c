@@ -121,9 +121,11 @@ int main() {
 
             timestep = (cl_float) (PI * sqrt(get_particle_mass(&(hparticles[0])) / stiffness) / 8);
 
-            writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness,
-                           restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness,
-                           particle_diameter, particle_effect_diameter, density, fluid_viscosity);
+            if (!writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness,
+                                restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness,
+                                particle_diameter, particle_effect_diameter, density, fluid_viscosity)) {
+                return 1;
+            }
 
             if (restitution_coefficient > 1 || restitution_coefficient < 0) {
                 printf("Restitution coefficient invalid. Skipping simulation.");
