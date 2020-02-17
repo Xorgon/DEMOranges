@@ -19,6 +19,7 @@
 #define LOG_DATA TRUE
 
 char *prefix = "BALL";
+char *log_dir = "BALL/";
 
 particle *hparticles;
 cl_ulong NUMPART = 10000;
@@ -77,7 +78,7 @@ int main() {
         return 1;
     }
 
-    if (!writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness,
+    if (!writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness,
                         restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness,
                         particle_diameter, 0, density, fluid_viscosity)) {
         return 1;
@@ -85,8 +86,8 @@ int main() {
 
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, FALSE, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,
-                         prefix,
-                         "", sim_length, timestep, VERBOSE, LOG_DATA, FALSE, FALSE, log_step, device, context);
+                         prefix, log_dir, sim_length, timestep, VERBOSE, LOG_DATA, FALSE, FALSE, log_step, device,
+                         context);
     clReleaseContext(context);
     return sim_ret;
 }
