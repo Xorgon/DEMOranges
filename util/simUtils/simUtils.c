@@ -4,8 +4,14 @@
 
 #include "simUtils.h"
 
-void writeParticles(particle *particles, float time, char prefix[], char dir[], cl_ulong NUMPART, boolean log_vel) {
+int writeParticles(particle *particles, float time, char prefix[], char dir[], cl_ulong NUMPART, boolean log_vel) {
     char filename[500];
+
+    if (!checkDirExists(dir)) {
+        fprintf(stderr, "Error: Directory (%s) does not exist or cannot be accessed.\n", dir);
+        return 0;
+    }
+
     sprintf(filename, "%s%llu_%s_%i.txt", dir, NUMPART, prefix, (long) roundf(time * 1e6));
     FILE *fd = fopen(filename, "w");
     for (int i = 0; i < NUMPART; i++) {
@@ -17,14 +23,21 @@ void writeParticles(particle *particles, float time, char prefix[], char dir[], 
         }
     }
     fclose(fd);
+    return 1;
 }
 
-void writeSetupData(char prefix[], char dir[], cl_ulong NUMPART, cl_float timestep, cl_float sim_length,
-                    cl_float domain_length, cl_float stiffness, cl_float restitution_coefficient,
-                    cl_float friction_coefficient, cl_float friction_stiffness, cl_float cohesion_stiffness,
-                    cl_float particle_diameter, cl_float effect_diameter, cl_float particle_density,
-                    cl_float fluid_viscosity) {
+int writeSetupData(char prefix[], char dir[], cl_ulong NUMPART, cl_float timestep, cl_float sim_length,
+                   cl_float domain_length, cl_float stiffness, cl_float restitution_coefficient,
+                   cl_float friction_coefficient, cl_float friction_stiffness, cl_float cohesion_stiffness,
+                   cl_float particle_diameter, cl_float effect_diameter, cl_float particle_density,
+                   cl_float fluid_viscosity) {
     char filename[500];
+
+    if (!checkDirExists(dir)) {
+        fprintf(stderr, "Error: Directory (%s) does not exist or cannot be accessed.\n", dir);
+        return 0;
+    }
+
     sprintf(filename, "%s%llu_%s_setup.txt", dir, NUMPART, prefix);
     FILE *fd = fopen(filename, "w");
     fprintf(fd, "Number of particles: %llu\n", NUMPART);
@@ -41,11 +54,18 @@ void writeSetupData(char prefix[], char dir[], cl_ulong NUMPART, cl_float timest
     fprintf(fd, "Particle density: %f\n", particle_density);
     fprintf(fd, "Fluid viscosity: %f\n", fluid_viscosity);
     fclose(fd);
+    return 1;
 }
 
-void
-writeCVStats(char prefix[], char dir[], cl_ulong NUMPART, cl_int *particle_count_array, cl_ulong NUMCVS, float time) {
+int writeCVStats(char prefix[], char dir[], cl_ulong NUMPART, cl_int *particle_count_array, cl_ulong NUMCVS,
+                 float time) {
     char filename[500];
+
+    if (!checkDirExists(dir)) {
+        fprintf(stderr, "Error: Directory (%s) does not exist or cannot be accessed.\n", dir);
+        return 0;
+    }
+
     sprintf(filename, "%s%llu_%s_cv_stats_%i.txt", dir, NUMPART, prefix, (long) roundf(time * 1e6));
     FILE *fd = fopen(filename, "w");
 
@@ -61,10 +81,17 @@ writeCVStats(char prefix[], char dir[], cl_ulong NUMPART, cl_int *particle_count
 
     fclose(fd);
     free(stat_array);
+    return 1;
 }
 
-void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]) {
+int writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]) {
     char filename[500];
+
+    if (!checkDirExists(dir)) {
+        fprintf(stderr, "Error: Directory (%s) does not exist or cannot be accessed.\n", dir);
+        return 0;
+    }
+
     sprintf(filename, "%s%llu_%s_setup.txt", dir, NUMPART, prefix);
 
     FILE *fd = fopen(filename, "a");
@@ -73,16 +100,23 @@ void writeTime(char prefix[], char dir[], cl_ulong NUMPART, char label[]) {
     now = time(NULL);
     fprintf(fd, "%s: %s\n", label, ctime(&now));
     fclose(fd);
+    return 1;
 }
 
-void writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART, float time) {
+int writeNumCols(char prefix[], char dir[], cl_ulong NUMCOLS, cl_ulong NUMPART, float time) {
     char filename[500];
+    if (!checkDirExists(dir)) {
+        fprintf(stderr, "Error: Directory (%s) does not exist or cannot be accessed.\n", dir);
+        return 0;
+    }
+
     sprintf(filename, "%s%llu_%s_cols.txt", dir, NUMPART, prefix);
 
     FILE *fd = fopen(filename, "a");
 
     fprintf(fd, "%f, %llu\n", time, NUMCOLS);
     fclose(fd);
+    return 1;
 }
 
 boolean checkDirExists(char dir[]) {

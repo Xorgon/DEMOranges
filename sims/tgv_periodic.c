@@ -98,9 +98,11 @@ int main() {
 
     timestep = (cl_float) (PI * sqrt(get_particle_mass(&(hparticles[0])) / stiffness) / 8);
 
-    writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
-                   friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter,
-                   particle_effect_diameter, density, fluid_viscosity);
+    if (!writeSetupData(prefix, log_dir, NUMPART, timestep, sim_length, domain_length, stiffness,
+                        restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness,
+                        particle_diameter, particle_effect_diameter, density, fluid_viscosity)) {
+        return 1;
+    }
 
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, periodic, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,

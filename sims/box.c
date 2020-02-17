@@ -87,9 +87,11 @@ int main() {
     walls = malloc(sizeof(aa_wall) * NUMWALLS);
     generate_closed_box(&walls, domain_length, (cl_float3) {0, 0, 0});
 
-    writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
+    if (!writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
                    friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, 0, density,
-                   fluid_viscosity);
+                   fluid_viscosity)) {
+        return 1;
+    }
 
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, FALSE, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,

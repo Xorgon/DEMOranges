@@ -77,9 +77,11 @@ int main() {
         return 1;
     }
 
-    writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness, restitution_coefficient,
-                   friction_coefficient, friction_stiffness, cohesion_stiffness, particle_diameter, 0, density,
-                   fluid_viscosity);
+    if (!writeSetupData(prefix, "", NUMPART, timestep, sim_length, domain_length, stiffness,
+                        restitution_coefficient, friction_coefficient, friction_stiffness, cohesion_stiffness,
+                        particle_diameter, 0, density, fluid_viscosity)) {
+        return 1;
+    }
 
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, NULL, 0, FALSE, stiffness,
                          restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness, domain_length,
