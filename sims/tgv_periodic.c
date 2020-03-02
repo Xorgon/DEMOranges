@@ -20,7 +20,7 @@
 #define LOG_DATA TRUE
 
 char *prefix = "TGV_PERIODIC";
-char *log_dir = "TGV_PERIODIC_3/";
+char *log_dir = "TGV_PERIODIC/";
 
 particle *hparticles;
 cl_ulong NUMPART = 10000;
@@ -82,6 +82,11 @@ int main() {
     // Using particle_effect_diameter so that cohesion effects are considered at the appropriate range.
     float cube_length = createCubePositions(positions, NUMPART, particle_effect_diameter, 2, (cl_float3) {0, 0, 0});
     domain_length = (cl_float) (2 * PI);
+
+    if (cube_length > domain_length) {
+        fprintf(stderr, "Not all particles fit within the specified domain length for the given cube parameters (%.3f > %.3f).", cube_length, domain_length);
+        return 1;
+    }
 
     cl_float3 *velocities = malloc(sizeof(cl_float3) * NUMPART);
     createNormalDistVelocities(velocities, NUMPART, init_speed_mean, init_speed_std_dev);

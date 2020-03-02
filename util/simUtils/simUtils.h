@@ -12,6 +12,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <malloc.h>
+#include <string.h>
 
 #if defined(_MSC_VER)
 

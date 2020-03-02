@@ -86,8 +86,8 @@ void createNormalDistVelocities(cl_float3 *velocities, cl_ulong NUMPART, float m
     for (int i = 0; i < NUMPART; i++) {
         // Select random speed.
         // Box-Muller transformation from uniform to normal.
-        float u = (float) rand() / (float) (RAND_MAX);
-        float v =(float) rand() / (float) (RAND_MAX);
+        float u = (float) (rand() + 1) / (float) (RAND_MAX + 1);
+        float v = (float) (rand() + 1) / (float) (RAND_MAX + 1);
         float speed = (float) (std_dev * sqrtf(-2 * logf(u)) * cos(2 * PI * v)) + mean;
 
         // Select random direction.
