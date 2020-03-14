@@ -5,6 +5,39 @@
 #include "test_assign_particles.h"
 #include "../../util/cvUtils/cvUtils.h"
 
+boolean test_reset_particle_count(cl_device_id device, cl_context context, boolean verbose) {
+    cl_int *particle_count_array; // Array of CVs with just the number of particles in each CV.
+    cl_mem gparticle_count_array;
+
+    cl_int ret;
+
+    cl_ulong NUMCVS = 100; // Total number of CVs.
+    particle_count_array = calloc(NUMCVS, sizeof(cl_int));
+    memset(particle_count_array, 1, sizeof(cl_int) * NUMCVS);
+
+    // Initializing OpenCL.
+    cl_command_queue queue = getCommandQueue(context, device, verbose);
+    cl_kernel reset_particle_count = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/assign_particles.cl",
+                                                        "reset_particle_count", verbose);
+
+    gparticle_count_array = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_int) * NUMCVS, NULL, &ret);
+    ret = intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+
+    ret = clSetKernelArg(reset_particle_count, 0, sizeof(cl_mem), &gparticle_count_array);
+    ret = clEnqueueNDRangeKernel(queue, reset_particle_count, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
+    ret = clFinish(queue);
+    ret = intArrayToHost(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+    
+    for (cl_ulong i = 0; i < NUMCVS; i++) {
+        if (particle_count_array[i] != 0) {
+            printf("Particle count array was not reset correctly.\n");
+            return false;
+        }
+    }
+    
+    return true;
+}
+
 boolean test_assign_particle_count(cl_device_id device, cl_context context, boolean verbose) {
 
     particle *hparticles;

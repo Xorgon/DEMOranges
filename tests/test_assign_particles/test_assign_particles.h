@@ -13,6 +13,8 @@
 #include "../../util/cvUtils/cvUtils.h"
 #include "../../structures/particle.h"
 
+boolean test_reset_particle_count(cl_device_id device, cl_context context, boolean verbose);
+
 boolean test_assign_particle_count(cl_device_id device, cl_context context, boolean verbose);
 
 boolean test_set_array_starts(boolean verbose);

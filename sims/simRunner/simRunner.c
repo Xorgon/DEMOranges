@@ -51,6 +51,8 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     cl_kernel calculate_pw_collision = getKernelWithUtils(device, context,
                                                           PROJECT_DIR "/kernels/calculate_pw_collision.cl",
                                                           "calculate_pw_collision", VERBOSE);
+    cl_kernel reset_particle_count = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/assign_particles.cl",
+                                                        "reset_particle_count", VERBOSE);
     cl_kernel assign_particle_count = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/assign_particles.cl",
                                                          "assign_particle_count", VERBOSE);
     cl_kernel assign_particles = getKernelWithUtils(device, context, PROJECT_DIR "/kernels/assign_particles.cl",
@@ -127,6 +129,8 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
     ret = clSetKernelArg(calculate_pp_collision, 7, sizeof(cl_float), &cohesion_stiffness);
     ret = clSetKernelArg(calculate_pp_collision, 8, sizeof(cl_float), &domain_length);
 
+    ret = clSetKernelArg(reset_particle_count, 0, sizeof(cl_mem), &gparticle_count_array);
+
     ret = clSetKernelArg(assign_particle_count, 0, sizeof(cl_mem), &gparticles);
     ret = clSetKernelArg(assign_particle_count, 1, sizeof(cl_mem), &gparticle_count_array);
     ret = clSetKernelArg(assign_particle_count, 2, sizeof(cl_float), &domain_length);
@@ -187,8 +191,7 @@ int runSim(particle *hparticles, cl_ulong NUMPART, cl_kernel iterate_particle, c
 
         // Count how many particles are in each CV.
         if (VERBOSE) printf("    Counting particles per CV\n");
-        memset(particle_count_array, 0, sizeof(cl_int) * NUMCVS); // Reset counts to 0.
-        ret = intArrayToDevice(queue, gparticle_count_array, &particle_count_array, NUMCVS);
+        ret = clEnqueueNDRangeKernel(queue, reset_particle_count, 1, NULL, &NUMCVS, 0, NULL, NULL, NULL);
         ret = clEnqueueNDRangeKernel(queue, assign_particle_count, 1, NULL, &NUMPART, 0, NULL, NULL, NULL);
 
         // Set CV array starts according to the counts and assign particles to the cv_pid array.

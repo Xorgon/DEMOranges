@@ -22,7 +22,7 @@
 char *prefix = "BOX";
 
 particle *hparticles;
-cl_ulong NUMPART = 1000000;
+cl_ulong NUMPART = 100000;
 
 // Particle properties.
 cl_float density = 2000;
@@ -92,8 +92,8 @@ int main() {
                    fluid_viscosity);
 
     int sim_ret = runSim(hparticles, NUMPART, iterate_particle, particle_diameter, walls, NUMWALLS, FALSE, stiffness,
-                         restitution_coefficient, friction_coefficient, stiffness, stiffness, cohesion_stiffness,
-                         domain_length,                         prefix, "",
+                         stiffness, restitution_coefficient, friction_coefficient, stiffness, cohesion_stiffness,
+                         domain_length, prefix, "",
                          sim_length, timestep, VERBOSE, LOG_DATA, FALSE, FALSE, log_step, device, context);
 
     clReleaseContext(context);

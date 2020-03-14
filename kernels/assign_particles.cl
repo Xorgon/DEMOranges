@@ -1,3 +1,11 @@
+/* Kernel to reset the count of particles per control volume. */
+
+__kernel void reset_particle_count(__global int *particle_count_array){
+    int gid = get_global_id(0);
+    particle_count_array[gid] = 0;
+}
+
+
 /* Kernel to count the number of particles per control volume. */
 
 __kernel void assign_particle_count(__global particle *particles, __global int *particle_count_array,

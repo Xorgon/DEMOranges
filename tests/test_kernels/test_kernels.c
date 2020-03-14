@@ -13,6 +13,7 @@ boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
             PROJECT_DIR "/kernels/iterate_particle.cl",
             PROJECT_DIR "/kernels/assign_particles.cl",
             PROJECT_DIR "/kernels/assign_particles.cl",
+            PROJECT_DIR "/kernels/assign_particles.cl",
             PROJECT_DIR "/kernels/make_pp_collisions.cl",
             PROJECT_DIR "/kernels/make_pp_collisions.cl",
 //        PROJECT_DIR "/kernels/make_pw_collisions.cl",
@@ -22,6 +23,7 @@ boolean test_kernels(cl_device_id device, cl_context context, boolean verbose) {
 
     char *kernelNames[] = {
             "iterate_particle",
+            "reset_particle_count",
             "assign_particle_count",
             "assign_particles",
             "count_pp_collisions",

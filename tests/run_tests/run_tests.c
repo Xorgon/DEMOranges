@@ -38,6 +38,11 @@ boolean run_all_tests(cl_device_id device, cl_context context, boolean verbose){
         return FALSE;
     }
 
+    if (!test_reset_particle_count(device, context, verbose)) {
+        fprintf(stderr, "\nFAILED AT test_reset_particle_count\n");
+        return FALSE;
+    }
+    
     if (!test_assign_particle_count(device, context, verbose)) {
         fprintf(stderr, "\nFAILED AT test_assign_particle_count\n");
         return FALSE;
